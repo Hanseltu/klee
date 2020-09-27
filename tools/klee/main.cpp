@@ -136,7 +136,7 @@ namespace {
   RunInDir("run-in-dir",
            cl::desc("Change to the given directory before starting execution (default=location of tested file)."),
            cl::cat(StartCat));
-  
+
   cl::opt<std::string>
   OutputDir("output-dir",
             cl::desc("Directory in which to write results (default=klee-out-<N>)"),
@@ -158,7 +158,7 @@ namespace {
   WarnAllExternals("warn-all-external-symbols",
                    cl::desc("Issue a warning on startup for all external symbols (default=false)."),
                    cl::cat(StartCat));
-  
+
 
   /*** Linking options ***/
 
@@ -223,10 +223,10 @@ namespace {
 
 
   /*** Replaying options ***/
-  
+
   cl::OptionCategory ReplayCat("Replaying options",
                                "These options impact replaying of test cases.");
-  
+
   cl::opt<bool>
   ReplayKeepSymbolic("replay-keep-symbolic",
                      cl::desc("Replay the test cases only by asserting "
@@ -1140,7 +1140,7 @@ int main(int argc, char **argv, char **envp) {
   KCommandLine::HideOptions(llvm::cl::GeneralCategory);
 
   llvm::InitializeNativeTarget();
-
+  //std::cout << "This is a developing version of KLEE" <<std::endl;
   parseArguments(argc, argv);
 #if LLVM_VERSION_CODE >= LLVM_VERSION(3, 9)
   sys::PrintStackTraceOnErrorSignal(argv[0]);
