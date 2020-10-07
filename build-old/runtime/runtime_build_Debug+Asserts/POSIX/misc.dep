@@ -1,5 +1,0 @@
-/home/tuhaoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/POSIX/misc.bc: \
-  /home/tuhaoxin/github/klee/runtime/POSIX/misc.c \
-  /home/tuhaoxin/github/klee/include/klee/klee.h
-
-/home/tuhaoxin/github/klee/include/klee/klee.h:

@@ -1,5 +1,0 @@
-/home/tuhaoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/Intrinsic/klee_choose.bc: \
-  /home/tuhaoxin/github/klee/runtime/Intrinsic/klee_choose.c \
-  /home/tuhaoxin/github/klee/include/klee/klee.h
-
-/home/tuhaoxin/github/klee/include/klee/klee.h:
