@@ -1,0 +1,22 @@
+klee --libc=uclibc --posix-runtime get_sign.bc
+PID: 495440
+Using monotonic steady clock with 1/1000000000s resolution
+Started: 2020-10-07 20:45:16
+BEGIN searcher description
+<InterleavedSearcher> containing 2 searchers:
+RandomPathSearcher
+WeightedRandomSearcher::CoveringNew
+</InterleavedSearcher>
+END searcher description
+Finished: 2020-10-07 20:45:16
+Elapsed: 00:00:00
+KLEE: done: explored paths = 3
+KLEE: done: avg. constructs per query = 14
+KLEE: done: total queries = 4
+KLEE: done: valid queries = 0
+KLEE: done: invalid queries = 4
+KLEE: done: query cex = 4
+
+KLEE: done: total instructions = 13707
+KLEE: done: completed paths = 3
+KLEE: done: generated tests = 3

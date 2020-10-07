@@ -1,0 +1,11 @@
+/home/tuhaoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/POSIX/fd_init.bc: \
+  /home/tuhaoxin/github/klee/runtime/POSIX/fd_init.c \
+  /home/tuhaoxin/github/klee/runtime/POSIX/fd.h \
+  /home/tuhaoxin/github/klee/build/include/klee/Config/config.h \
+  /home/tuhaoxin/github/klee/include/klee/klee.h
+
+/home/tuhaoxin/github/klee/runtime/POSIX/fd.h:
+
+/home/tuhaoxin/github/klee/build/include/klee/Config/config.h:
+
+/home/tuhaoxin/github/klee/include/klee/klee.h:

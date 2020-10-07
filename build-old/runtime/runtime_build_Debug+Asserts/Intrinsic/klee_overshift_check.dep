@@ -1,0 +1,5 @@
+/home/tuhaoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/Intrinsic/klee_overshift_check.bc: \
+  /home/tuhaoxin/github/klee/runtime/Intrinsic/klee_overshift_check.c \
+  /home/tuhaoxin/github/klee/include/klee/klee.h
+
+/home/tuhaoxin/github/klee/include/klee/klee.h:
