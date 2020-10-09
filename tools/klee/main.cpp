@@ -1223,7 +1223,7 @@ int main(int argc, char **argv, char **envp) {
 
   // Load the bytecode...
   std::string errorMsg;
-  LLVMContext ctx;
+  LLVMContext ctx; //ctx includes the global information related to llvm
   std::vector<std::unique_ptr<llvm::Module>> loadedModules;
   if (!klee::loadFile(InputFile, ctx, loadedModules, errorMsg)) {
     klee_error("error loading program '%s': %s", InputFile.c_str(),
@@ -1239,7 +1239,7 @@ int main(int argc, char **argv, char **envp) {
                errorMsg.c_str());
   }
 
-  llvm::Module *mainModule = M.get();
+  llvm::Module *mainModule = M.get(); // the top container of all LLVM IR
   // Push the module as the first entry
   loadedModules.emplace_back(std::move(M));
 
@@ -1249,7 +1249,7 @@ int main(int argc, char **argv, char **envp) {
                                   /*CheckDivZero=*/CheckDivZero,
                                   /*CheckOvershift=*/CheckOvershift);
 
-  if (WithPOSIXRuntime) {
+  if (WithPOSIXRuntime) { //check WithPOSIXRuntime
     SmallString<128> Path(Opts.LibraryDir);
     llvm::sys::path::append(Path, "libkleeRuntimePOSIX.bca");
     klee_message("NOTE: Using POSIX model: %s", Path.c_str());
@@ -1262,7 +1262,7 @@ int main(int argc, char **argv, char **envp) {
     preparePOSIX(loadedModules, libcPrefix);
   }
 
-  if (Libcxx) {
+  if (Libcxx) { //check Libcxx
 #ifndef SUPPORT_KLEE_LIBCXX
     klee_error("Klee was not compiled with libcxx support");
 #else
@@ -1276,7 +1276,7 @@ int main(int argc, char **argv, char **envp) {
 #endif
   }
 
-  switch (Libc) {
+  switch (Libc) { //corresponding libc libary used in comannd option "--uclibc="
   case LibcType::KleeLibc: {
     // FIXME: Find a reasonable solution for this.
     SmallString<128> Path(Opts.LibraryDir);
@@ -1310,8 +1310,8 @@ int main(int argc, char **argv, char **envp) {
 
   // FIXME: Change me to std types.
   int pArgc;
-  char **pArgv;
-  char **pEnvp;
+  char **pArgv; //storage user-defined arguments
+  char **pEnvp; //storage user-defined environment setup, posixruntime?
   if (Environ != "") {
     std::vector<std::string> items;
     std::ifstream f(Environ.c_str());
@@ -1375,7 +1375,7 @@ int main(int argc, char **argv, char **envp) {
     klee_error("Entry function '%s' not found in module.", EntryPoint.c_str());
   }
 
-  externalsAndGlobalsCheck(finalModule);
+  externalsAndGlobalsCheck(finalModule); // executed some check
 
   if (ReplayPathFile != "") {
     interpreter->setReplayPath(&replayPath);
@@ -1432,6 +1432,7 @@ int main(int argc, char **argv, char **envp) {
                    << " (" << ++i << "/" << kTestFiles.size() << ")\n";
       // XXX should put envp in .ktest ?
       interpreter->runFunctionAsMain(mainFn, out->numArgs, out->args, pEnvp);
+      // the entry of main symbolic execution function, defined in Interpreter.h with virtual function, and implemented in Executor.cpp
       if (interrupted) break;
     }
     interpreter->setReplayKTest(0);

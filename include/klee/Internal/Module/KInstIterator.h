@@ -17,9 +17,11 @@ namespace klee {
     KInstruction **it;
 
   public:
+    //two constractors
     KInstIterator() : it(0) {}
     KInstIterator(KInstruction **_it) : it(_it) {}
 
+    //two operator overloading used for compare two KInstIterator
     bool operator==(const KInstIterator &b) const {
       return it==b.it;
     }
@@ -27,11 +29,13 @@ namespace klee {
       return !(*this == b);
     }
 
+    //also the operator overloading, just for increment reference: https://en.cppreference.com/w/cpp/language/operators/ Increment and decrement part
     KInstIterator &operator++() {
       ++it;
       return *this;
     }
 
+    //what's this? no argument???
     operator KInstruction*() const { return it ? *it : 0;}
     operator bool() const { return it != 0; }
 

@@ -16,7 +16,7 @@ int get_sign(int x) {
 
 int main() {
   int a;
-  printf("hello\n");
+  //printf("hello\n");
   klee_make_symbolic(&a, sizeof(a), "a");
   return get_sign(a);
 }
