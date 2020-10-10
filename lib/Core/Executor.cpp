@@ -1359,10 +1359,14 @@ static inline const llvm::fltSemantics *fpWidthToSemantics(unsigned width) {
   }
 }
 
+int num_ec = 0;
 void Executor::executeCall(ExecutionState &state,
                            KInstruction *ki,
                            Function *f,
                            std::vector< ref<Expr> > &arguments) {
+  //new added test function
+  printf("No.%d executionCall in Executor::executeCall\n", num_ec);
+  num_ec += 1;
   Instruction *i = ki->inst;
   if (i && isa<DbgInfoIntrinsic>(i))
     return;
@@ -1623,10 +1627,13 @@ Function* Executor::getTargetFunction(Value *calledVal, ExecutionState &state) {
   }
 }
 
+int i = 0;
+int numExecuteCall = 0;
 void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   //new added test code
+  /*
   std::vector<StackFrame> stack_ty_test = state.stack;
-  printf("Here are informations in StackFrame: \n");
+  printf("Here are informations in StackFrame No.%d: \n", i);
   printf("The size of vector<StackFrame> = %d\n", (int)stack_ty_test.size());
   for (auto s : stack_ty_test){
     printf("    The information in vector<StackFrame>:\n");
@@ -1636,6 +1643,8 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     printf("            numInstructions = %d\n", s.kf->numInstructions);
   }
   printf("\n");
+  i += 1;
+  */
   Instruction *i = ki->inst;
   switch (i->getOpcode()) {
     // Control flow
@@ -1993,7 +2002,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
           i++;
         }
       }
-
+      printf("\n No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
       executeCall(state, ki, f, arguments);
     } else {
       ref<Expr> v = eval(ki, 0, state).value;
@@ -2022,6 +2031,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                                 "resolved symbolic function pointer to: %s",
                                 f->getName().data());
 
+            printf("\n No.%d executeCall in else statement in Executor::executeInstruction executed! \n", numExecuteCall);
             executeCall(*res.first, ki, f, arguments);
           } else {
             if (!hasInvalid) {
@@ -2035,6 +2045,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         free = res.second;
       } while (free);
     }
+    numExecuteCall += 1;
     break;
   }
   case Instruction::PHI: {
