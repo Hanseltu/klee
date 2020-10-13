@@ -1365,7 +1365,7 @@ void Executor::executeCall(ExecutionState &state,
                            Function *f,
                            std::vector< ref<Expr> > &arguments) {
   //new added test function
-  printf("No.%d executionCall in Executor::executeCall\n", num_ec);
+  printf("No.%d executionCall in Executor::executeCall\n\n", num_ec);
   num_ec += 1;
   Instruction *i = ki->inst;
   if (i && isa<DbgInfoIntrinsic>(i))
@@ -1948,8 +1948,13 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     CallSite cs(i);
 
     unsigned numArgs = cs.arg_size();
+    printf("in case Instruction::Call numArgs = %d\n", numArgs);
     Value *fp = cs.getCalledValue();
+    printf("in case Instruction::Call *fp data :\n");
+    printf("    hasName() = %d\n", fp->hasName());
+    printf("    getName() = %s\n", fp->getName().str().c_str());
     Function *f = getTargetFunction(fp, state);
+    printf("in case Instruction::Call *f function name = %s\n", f->getName().str().c_str());
 
     if (isa<InlineAsm>(fp)) {
       terminateStateOnExecError(state, "inline assembly is unsupported");
@@ -2002,7 +2007,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
           i++;
         }
       }
-      printf("\n No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
+      printf(" No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
       executeCall(state, ki, f, arguments);
     } else {
       ref<Expr> v = eval(ki, 0, state).value;

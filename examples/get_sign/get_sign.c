@@ -29,18 +29,26 @@ int compare(int a, int b){
     else return 3;
 }
 
+int func(int a, int b){
+    if (a > b)
+        return 1;
+    return 2;
+}
+
 int main() {
-  int a, b, c, d, e;
+  int a, b, c, d, e, f, g;
   //printf("hello\n");
   klee_make_symbolic(&a, sizeof(a), "a");
   klee_make_symbolic(&b, sizeof(a), "b");
   klee_make_symbolic(&c, sizeof(a), "c");
-  //klee_make_symbolic(&d, sizeof(a), "d");
-  //klee_make_symbolic(&e, sizeof(a), "e");
+  klee_make_symbolic(&d, sizeof(a), "d");
+  klee_make_symbolic(&e, sizeof(a), "e");
+  klee_make_symbolic(&f, sizeof(a), "f");
+  klee_make_symbolic(&g, sizeof(a), "g");
+
   int ret1 = get_sign(a);
   int ret2 = add(b,c);
-  klee_make_symbolic(&ret1, sizeof(ret1), "d");
-  klee_make_symbolic(&ret2, sizeof(ret2), "e");
-  int ret3 = compare(ret1, ret2);
+  int ret3 = compare(d, e);
+  int ret4 = func(f, g);
   return 0;
 }

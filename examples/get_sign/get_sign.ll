@@ -8,6 +8,8 @@ target triple = "x86_64-unknown-linux-gnu"
 @.str.2 = private unnamed_addr constant [2 x i8] c"c\00", align 1
 @.str.3 = private unnamed_addr constant [2 x i8] c"d\00", align 1
 @.str.4 = private unnamed_addr constant [2 x i8] c"e\00", align 1
+@.str.5 = private unnamed_addr constant [2 x i8] c"f\00", align 1
+@.str.6 = private unnamed_addr constant [2 x i8] c"g\00", align 1
 
 ; Function Attrs: noinline nounwind optnone uwtable
 define dso_local i32 @get_sign(i32) #0 {
@@ -118,6 +120,31 @@ define dso_local i32 @compare(i32, i32) #0 {
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable
+define dso_local i32 @func(i32, i32) #0 {
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  %5 = alloca i32, align 4
+  store i32 %0, i32* %4, align 4
+  store i32 %1, i32* %5, align 4
+  %6 = load i32, i32* %4, align 4
+  %7 = load i32, i32* %5, align 4
+  %8 = icmp sgt i32 %6, %7
+  br i1 %8, label %9, label %10
+
+9:                                                ; preds = %2
+  store i32 1, i32* %3, align 4
+  br label %11
+
+10:                                               ; preds = %2
+  store i32 2, i32* %3, align 4
+  br label %11
+
+11:                                               ; preds = %10, %9
+  %12 = load i32, i32* %3, align 4
+  ret i32 %12
+}
+
+; Function Attrs: noinline nounwind optnone uwtable
 define dso_local i32 @main() #0 {
   %1 = alloca i32, align 4
   %2 = alloca i32, align 4
@@ -128,28 +155,39 @@ define dso_local i32 @main() #0 {
   %7 = alloca i32, align 4
   %8 = alloca i32, align 4
   %9 = alloca i32, align 4
+  %10 = alloca i32, align 4
+  %11 = alloca i32, align 4
+  %12 = alloca i32, align 4
   store i32 0, i32* %1, align 4
-  %10 = bitcast i32* %2 to i8*
-  call void @klee_make_symbolic(i8* %10, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i64 0, i64 0))
-  %11 = bitcast i32* %3 to i8*
-  call void @klee_make_symbolic(i8* %11, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.1, i64 0, i64 0))
-  %12 = bitcast i32* %4 to i8*
-  call void @klee_make_symbolic(i8* %12, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.2, i64 0, i64 0))
-  %13 = load i32, i32* %2, align 4
-  %14 = call i32 @get_sign(i32 %13)
-  store i32 %14, i32* %7, align 4
-  %15 = load i32, i32* %3, align 4
-  %16 = load i32, i32* %4, align 4
-  %17 = call i32 @add(i32 %15, i32 %16)
-  store i32 %17, i32* %8, align 4
+  %13 = bitcast i32* %2 to i8*
+  call void @klee_make_symbolic(i8* %13, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i64 0, i64 0))
+  %14 = bitcast i32* %3 to i8*
+  call void @klee_make_symbolic(i8* %14, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.1, i64 0, i64 0))
+  %15 = bitcast i32* %4 to i8*
+  call void @klee_make_symbolic(i8* %15, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.2, i64 0, i64 0))
+  %16 = bitcast i32* %5 to i8*
+  call void @klee_make_symbolic(i8* %16, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.3, i64 0, i64 0))
+  %17 = bitcast i32* %6 to i8*
+  call void @klee_make_symbolic(i8* %17, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.4, i64 0, i64 0))
   %18 = bitcast i32* %7 to i8*
-  call void @klee_make_symbolic(i8* %18, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.3, i64 0, i64 0))
+  call void @klee_make_symbolic(i8* %18, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.5, i64 0, i64 0))
   %19 = bitcast i32* %8 to i8*
-  call void @klee_make_symbolic(i8* %19, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.4, i64 0, i64 0))
-  %20 = load i32, i32* %7, align 4
-  %21 = load i32, i32* %8, align 4
-  %22 = call i32 @compare(i32 %20, i32 %21)
-  store i32 %22, i32* %9, align 4
+  call void @klee_make_symbolic(i8* %19, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.6, i64 0, i64 0))
+  %20 = load i32, i32* %2, align 4
+  %21 = call i32 @get_sign(i32 %20)
+  store i32 %21, i32* %9, align 4
+  %22 = load i32, i32* %3, align 4
+  %23 = load i32, i32* %4, align 4
+  %24 = call i32 @add(i32 %22, i32 %23)
+  store i32 %24, i32* %10, align 4
+  %25 = load i32, i32* %5, align 4
+  %26 = load i32, i32* %6, align 4
+  %27 = call i32 @compare(i32 %25, i32 %26)
+  store i32 %27, i32* %11, align 4
+  %28 = load i32, i32* %7, align 4
+  %29 = load i32, i32* %8, align 4
+  %30 = call i32 @func(i32 %28, i32 %29)
+  store i32 %30, i32* %12, align 4
   ret i32 0
 }
 
