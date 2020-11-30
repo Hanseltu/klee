@@ -138,6 +138,7 @@ void ExecutionState::popFrame() {
   for (std::vector<const MemoryObject*>::iterator it = sf.allocas.begin(),
          ie = sf.allocas.end(); it != ie; ++it)
     addressSpace.unbindObject(*it);
+  //delet the last element
   stack.pop_back();
 }
 

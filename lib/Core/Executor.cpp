@@ -1365,17 +1365,21 @@ void Executor::executeCall(ExecutionState &state,
                            Function *f,
                            std::vector< ref<Expr> > &arguments) {
   //new added test function
-  printf("No.%d executionCall in Executor::executeCall\n\n", num_ec);
+  printf("No.%d executionCall in Executor::executeCall\n", num_ec);
   num_ec += 1;
   Instruction *i = ki->inst;
+  // check Instrinsic, =0 if not dbg_declare, dbg_value, dbg_addr, dgb_label
   if (i && isa<DbgInfoIntrinsic>(i))
     return;
   if (f && f->isDeclaration()) {
+    //getIntrinsicID returns the ID number of the specified function, or Instrinsic:not_intrinsic if the function is not an intrinsic, or if the pointer is null
     switch(f->getIntrinsicID()) {
     case Intrinsic::not_intrinsic:
       // state may be destroyed by this call, cannot touch
       callExternalFunction(state, ki, f, arguments);
+      printf("callExternalFunction executed in function executeCall!\n");
       break;
+    // llvm.fabs return the absolute value of the operand
     case Intrinsic::fabs: {
       ref<ConstantExpr> arg =
           toConstant(state, eval(ki, 0, state).value, "floating point");
@@ -1392,6 +1396,7 @@ void Executor::executeCall(ExecutionState &state,
     }
     // va_arg is handled by caller and intrinsic lowering, see comment for
     // ExecutionState::varargs
+    // llvm.va_start initializes *<arglist> for subsequent use by va_arg
     case Intrinsic::vastart:  {
       StackFrame &sf = state.stack.back();
 
@@ -1402,10 +1407,11 @@ void Executor::executeCall(ExecutionState &state,
       // FIXME: This is really specific to the architecture, not the pointer
       // size. This happens to work for x86-32 and x86-64, however.
       Expr::Width WordSize = Context::get().getPointerWidth();
+      //deal with X86-32
       if (WordSize == Expr::Int32) {
         executeMemoryOperation(state, true, arguments[0],
                                sf.varargs->getBaseExpr(), 0);
-      } else {
+      } else { //deal with X86-64
         assert(WordSize == Expr::Int64 && "Unknown word size!");
 
         // x86-64 has quite complicated calling convention. However,
@@ -1428,6 +1434,7 @@ void Executor::executeCall(ExecutionState &state,
       }
       break;
     }
+    // llvm.va_end destroys *<arglist>, which has been initialized previously with llvm.va_start pr llvm_va_copy
     case Intrinsic::vaend:
       // va_end is a noop for the interpreter.
       //
@@ -1459,6 +1466,7 @@ void Executor::executeCall(ExecutionState &state,
     // guess. This just done to avoid having to pass KInstIterator everywhere
     // instead of the actual instruction, since we can't make a KInstIterator
     // from just an instruction (unlike LLVM).
+    printf("Here calling the target function!\n");
     KFunction *kf = kmodule->functionMap[f];
 
     state.pushFrame(state.prevPC, kf); //save current inst (old EBP), as well as caller's inst (arguments, local variables)
@@ -1472,7 +1480,11 @@ void Executor::executeCall(ExecutionState &state,
      // TODO: support zeroext, signext, sret attributes
 
     unsigned callingArgs = arguments.size();
+    printf("callingArgs = %d\n", callingArgs);
     unsigned funcArgs = f->arg_size();
+    printf("funcArgs = %d\n", funcArgs);
+    //bool llvm::Function::isVarArg Return true if this function takes a variable number of arguments
+    // here if this function takes no arguments
     if (!f->isVarArg()) {
       if (callingArgs > funcArgs) {
         klee_warning_once(f, "calling %s with extra arguments.",
@@ -1482,7 +1494,7 @@ void Executor::executeCall(ExecutionState &state,
                               User);
         return;
       }
-    } else {
+    } else { // start from here if this function takes arguments
       Expr::Width WordSize = Context::get().getPointerWidth();
 
       if (callingArgs < funcArgs) {
@@ -1495,6 +1507,8 @@ void Executor::executeCall(ExecutionState &state,
       unsigned size = 0;
       bool requires16ByteAlignment = false;
       for (unsigned i = funcArgs; i < callingArgs; i++) {
+        //which condition will make this path execute?
+        printf("I don't think this path will be executed?\n");
         // FIXME: This is really specific to the architecture, not the pointer
         // size. This happens to work for x86-32 and x86-64, however.
         if (WordSize == Expr::Int32) {
@@ -1572,6 +1586,7 @@ void Executor::executeCall(ExecutionState &state,
     for (unsigned i=0; i<numFormals; ++i)
       bindArgument(kf, i, state, arguments[i]);
   }
+  printf("\n");
 }
 
 void Executor::transferToBasicBlock(BasicBlock *dst, BasicBlock *src,

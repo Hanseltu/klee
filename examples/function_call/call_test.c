@@ -11,7 +11,9 @@ int func1(int a){
 
 // 2 pathes function
 int func2(int a, int b){
-    if (a > b)
+    int var_a = func1(a);
+    int var_b = func1(b);
+    if (var_a > var_b)
         return 1;
     return 2;
 }
@@ -49,7 +51,7 @@ int main() {
   //klee_make_symbolic(&f, sizeof(a), "f");
   //klee_make_symbolic(&g, sizeof(a), "g");
 
-  int ret1 = func1(a, b);
+  int ret1 = func1(a);
   int ret2 = func2(b, c);
   //int ret3 = func3(d);
   //int ret4 = func4(f, g);
