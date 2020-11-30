@@ -1461,9 +1461,10 @@ void Executor::executeCall(ExecutionState &state,
     // from just an instruction (unlike LLVM).
     KFunction *kf = kmodule->functionMap[f];
 
-    state.pushFrame(state.prevPC, kf);
-    state.pc = kf->instructions;
+    state.pushFrame(state.prevPC, kf); //save current inst (old EBP), as well as caller's inst (arguments, local variables)
+    state.pc = kf->instructions; // restore EBP and ESP, let PC pointering to the caller inst
 
+    //Now enter caller exection phase
     if (statsTracker)
       statsTracker->framePushed(state, &state.stack[state.stack.size()-2]);
 
@@ -1490,7 +1491,7 @@ void Executor::executeCall(ExecutionState &state,
         return;
       }
 
-      StackFrame &sf = state.stack.back();
+      StackFrame &sf = state.stack.back(); // save the last stack frame in vector<StackFrame>, return value might be restored
       unsigned size = 0;
       bool requires16ByteAlignment = false;
       for (unsigned i = funcArgs; i < callingArgs; i++) {
