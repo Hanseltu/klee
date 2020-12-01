@@ -11,6 +11,7 @@ int func1(int a){
 
 // 2 pathes function
 int func2(int a, int b){
+    int local_a, local_b = 0;
     int var_a = func1(a);
     int var_b = func1(b);
     if (var_a > var_b)

@@ -1468,7 +1468,11 @@ void Executor::executeCall(ExecutionState &state,
     // from just an instruction (unlike LLVM).
     printf("Here calling the target function!\n");
     KFunction *kf = kmodule->functionMap[f];
-
+    printf("Information in KFunction *kf :\n");
+    printf("    numArgs: %d\n", kf->numArgs);
+    printf("    numRegisters: %d\n", kf->numRegisters);
+    printf("    numInstructions: %d\n", kf->numInstructions);
+    printf("    trackCoverage: %d\n", kf->trackCoverage);
     state.pushFrame(state.prevPC, kf); //save current inst (old EBP), as well as caller's inst (arguments, local variables)
     state.pc = kf->instructions; // restore EBP and ESP, let PC pointering to the caller inst
 
