@@ -1467,7 +1467,7 @@ void Executor::executeCall(ExecutionState &state,
     // instead of the actual instruction, since we can't make a KInstIterator
     // from just an instruction (unlike LLVM).
     printf("Here calling the target function!\n");
-    KFunction *kf = kmodule->functionMap[f];
+    KFunction *kf = kmodule->functionMap[f]; //KModule holds a map<llvm::Function*, KFunction*>
     printf("Information in KFunction *kf :\n");
     printf("    numArgs: %d\n", kf->numArgs);
     printf("    numRegisters: %d\n", kf->numRegisters);
@@ -1487,9 +1487,11 @@ void Executor::executeCall(ExecutionState &state,
     printf("callingArgs = %d\n", callingArgs);
     unsigned funcArgs = f->arg_size();
     printf("funcArgs = %d\n", funcArgs);
-    //bool llvm::Function::isVarArg Return true if this function takes a variable number of arguments
+    //bool llvm::Function::isVarArg Return true if this function takes a variable number of arguments (Note that here variable!)
     // here if this function takes no arguments
+    printf("f->isVarArg(): %d\n", f->isVarArg());
     if (!f->isVarArg()) {
+      printf("1\n");
       if (callingArgs > funcArgs) {
         klee_warning_once(f, "calling %s with extra arguments.",
                           f->getName().data());
@@ -1498,7 +1500,8 @@ void Executor::executeCall(ExecutionState &state,
                               User);
         return;
       }
-    } else { // start from here if this function takes arguments
+    } else { // start from here if this function takes variable arguments, not easy to reach this path?
+      printf("2\n");
       Expr::Width WordSize = Context::get().getPointerWidth();
 
       if (callingArgs < funcArgs) {
@@ -1508,6 +1511,8 @@ void Executor::executeCall(ExecutionState &state,
       }
 
       StackFrame &sf = state.stack.back(); // save the last stack frame in vector<StackFrame>, return value might be restored
+      printf("The content in the top of the StackFrame:\n");
+      printf("      sf->KFunction->Function: %s\n", sf.kf->function->getName().str().c_str());
       unsigned size = 0;
       bool requires16ByteAlignment = false;
       for (unsigned i = funcArgs; i < callingArgs; i++) {
@@ -1584,13 +1589,15 @@ void Executor::executeCall(ExecutionState &state,
           }
         }
       }
+      printf("3 not execute here as well\n");
     }
 
     unsigned numFormals = f->arg_size();
+    printf("numFormals: %d\n", numFormals);
     for (unsigned i=0; i<numFormals; ++i)
       bindArgument(kf, i, state, arguments[i]);
   }
-  printf("\n");
+  //printf("\n");
 }
 
 void Executor::transferToBasicBlock(BasicBlock *dst, BasicBlock *src,
@@ -1669,6 +1676,8 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   switch (i->getOpcode()) {
     // Control flow
   case Instruction::Ret: {
+    printf("The content in Instruction::Ret: \n");
+    printf(" what's this?\n");
     ReturnInst *ri = cast<ReturnInst>(i);
     KInstIterator kcaller = state.stack.back().caller;
     Instruction *caller = kcaller ? kcaller->inst : 0;
@@ -1676,13 +1685,16 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     ref<Expr> result = ConstantExpr::alloc(0, Expr::Bool);
 
     if (!isVoidReturn) {
+      printf("This is not a void return.\n");
       result = eval(ki, 0, state).value;
+      printf("result value is : %d\n", result);
     }
 
-    if (state.stack.size() <= 1) {
+    if (state.stack.size() <= 1) { //last StackFrame
       assert(!caller && "caller set on initial stack frame");
       terminateStateOnExit(state);
     } else {
+      //as the return value has already saved in results, here delete the current StackFrame
       state.popFrame();
 
       if (statsTracker)
@@ -1691,7 +1703,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       if (InvokeInst *ii = dyn_cast<InvokeInst>(caller)) {
         transferToBasicBlock(ii->getNormalDest(), caller->getParent(), state);
       } else {
-        state.pc = kcaller;
+        state.pc = kcaller; //back to the caller StackFrame
         ++state.pc;
       }
 
@@ -1718,7 +1730,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
               result = ZExtExpr::create(result, to);
             }
           }
-
+          // return value is saved and bind in caller's state
           bindLocal(kcaller, state, result);
         }
       } else {
@@ -1730,6 +1742,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         }
       }
     }
+    printf("\n");
     break;
   }
   case Instruction::Br: {
@@ -2029,7 +2042,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       }
       printf(" No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
       executeCall(state, ki, f, arguments);
-    } else {
+    } else { // call a not normal function?
       ref<Expr> v = eval(ki, 0, state).value;
 
       ExecutionState *free = &state;
@@ -3802,6 +3815,7 @@ void Executor::runFunctionAsMain(Function *f, //the initial execution function
   //save f to KFunction structure, to help KLEE deal with function more convenient
   // KFunction is defined in /klee/include/klee/Internal/Module/KModule.h
   KFunction *kf = kmodule->functionMap[f];
+  printf("runFunctionAsMain *kf name : %s\n", kf->function->getName().str().c_str());
   assert(kf);
   // allocate memory for arguments and save them to the vector "argument"
   // Noted that the number of arguments should be no more than 3, why? whose arguments? KLEE main or test function main?

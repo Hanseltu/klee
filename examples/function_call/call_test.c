@@ -13,7 +13,8 @@ int func1(int a){
 int func2(int a, int b){
     int local_a, local_b = 0;
     int var_a = func1(a);
-    int var_b = func1(b);
+    int var_b = func3(b);
+    int temp = func4(a,b);
     if (var_a > var_b)
         return 1;
     return 2;
