@@ -1,7 +1,3 @@
-/*
- * First KLEE tutorial: testing a small function
- */
-#include <stdio.h>
 #include "klee/klee.h"
 
 int func1(int a1){
