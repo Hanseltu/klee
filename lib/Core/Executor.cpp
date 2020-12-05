@@ -1475,7 +1475,10 @@ void Executor::executeCall(ExecutionState &state,
     printf("    trackCoverage: %d\n", kf->trackCoverage);
     state.pushFrame(state.prevPC, kf); //save current inst (old EBP), as well as caller's inst (arguments, local variables)
     state.pc = kf->instructions; // restore EBP and ESP, let PC pointering to the caller inst
-
+    printf("dumpStack output:\n");
+    std::string MsgString;
+    llvm::raw_string_ostream out(MsgString);
+    state.dumpStack(out);
     //Now enter caller exection phase
     if (statsTracker)
       statsTracker->framePushed(state, &state.stack[state.stack.size()-2]);
