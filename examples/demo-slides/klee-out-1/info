@@ -1,0 +1,4 @@
+/usr/local/bin/klee test.bc
+PID: 868193
+Using monotonic steady clock with 1/1000000000s resolution
+Started: 2020-12-07 21:22:26

@@ -1783,7 +1783,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
 
     // concrete address
     if (const auto CE = dyn_cast<ConstantExpr>(address.get())) {
-      const auto bb_address = (BasicBlock *) CE->getZExtValue(Context::get().getPointerWidth());
+      const auto bb_address = (BasicBlock *)CE->getZExtValue(Context::get().getPointerWidth());
       transferToBasicBlock(bb_address, bi->getParent(), state);
       break;
     }
@@ -1988,15 +1988,15 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     Value *fp = cs.getCalledValue();
     printf("in case Instruction::Call *fp data :\n");
     printf("    hasName() = %d\n", fp->hasName());
-    printf("    getName() = %s\n", fp->getName().str().c_str());
+    //printf("    getName() = %s\n", fp->getName().str().c_str());
     Function *f = getTargetFunction(fp, state);
-    printf("in case Instruction::Call *f function name = %s\n", f->getName().str().c_str());
+    //printf("in case Instruction::Call *f function name = %s\n", f->getName().str().c_str());
 
     if (isa<InlineAsm>(fp)) {
       terminateStateOnExecError(state, "inline assembly is unsupported");
       break;
     }
-    // evaluate arguments
+    // evaluate argumentscd dut-research/gitee/lpm-csmith/test-main/lpm-csmith-test/test-
     std::vector< ref<Expr> > arguments;
     arguments.reserve(numArgs);
 
@@ -2307,7 +2307,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   }
 
     // Memory instructions...
-  case Instruction::Alloca: {
+  case Instruction::Alloca: {//allocate memory for current function, a.k.a, local variable
     AllocaInst *ai = cast<AllocaInst>(i);
     unsigned elementSize =
       kmodule->targetData->getTypeStoreSize(ai->getAllocatedType());
@@ -2321,12 +2321,12 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     break;
   }
 
-  case Instruction::Load: {
+  case Instruction::Load: { //read operation
     ref<Expr> base = eval(ki, 0, state).value;
     executeMemoryOperation(state, false, base, 0, ki);
     break;
   }
-  case Instruction::Store: {
+  case Instruction::Store: { //load operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
     executeMemoryOperation(state, true, base, value, 0);

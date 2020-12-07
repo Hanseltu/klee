@@ -23,7 +23,7 @@ int func3(int a3) {
 
 
 int main() {
-  int a;
+  int a = 100;
   klee_make_symbolic(&a, sizeof(a), "a");
   int ret = func3(a);
   return ret;
