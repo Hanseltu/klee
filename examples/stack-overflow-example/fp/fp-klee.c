@@ -10,7 +10,7 @@ void bof(char *bof) {
 
 int main(int argc, char* argv[]) {
     int i = 0;
-    char buf[20] = "I love DUT!";
+    char buf[20] = "I love SMU!";
     klee_make_symbolic(&buf, sizeof(buf), "buf");
     for (i = 0; i < sizeof(buf); i ++)
         klee_assume(buf[i] != '\x00');
