@@ -1,22 +1,22 @@
 klee call_test.bc
-PID: 1938983
+PID: 1474170
 Using monotonic steady clock with 1/1000000000s resolution
-Started: 2020-12-01 22:20:06
+Started: 2020-12-15 10:52:47
 BEGIN searcher description
 <InterleavedSearcher> containing 2 searchers:
 RandomPathSearcher
 WeightedRandomSearcher::CoveringNew
 </InterleavedSearcher>
 END searcher description
-Finished: 2020-12-01 22:20:06
+Finished: 2020-12-15 10:52:47
 Elapsed: 00:00:00
-KLEE: done: explored paths = 10
-KLEE: done: avg. constructs per query = 30
-KLEE: done: total queries = 13
-KLEE: done: valid queries = 7
-KLEE: done: invalid queries = 6
-KLEE: done: query cex = 13
+KLEE: done: explored paths = 2
+KLEE: done: avg. constructs per query = 8
+KLEE: done: total queries = 2
+KLEE: done: valid queries = 0
+KLEE: done: invalid queries = 2
+KLEE: done: query cex = 2
 
-KLEE: done: total instructions = 263
-KLEE: done: completed paths = 10
-KLEE: done: generated tests = 10
+KLEE: done: total instructions = 40
+KLEE: done: completed paths = 2
+KLEE: done: generated tests = 2

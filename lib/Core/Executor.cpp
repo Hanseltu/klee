@@ -1475,6 +1475,10 @@ void Executor::executeCall(ExecutionState &state,
     printf("    trackCoverage: %d\n", kf->trackCoverage);
     state.pushFrame(state.prevPC, kf); //save current inst (old EBP), as well as caller's inst (arguments, local variables)
     state.pc = kf->instructions; // restore EBP and ESP, let PC pointering to the caller inst
+
+    // Here analyze the contents in StackFrame
+    //StackFrame &temp_stack_last = state.stack.back();
+
     printf("dumpStack output:\n");
     std::string MsgString;
     llvm::raw_string_ostream out(MsgString);
@@ -1514,8 +1518,8 @@ void Executor::executeCall(ExecutionState &state,
       }
 
       StackFrame &sf = state.stack.back(); // save the last stack frame in vector<StackFrame>, return value might be restored
-      printf("The content in the top of the StackFrame:\n");
-      printf("      sf->KFunction->Function: %s\n", sf.kf->function->getName().str().c_str());
+      //printf("The content in the top of the StackFrame:\n");
+      //printf("      sf->KFunction->Function: %s\n", sf.kf->function->getName().str().c_str());
       unsigned size = 0;
       bool requires16ByteAlignment = false;
       for (unsigned i = funcArgs; i < callingArgs; i++) {
@@ -1680,7 +1684,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     // Control flow
   case Instruction::Ret: {
     printf("The content in Instruction::Ret: \n");
-    printf(" what's this?\n");
+    //printf(" what's this?\n");
     ReturnInst *ri = cast<ReturnInst>(i);
     KInstIterator kcaller = state.stack.back().caller;
     Instruction *caller = kcaller ? kcaller->inst : 0;
@@ -1688,9 +1692,9 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     ref<Expr> result = ConstantExpr::alloc(0, Expr::Bool);
 
     if (!isVoidReturn) {
-      printf("This is not a void return.\n");
+      //printf("This is not a void return.\n");
       result = eval(ki, 0, state).value;
-      printf("result value is : %d\n", result);
+      //printf("result value is : %d\n", result);
     }
 
     if (state.stack.size() <= 1) { //last StackFrame
@@ -1698,6 +1702,23 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       terminateStateOnExit(state);
     } else {
       //as the return value has already saved in results, here delete the current StackFrame
+    // Here analyze the contents in StackFrame
+      StackFrame &temp_stack_last = state.stack.back();
+      printf("The following contents are callee's StackFrame before pop it:\n"); // useful information of callee are all in stack already
+      printf("  caller is \n");
+      printf("  kf : %s\n", temp_stack_last.kf->function->getName().str().c_str());
+      printf("  allocas : \n");
+      printf("      size = %d\n", (int)temp_stack_last.allocas.size());
+      for (int i = 0; i <  temp_stack_last.allocas.size(); i++){
+            printf("    MO_%d in allocas\n", i);
+            printf("        id = %d\n", temp_stack_last.allocas[i]->id);
+            printf("        address = %d\n", temp_stack_last.allocas[i]->address);
+            printf("        size = %d\n", temp_stack_last.allocas[i]->size);
+            printf("        name = %s\n", temp_stack_last.allocas[i]->name.c_str());
+            printf("        isLocal = %d\n", temp_stack_last.allocas[i]->isLocal);
+      }
+      printf("  locals : \n");
+      //printf("      size = %s", temp_stack_last.locals[0].value->dump());
       state.popFrame();
 
       if (statsTracker)
@@ -1988,7 +2009,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     Value *fp = cs.getCalledValue();
     printf("in case Instruction::Call *fp data :\n");
     printf("    hasName() = %d\n", fp->hasName());
-    //printf("    getName() = %s\n", fp->getName().str().c_str());
+    printf("    getName() = %s\n", fp->getName().str().c_str());
     Function *f = getTargetFunction(fp, state);
     //printf("in case Instruction::Call *f function name = %s\n", f->getName().str().c_str());
 

@@ -4,15 +4,41 @@ target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
 @.str = private unnamed_addr constant [2 x i8] c"a\00", align 1
-@.str.1 = private unnamed_addr constant [2 x i8] c"b\00", align 1
-@.str.2 = private unnamed_addr constant [2 x i8] c"c\00", align 1
 
 ; Function Attrs: noinline nounwind optnone uwtable
 define dso_local i32 @func1(i32) #0 {
   %2 = alloca i32, align 4
-  store i32 %0, i32* %2, align 4
-  %3 = load i32, i32* %2, align 4
-  ret i32 %3
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  %5 = alloca i32, align 4
+  %6 = alloca i32, align 4
+  store i32 %0, i32* %3, align 4
+  store i32 0, i32* %4, align 4
+  store i32 0, i32* %5, align 4
+  store i32 0, i32* %6, align 4
+  %7 = load i32, i32* %3, align 4
+  %8 = icmp sgt i32 %7, 0
+  br i1 %8, label %9, label %17
+
+9:                                                ; preds = %1
+  %10 = load i32, i32* %3, align 4
+  %11 = load i32, i32* %4, align 4
+  %12 = add nsw i32 %10, %11
+  %13 = load i32, i32* %5, align 4
+  %14 = add nsw i32 %12, %13
+  %15 = load i32, i32* %6, align 4
+  %16 = add nsw i32 %14, %15
+  store i32 %16, i32* %2, align 4
+  br label %19
+
+17:                                               ; preds = %1
+  %18 = load i32, i32* %3, align 4
+  store i32 %18, i32* %2, align 4
+  br label %19
+
+19:                                               ; preds = %17, %9
+  %20 = load i32, i32* %2, align 4
+  ret i32 %20
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable
@@ -134,27 +160,12 @@ define dso_local i32 @main() #0 {
   %1 = alloca i32, align 4
   %2 = alloca i32, align 4
   %3 = alloca i32, align 4
-  %4 = alloca i32, align 4
-  %5 = alloca i32, align 4
-  %6 = alloca i32, align 4
-  %7 = alloca i32, align 4
-  %8 = alloca i32, align 4
-  %9 = alloca i32, align 4
-  %10 = alloca i32, align 4
   store i32 0, i32* %1, align 4
-  %11 = bitcast i32* %2 to i8*
-  call void @klee_make_symbolic(i8* %11, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i64 0, i64 0))
-  %12 = bitcast i32* %3 to i8*
-  call void @klee_make_symbolic(i8* %12, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.1, i64 0, i64 0))
-  %13 = bitcast i32* %4 to i8*
-  call void @klee_make_symbolic(i8* %13, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.2, i64 0, i64 0))
-  %14 = load i32, i32* %2, align 4
-  %15 = call i32 @func1(i32 %14)
-  store i32 %15, i32* %9, align 4
-  %16 = load i32, i32* %3, align 4
-  %17 = load i32, i32* %4, align 4
-  %18 = call i32 @func2(i32 %16, i32 %17)
-  store i32 %18, i32* %10, align 4
+  %4 = bitcast i32* %2 to i8*
+  call void @klee_make_symbolic(i8* %4, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i64 0, i64 0))
+  %5 = load i32, i32* %2, align 4
+  %6 = call i32 @func1(i32 %5)
+  store i32 %6, i32* %3, align 4
   ret i32 0
 }
 
