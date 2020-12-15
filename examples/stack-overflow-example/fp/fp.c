@@ -8,7 +8,7 @@ void bof(char *bof) {
 }
 
 int main(int argc, char* argv[]) {
-    char buf[20] = "I love DUT!";
+    char buf[20] = "I love SMU!";
     bof(buf);
     return 0;
 }
