@@ -1718,7 +1718,12 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
             printf("        isLocal = %d\n", temp_stack_last.allocas[i]->isLocal);
       }
       printf("  locals : \n");
+      printf("  allocSite : \n");
       //printf("      size = %s", temp_stack_last.locals[0].value->dump());
+      //printf("Here print the contents in getAddressInfo\n");
+      //ref<Expr> address = &state.stack[1].allocas[4]->address;
+      //std::string str_getAddressInfo = getAddressInfo(state, address);
+      //printf("  %s", str_getAddressInfo.c_str());
       state.popFrame();
 
       if (statsTracker)
@@ -2344,6 +2349,9 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
 
   case Instruction::Load: { //read operation
     ref<Expr> base = eval(ki, 0, state).value;
+    printf("print addressInfo in load instruction:\n");
+    std::string str_addressInfo = getAddressInfo(state, base);
+    printf("    %s\n", str_addressInfo.c_str());
     executeMemoryOperation(state, false, base, 0, ki);
     break;
   }
@@ -3068,6 +3076,7 @@ std::string Executor::getAddressInfo(ExecutionState &state,
   uint64_t example;
   if (ConstantExpr *CE = dyn_cast<ConstantExpr>(address)) {
     example = CE->getZExtValue();
+    printf("example's value : %d\n", example);
   } else {
     ref<ConstantExpr> value;
     bool success = solver->getValue(state, address, value);

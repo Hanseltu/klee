@@ -11,14 +11,14 @@ define dso_local i32 @func1(i32) #0 {
   %3 = alloca i32, align 4
   %4 = alloca i32, align 4
   %5 = alloca i32, align 4
-  %6 = alloca i32, align 4
+  %6 = alloca i64, align 8
   store i32 %0, i32* %3, align 4
-  store i32 0, i32* %4, align 4
-  store i32 0, i32* %5, align 4
-  store i32 0, i32* %6, align 4
+  store i32 1111, i32* %4, align 4
+  store i32 2222, i32* %5, align 4
+  store i64 3333, i64* %6, align 8
   %7 = load i32, i32* %3, align 4
   %8 = icmp sgt i32 %7, 0
-  br i1 %8, label %9, label %17
+  br i1 %8, label %9, label %19
 
 9:                                                ; preds = %1
   %10 = load i32, i32* %3, align 4
@@ -26,19 +26,21 @@ define dso_local i32 @func1(i32) #0 {
   %12 = add nsw i32 %10, %11
   %13 = load i32, i32* %5, align 4
   %14 = add nsw i32 %12, %13
-  %15 = load i32, i32* %6, align 4
-  %16 = add nsw i32 %14, %15
-  store i32 %16, i32* %2, align 4
-  br label %19
-
-17:                                               ; preds = %1
-  %18 = load i32, i32* %3, align 4
+  %15 = sext i32 %14 to i64
+  %16 = load i64, i64* %6, align 8
+  %17 = add nsw i64 %15, %16
+  %18 = trunc i64 %17 to i32
   store i32 %18, i32* %2, align 4
-  br label %19
+  br label %21
 
-19:                                               ; preds = %17, %9
-  %20 = load i32, i32* %2, align 4
-  ret i32 %20
+19:                                               ; preds = %1
+  %20 = load i32, i32* %3, align 4
+  store i32 %20, i32* %2, align 4
+  br label %21
+
+21:                                               ; preds = %19, %9
+  %22 = load i32, i32* %2, align 4
+  ret i32 %22
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable

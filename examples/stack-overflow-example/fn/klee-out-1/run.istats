@@ -1,0 +1,30 @@
+version: 1
+creator: klee
+pid: 1575706
+cmd: fn.bc
+
+
+positions: instr line
+event: Icov : CoveredInstructions
+event: Forks : Forks
+event: Ireal : InstructionRealTimes
+event: Itime : InstructionTimes
+event: I : Instructions
+event: UCdist : MinDistToUncovered
+event: Rtime : ResolveTime
+event: States : States
+event: Iuncov : UncoveredInstructions
+event: Q : Queries
+event: Qiv : QueriesInvalid
+event: Qv : QueriesValid
+event: Qtime : QueryTime
+events: Icov Forks Ireal Itime I UCdist Rtime States Iuncov Q Qiv Qv Qtime 
+ob=assembly.ll
+fn=main
+8 0 1 0 0 0 1 0 0 0 0 0 0 0 0 
+9 0 1 0 0 0 1 0 0 0 0 0 0 0 0 
+10 0 1 0 0 0 1 0 0 0 0 0 0 0 0 
+11 0 1 0 0 0 1 0 0 0 0 0 0 0 0 
+12 0 1 0 0 0 1 0 0 0 0 0 0 0 0 
+13 0 1 0 0 0 1 0 0 0 0 0 0 0 0 
+14 0 1 0 0 0 1 0 0 0 0 0 0 0 0 

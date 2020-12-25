@@ -6,7 +6,8 @@
 
 //1 path function
 int func1(int a){
-    int b =0, c=0, d=0;
+    int b =1111, c=2222;
+    long long d=3333;
     if (a > 0)
         return a + b + c + d;
     return a;
