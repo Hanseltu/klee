@@ -1165,6 +1165,7 @@ void Executor::addConstraint(ExecutionState &state, ref<Expr> condition) {
 const Cell& Executor::eval(KInstruction *ki, unsigned index,
                            ExecutionState &state) const {
   assert(index < ki->inst->getNumOperands());
+  printf("index = %d \t ki->inst->getNumOperands = %d \t vnumber = %d \n", index, ki->inst->getNumOperands(), ki->operands[index]);
   int vnumber = ki->operands[index];
 
   assert(vnumber != -1 &&
