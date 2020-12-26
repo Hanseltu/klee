@@ -1,0 +1,11 @@
+/home/haoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/POSIX/klee_init_env.bc: \
+  /home/haoxin/github/klee/runtime/POSIX/klee_init_env.c \
+  /home/haoxin/github/klee/include/klee/klee.h \
+  /home/haoxin/github/klee/runtime/POSIX/fd.h \
+  /home/haoxin/github/klee/build/include/klee/Config/config.h
+
+/home/haoxin/github/klee/include/klee/klee.h:
+
+/home/haoxin/github/klee/runtime/POSIX/fd.h:
+
+/home/haoxin/github/klee/build/include/klee/Config/config.h:

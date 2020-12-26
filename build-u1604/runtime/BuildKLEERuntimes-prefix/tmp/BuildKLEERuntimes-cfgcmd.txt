@@ -1,0 +1,1 @@
+cmd='/home/haoxin/corpus-compilers/package/cmake-3.17.4/bin/cmake;-E;echo;'

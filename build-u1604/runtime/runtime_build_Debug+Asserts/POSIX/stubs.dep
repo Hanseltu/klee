@@ -1,0 +1,5 @@
+/home/haoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/POSIX/stubs.bc: \
+  /home/haoxin/github/klee/runtime/POSIX/stubs.c \
+  /home/haoxin/github/klee/build/include/klee/Config/config.h
+
+/home/haoxin/github/klee/build/include/klee/Config/config.h:
