@@ -1,7 +1,6 @@
 file(REMOVE_RECURSE
   "../../bin/gen-random-bout"
   "../../bin/gen-random-bout.pdb"
-  "CMakeFiles/CMakeRelink.dir/gen-random-bout"
   "CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.o"
 )
 

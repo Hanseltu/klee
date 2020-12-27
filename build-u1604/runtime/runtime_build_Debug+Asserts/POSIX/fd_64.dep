@@ -1,13 +1,13 @@
-/home/haoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/POSIX/fd_64.bc: \
+/home/haoxin/github/klee/build-u1604/runtime/runtime_build_Debug+Asserts/POSIX/fd_64.bc: \
   /home/haoxin/github/klee/runtime/POSIX/fd_64.c \
   /home/haoxin/github/klee/runtime/POSIX/fd.h \
-  /home/haoxin/github/klee/build/include/klee/Config/config.h \
+  /home/haoxin/github/klee/build-u1604/include/klee/Config/config.h \
   /home/haoxin/github/klee/include/klee/Config/Version.h \
   /home/haoxin/github/klee/include/klee/klee.h
 
 /home/haoxin/github/klee/runtime/POSIX/fd.h:
 
-/home/haoxin/github/klee/build/include/klee/Config/config.h:
+/home/haoxin/github/klee/build-u1604/include/klee/Config/config.h:
 
 /home/haoxin/github/klee/include/klee/Config/Version.h:
 

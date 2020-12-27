@@ -39,13 +39,13 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/haoxin/github/klee/build/tools/gen-bout/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/tools/gen-random-bout/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/tools/kleaver/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/tools/klee/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/tools/klee-replay/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/tools/klee-stats/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/tools/ktest-tool/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/tools/gen-bout/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/tools/gen-random-bout/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/tools/kleaver/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/tools/klee/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/tools/klee-replay/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/tools/klee-stats/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/tools/ktest-tool/cmake_install.cmake")
 
 endif()
 

@@ -7,11 +7,11 @@ C_FLAGS =  -Wall -Wextra -Wno-unused-parameter -O0 -g -fPIC
 
 C_DEFINES = -DkleeRuntest_EXPORTS
 
-C_INCLUDES = -I/home/haoxin/github/klee/build/include -I/home/haoxin/github/klee/include 
+C_INCLUDES = -I/home/haoxin/github/klee/build-u1604/include -I/home/haoxin/github/klee/include 
 
 CXX_FLAGS =  -Wall -Wextra -Wno-unused-parameter -O0 -g -fPIC   -std=gnu++14
 
 CXX_DEFINES = -DkleeRuntest_EXPORTS
 
-CXX_INCLUDES = -I/home/haoxin/github/klee/build/include -I/home/haoxin/github/klee/include 
+CXX_INCLUDES = -I/home/haoxin/github/klee/build-u1604/include -I/home/haoxin/github/klee/include 
 

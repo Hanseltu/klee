@@ -8,8 +8,14 @@
 int func1(int a){
     int b =1111, c=2222;
     long long d=3333;
-    if (a > 0)
+    d = 4444;
+    d = 5555;
+    if (a > 0){
+        d = 6666;
+        int e = d;
+        int f;
         return a + b + c + d;
+    }
     return a;
 }
 

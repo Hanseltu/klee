@@ -71,7 +71,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -146,14 +146,14 @@ list_install_components/fast: list_install_components
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build/CMakeFiles /home/haoxin/github/klee/build/tools/gen-bout/CMakeFiles/progress.marks
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build/CMakeFiles 0
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build-u1604/CMakeFiles /home/haoxin/github/klee/build-u1604/tools/gen-bout/CMakeFiles/progress.marks
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build-u1604/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/clean
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/clean
 .PHONY : clean
 
 # The main clean target
@@ -163,22 +163,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/preinstall
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/preinstall
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 tools/gen-bout/CMakeFiles/gen-bout.dir/rule:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/CMakeFiles/gen-bout.dir/rule
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/CMakeFiles/gen-bout.dir/rule
 .PHONY : tools/gen-bout/CMakeFiles/gen-bout.dir/rule
 
 # Convenience name for target.
@@ -188,13 +188,8 @@ gen-bout: tools/gen-bout/CMakeFiles/gen-bout.dir/rule
 
 # fast build rule for target.
 gen-bout/fast:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/build
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/build
 .PHONY : gen-bout/fast
-
-# Manual pre-install relink rule for target.
-gen-bout/preinstall:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/gen-bout/CMakeFiles/gen-bout.dir/preinstall
-.PHONY : gen-bout/preinstall
 
 gen-bout.o: gen-bout.cpp.o
 
@@ -202,7 +197,7 @@ gen-bout.o: gen-bout.cpp.o
 
 # target to build an object file
 gen-bout.cpp.o:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/gen-bout.cpp.o
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/gen-bout.cpp.o
 .PHONY : gen-bout.cpp.o
 
 gen-bout.i: gen-bout.cpp.i
@@ -211,7 +206,7 @@ gen-bout.i: gen-bout.cpp.i
 
 # target to preprocess a source file
 gen-bout.cpp.i:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/gen-bout.cpp.i
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/gen-bout.cpp.i
 .PHONY : gen-bout.cpp.i
 
 gen-bout.s: gen-bout.cpp.s
@@ -220,7 +215,7 @@ gen-bout.s: gen-bout.cpp.s
 
 # target to generate assembly for a file
 gen-bout.cpp.s:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/gen-bout.cpp.s
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/gen-bout.cpp.s
 .PHONY : gen-bout.cpp.s
 
 # Help Target
@@ -250,6 +245,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

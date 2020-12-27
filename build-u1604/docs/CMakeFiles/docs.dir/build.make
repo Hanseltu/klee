@@ -66,7 +66,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 # Utility rule file for docs.
 
@@ -83,10 +83,10 @@ docs/CMakeFiles/docs.dir/build: docs
 .PHONY : docs/CMakeFiles/docs.dir/build
 
 docs/CMakeFiles/docs.dir/clean:
-	cd /home/haoxin/github/klee/build/docs && $(CMAKE_COMMAND) -P CMakeFiles/docs.dir/cmake_clean.cmake
+	cd /home/haoxin/github/klee/build-u1604/docs && $(CMAKE_COMMAND) -P CMakeFiles/docs.dir/cmake_clean.cmake
 .PHONY : docs/CMakeFiles/docs.dir/clean
 
 docs/CMakeFiles/docs.dir/depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/docs /home/haoxin/github/klee/build /home/haoxin/github/klee/build/docs /home/haoxin/github/klee/build/docs/CMakeFiles/docs.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/docs /home/haoxin/github/klee/build-u1604 /home/haoxin/github/klee/build-u1604/docs /home/haoxin/github/klee/build-u1604/docs/CMakeFiles/docs.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : docs/CMakeFiles/docs.dir/depend
 

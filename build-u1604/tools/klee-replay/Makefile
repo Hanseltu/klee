@@ -71,7 +71,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -146,14 +146,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build/CMakeFiles /home/haoxin/github/klee/build/tools/klee-replay/CMakeFiles/progress.marks
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build/CMakeFiles 0
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build-u1604/CMakeFiles /home/haoxin/github/klee/build-u1604/tools/klee-replay/CMakeFiles/progress.marks
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build-u1604/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/clean
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/clean
 .PHONY : clean
 
 # The main clean target
@@ -163,22 +163,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/preinstall
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/preinstall
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 tools/klee-replay/CMakeFiles/klee-replay.dir/rule:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/CMakeFiles/klee-replay.dir/rule
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/CMakeFiles/klee-replay.dir/rule
 .PHONY : tools/klee-replay/CMakeFiles/klee-replay.dir/rule
 
 # Convenience name for target.
@@ -188,13 +188,8 @@ klee-replay: tools/klee-replay/CMakeFiles/klee-replay.dir/rule
 
 # fast build rule for target.
 klee-replay/fast:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/build
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/build
 .PHONY : klee-replay/fast
-
-# Manual pre-install relink rule for target.
-klee-replay/preinstall:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tools/klee-replay/CMakeFiles/klee-replay.dir/preinstall
-.PHONY : klee-replay/preinstall
 
 fd_init.o: fd_init.c.o
 
@@ -202,7 +197,7 @@ fd_init.o: fd_init.c.o
 
 # target to build an object file
 fd_init.c.o:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.o
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.o
 .PHONY : fd_init.c.o
 
 fd_init.i: fd_init.c.i
@@ -211,7 +206,7 @@ fd_init.i: fd_init.c.i
 
 # target to preprocess a source file
 fd_init.c.i:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.i
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.i
 .PHONY : fd_init.c.i
 
 fd_init.s: fd_init.c.s
@@ -220,7 +215,7 @@ fd_init.s: fd_init.c.s
 
 # target to generate assembly for a file
 fd_init.c.s:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.s
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.s
 .PHONY : fd_init.c.s
 
 file-creator.o: file-creator.c.o
@@ -229,7 +224,7 @@ file-creator.o: file-creator.c.o
 
 # target to build an object file
 file-creator.c.o:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.o
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.o
 .PHONY : file-creator.c.o
 
 file-creator.i: file-creator.c.i
@@ -238,7 +233,7 @@ file-creator.i: file-creator.c.i
 
 # target to preprocess a source file
 file-creator.c.i:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.i
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.i
 .PHONY : file-creator.c.i
 
 file-creator.s: file-creator.c.s
@@ -247,7 +242,7 @@ file-creator.s: file-creator.c.s
 
 # target to generate assembly for a file
 file-creator.c.s:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.s
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.s
 .PHONY : file-creator.c.s
 
 klee-replay.o: klee-replay.c.o
@@ -256,7 +251,7 @@ klee-replay.o: klee-replay.c.o
 
 # target to build an object file
 klee-replay.c.o:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.o
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.o
 .PHONY : klee-replay.c.o
 
 klee-replay.i: klee-replay.c.i
@@ -265,7 +260,7 @@ klee-replay.i: klee-replay.c.i
 
 # target to preprocess a source file
 klee-replay.c.i:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.i
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.i
 .PHONY : klee-replay.c.i
 
 klee-replay.s: klee-replay.c.s
@@ -274,7 +269,7 @@ klee-replay.s: klee-replay.c.s
 
 # target to generate assembly for a file
 klee-replay.c.s:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.s
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.s
 .PHONY : klee-replay.c.s
 
 klee_init_env.o: klee_init_env.c.o
@@ -283,7 +278,7 @@ klee_init_env.o: klee_init_env.c.o
 
 # target to build an object file
 klee_init_env.c.o:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.o
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.o
 .PHONY : klee_init_env.c.o
 
 klee_init_env.i: klee_init_env.c.i
@@ -292,7 +287,7 @@ klee_init_env.i: klee_init_env.c.i
 
 # target to preprocess a source file
 klee_init_env.c.i:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.i
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.i
 .PHONY : klee_init_env.c.i
 
 klee_init_env.s: klee_init_env.c.s
@@ -301,7 +296,7 @@ klee_init_env.s: klee_init_env.c.s
 
 # target to generate assembly for a file
 klee_init_env.c.s:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.s
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.s
 .PHONY : klee_init_env.c.s
 
 # Help Target
@@ -340,6 +335,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

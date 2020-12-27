@@ -1,7 +1,6 @@
 file(REMOVE_RECURSE
   "../../bin/klee"
   "../../bin/klee.pdb"
-  "CMakeFiles/CMakeRelink.dir/klee"
   "CMakeFiles/klee.dir/main.cpp.o"
 )
 

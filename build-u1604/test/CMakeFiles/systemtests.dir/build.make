@@ -66,7 +66,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 # Utility rule file for systemtests.
 
@@ -79,8 +79,8 @@ test/CMakeFiles/systemtests: bin/klee-replay
 test/CMakeFiles/systemtests: lib/libkleeRuntest.so.1.0
 test/CMakeFiles/systemtests: bin/gen-bout
 test/CMakeFiles/systemtests: bin/gen-random-bout
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/haoxin/github/klee/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Running system tests"
-	cd /home/haoxin/github/klee/build/test && /home/haoxin/corpus-compilers/llvm-9.0/llvm-src/build/bin/llvm-lit -v -s /home/haoxin/github/klee/build/test
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/haoxin/github/klee/build-u1604/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Running system tests"
+	cd /home/haoxin/github/klee/build-u1604/test && /home/haoxin/corpus-compilers/llvm-9.0/llvm-src/build/bin/llvm-lit -v -s /home/haoxin/github/klee/build-u1604/test
 
 systemtests: test/CMakeFiles/systemtests
 systemtests: test/CMakeFiles/systemtests.dir/build.make
@@ -93,10 +93,10 @@ test/CMakeFiles/systemtests.dir/build: systemtests
 .PHONY : test/CMakeFiles/systemtests.dir/build
 
 test/CMakeFiles/systemtests.dir/clean:
-	cd /home/haoxin/github/klee/build/test && $(CMAKE_COMMAND) -P CMakeFiles/systemtests.dir/cmake_clean.cmake
+	cd /home/haoxin/github/klee/build-u1604/test && $(CMAKE_COMMAND) -P CMakeFiles/systemtests.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/systemtests.dir/clean
 
 test/CMakeFiles/systemtests.dir/depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/test /home/haoxin/github/klee/build /home/haoxin/github/klee/build/test /home/haoxin/github/klee/build/test/CMakeFiles/systemtests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/test /home/haoxin/github/klee/build-u1604 /home/haoxin/github/klee/build-u1604/test /home/haoxin/github/klee/build-u1604/test/CMakeFiles/systemtests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : test/CMakeFiles/systemtests.dir/depend
 

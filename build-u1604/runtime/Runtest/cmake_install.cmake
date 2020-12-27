@@ -38,6 +38,12 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so.1.0" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so.1.0")
+    file(RPATH_CHECK
+         FILE "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so.1.0"
+         RPATH "")
+  endif()
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
    "/usr/local/lib/libkleeRuntest.so.1.0")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
@@ -46,7 +52,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local/lib" TYPE SHARED_LIBRARY FILES "/home/haoxin/github/klee/build/lib/libkleeRuntest.so.1.0")
+file(INSTALL DESTINATION "/usr/local/lib" TYPE SHARED_LIBRARY FILES "/home/haoxin/github/klee/build-u1604/lib/libkleeRuntest.so.1.0")
   if(EXISTS "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so.1.0" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so.1.0")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -56,6 +62,12 @@ file(INSTALL DESTINATION "/usr/local/lib" TYPE SHARED_LIBRARY FILES "/home/haoxi
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so")
+    file(RPATH_CHECK
+         FILE "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so"
+         RPATH "")
+  endif()
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
    "/usr/local/lib/libkleeRuntest.so")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
@@ -64,7 +76,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local/lib" TYPE SHARED_LIBRARY FILES "/home/haoxin/github/klee/build/lib/libkleeRuntest.so")
+file(INSTALL DESTINATION "/usr/local/lib" TYPE SHARED_LIBRARY FILES "/home/haoxin/github/klee/build-u1604/lib/libkleeRuntest.so")
   if(EXISTS "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/lib/libkleeRuntest.so")
     if(CMAKE_INSTALL_DO_STRIP)

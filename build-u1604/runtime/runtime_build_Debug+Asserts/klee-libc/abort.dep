@@ -1,4 +1,4 @@
-/home/haoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/klee-libc/abort.bc: \
+/home/haoxin/github/klee/build-u1604/runtime/runtime_build_Debug+Asserts/klee-libc/abort.bc: \
   /home/haoxin/github/klee/runtime/klee-libc/abort.c \
   /home/haoxin/github/klee/include/klee/klee.h
 

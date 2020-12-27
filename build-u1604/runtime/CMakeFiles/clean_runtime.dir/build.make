@@ -66,7 +66,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 # Utility rule file for clean_runtime.
 
@@ -74,7 +74,7 @@ CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
 include runtime/CMakeFiles/clean_runtime.dir/progress.make
 
 runtime/CMakeFiles/clean_runtime:
-	cd /home/haoxin/github/klee/build/runtime && /usr/bin/env MAKEFLAGS="" /usr/bin/make -f Makefile.cmake.bitcode clean
+	cd /home/haoxin/github/klee/build-u1604/runtime && /usr/bin/env MAKEFLAGS="" /usr/bin/make -f Makefile.cmake.bitcode clean
 
 clean_runtime: runtime/CMakeFiles/clean_runtime
 clean_runtime: runtime/CMakeFiles/clean_runtime.dir/build.make
@@ -87,10 +87,10 @@ runtime/CMakeFiles/clean_runtime.dir/build: clean_runtime
 .PHONY : runtime/CMakeFiles/clean_runtime.dir/build
 
 runtime/CMakeFiles/clean_runtime.dir/clean:
-	cd /home/haoxin/github/klee/build/runtime && $(CMAKE_COMMAND) -P CMakeFiles/clean_runtime.dir/cmake_clean.cmake
+	cd /home/haoxin/github/klee/build-u1604/runtime && $(CMAKE_COMMAND) -P CMakeFiles/clean_runtime.dir/cmake_clean.cmake
 .PHONY : runtime/CMakeFiles/clean_runtime.dir/clean
 
 runtime/CMakeFiles/clean_runtime.dir/depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/runtime /home/haoxin/github/klee/build /home/haoxin/github/klee/build/runtime /home/haoxin/github/klee/build/runtime/CMakeFiles/clean_runtime.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/runtime /home/haoxin/github/klee/build-u1604 /home/haoxin/github/klee/build-u1604/runtime /home/haoxin/github/klee/build-u1604/runtime/CMakeFiles/clean_runtime.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : runtime/CMakeFiles/clean_runtime.dir/depend
 

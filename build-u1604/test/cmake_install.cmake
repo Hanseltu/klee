@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/haoxin/github/klee/build/test/Concrete/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/test/Concrete/cmake_install.cmake")
 
 endif()
 

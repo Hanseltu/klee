@@ -55,11 +55,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/haoxin/github/klee/build/lib/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/runtime/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/tools/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/test/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/docs/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/lib/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/runtime/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/tools/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/test/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/docs/cmake_install.cmake")
 
 endif()
 
@@ -71,5 +71,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/haoxin/github/klee/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/haoxin/github/klee/build-u1604/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

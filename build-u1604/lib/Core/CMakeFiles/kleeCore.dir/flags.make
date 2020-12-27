@@ -6,5 +6,5 @@ CXX_FLAGS =  -Wall -Wextra -Wno-unused-parameter -O0 -g   -fno-exceptions -fno-r
 
 CXX_DEFINES = -DKLEE_UCLIBC_BCA_NAME=\"klee-uclibc.bca\" -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
 
-CXX_INCLUDES = -I/home/haoxin/github/klee/build/include -I/home/haoxin/github/klee/include -I/home/haoxin/corpus-compilers/llvm-9.0/llvm-src/include -I/home/haoxin/corpus-compilers/llvm-9.0/llvm-src/build/include 
+CXX_INCLUDES = -I/home/haoxin/github/klee/build-u1604/include -I/home/haoxin/github/klee/include -I/home/haoxin/corpus-compilers/llvm-9.0/llvm-src/include -I/home/haoxin/corpus-compilers/llvm-9.0/llvm-src/build/include 
 

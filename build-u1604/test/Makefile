@@ -71,7 +71,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -146,14 +146,14 @@ list_install_components/fast: list_install_components
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build/CMakeFiles /home/haoxin/github/klee/build/test/CMakeFiles/progress.marks
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build/CMakeFiles 0
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build-u1604/CMakeFiles /home/haoxin/github/klee/build-u1604/test/CMakeFiles/progress.marks
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build-u1604/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/clean
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/clean
 .PHONY : clean
 
 # The main clean target
@@ -163,22 +163,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 test/CMakeFiles/systemtests.dir/rule:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/systemtests.dir/rule
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/systemtests.dir/rule
 .PHONY : test/CMakeFiles/systemtests.dir/rule
 
 # Convenience name for target.
@@ -188,7 +188,7 @@ systemtests: test/CMakeFiles/systemtests.dir/rule
 
 # fast build rule for target.
 systemtests/fast:
-	cd /home/haoxin/github/klee/build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/systemtests.dir/build.make test/CMakeFiles/systemtests.dir/build
+	cd /home/haoxin/github/klee/build-u1604 && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/systemtests.dir/build.make test/CMakeFiles/systemtests.dir/build
 .PHONY : systemtests/fast
 
 # Help Target
@@ -215,6 +215,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

@@ -39,12 +39,12 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/haoxin/github/klee/build/lib/Basic/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/lib/Support/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/lib/Expr/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/lib/Solver/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/lib/Module/cmake_install.cmake")
-  include("/home/haoxin/github/klee/build/lib/Core/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/lib/Basic/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/lib/Support/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/lib/Expr/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/lib/Solver/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/lib/Module/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/lib/Core/cmake_install.cmake")
 
 endif()
 

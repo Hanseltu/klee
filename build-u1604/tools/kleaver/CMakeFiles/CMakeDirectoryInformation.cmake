@@ -3,7 +3,7 @@
 
 # Relative path conversion top directories.
 set(CMAKE_RELATIVE_PATH_TOP_SOURCE "/home/haoxin/github/klee")
-set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/haoxin/github/klee/build")
+set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/haoxin/github/klee/build-u1604")
 
 # Force unix paths in dependencies.
 set(CMAKE_FORCE_UNIX_PATHS 1)

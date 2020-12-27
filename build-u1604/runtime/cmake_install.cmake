@@ -47,16 +47,16 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
 file(INSTALL DESTINATION "/usr/local/lib/klee/runtime" TYPE FILE FILES
-    "/home/haoxin/github/klee/build/Debug+Asserts/lib/libkleeRuntimeIntrinsic.bca"
-    "/home/haoxin/github/klee/build/Debug+Asserts/lib/libklee-libc.bca"
-    "/home/haoxin/github/klee/build/Debug+Asserts/lib/libkleeRuntimeFreeStanding.bca"
-    "/home/haoxin/github/klee/build/Debug+Asserts/lib/libkleeRuntimePOSIX.bca"
+    "/home/haoxin/github/klee/build-u1604/Debug+Asserts/lib/libkleeRuntimeIntrinsic.bca"
+    "/home/haoxin/github/klee/build-u1604/Debug+Asserts/lib/libklee-libc.bca"
+    "/home/haoxin/github/klee/build-u1604/Debug+Asserts/lib/libkleeRuntimeFreeStanding.bca"
+    "/home/haoxin/github/klee/build-u1604/Debug+Asserts/lib/libkleeRuntimePOSIX.bca"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/haoxin/github/klee/build/runtime/Runtest/cmake_install.cmake")
+  include("/home/haoxin/github/klee/build-u1604/runtime/Runtest/cmake_install.cmake")
 
 endif()
 

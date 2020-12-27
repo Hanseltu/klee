@@ -71,7 +71,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -146,9 +146,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build/CMakeFiles /home/haoxin/github/klee/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build-u1604/CMakeFiles /home/haoxin/github/klee/build-u1604/CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/github/klee/build-u1604/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -332,11 +332,6 @@ gen-bout/fast:
 	$(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/build
 .PHONY : gen-bout/fast
 
-# Manual pre-install relink rule for target.
-gen-bout/preinstall:
-	$(MAKE) $(MAKESILENT) -f tools/gen-bout/CMakeFiles/gen-bout.dir/build.make tools/gen-bout/CMakeFiles/gen-bout.dir/preinstall
-.PHONY : gen-bout/preinstall
-
 #=============================================================================
 # Target rules for targets named gen-random-bout
 
@@ -349,11 +344,6 @@ gen-random-bout: cmake_check_build_system
 gen-random-bout/fast:
 	$(MAKE) $(MAKESILENT) -f tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/build.make tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/build
 .PHONY : gen-random-bout/fast
-
-# Manual pre-install relink rule for target.
-gen-random-bout/preinstall:
-	$(MAKE) $(MAKESILENT) -f tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/build.make tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/preinstall
-.PHONY : gen-random-bout/preinstall
 
 #=============================================================================
 # Target rules for targets named kleaver
@@ -368,11 +358,6 @@ kleaver/fast:
 	$(MAKE) $(MAKESILENT) -f tools/kleaver/CMakeFiles/kleaver.dir/build.make tools/kleaver/CMakeFiles/kleaver.dir/build
 .PHONY : kleaver/fast
 
-# Manual pre-install relink rule for target.
-kleaver/preinstall:
-	$(MAKE) $(MAKESILENT) -f tools/kleaver/CMakeFiles/kleaver.dir/build.make tools/kleaver/CMakeFiles/kleaver.dir/preinstall
-.PHONY : kleaver/preinstall
-
 #=============================================================================
 # Target rules for targets named klee
 
@@ -386,11 +371,6 @@ klee/fast:
 	$(MAKE) $(MAKESILENT) -f tools/klee/CMakeFiles/klee.dir/build.make tools/klee/CMakeFiles/klee.dir/build
 .PHONY : klee/fast
 
-# Manual pre-install relink rule for target.
-klee/preinstall:
-	$(MAKE) $(MAKESILENT) -f tools/klee/CMakeFiles/klee.dir/build.make tools/klee/CMakeFiles/klee.dir/preinstall
-.PHONY : klee/preinstall
-
 #=============================================================================
 # Target rules for targets named klee-replay
 
@@ -403,11 +383,6 @@ klee-replay: cmake_check_build_system
 klee-replay/fast:
 	$(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/build
 .PHONY : klee-replay/fast
-
-# Manual pre-install relink rule for target.
-klee-replay/preinstall:
-	$(MAKE) $(MAKESILENT) -f tools/klee-replay/CMakeFiles/klee-replay.dir/build.make tools/klee-replay/CMakeFiles/klee-replay.dir/preinstall
-.PHONY : klee-replay/preinstall
 
 #=============================================================================
 # Target rules for targets named systemtests

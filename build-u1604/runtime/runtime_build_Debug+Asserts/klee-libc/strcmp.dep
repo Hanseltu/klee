@@ -1,2 +1,2 @@
-/home/haoxin/github/klee/build/runtime/runtime_build_Debug+Asserts/klee-libc/strcmp.bc: \
+/home/haoxin/github/klee/build-u1604/runtime/runtime_build_Debug+Asserts/klee-libc/strcmp.bc: \
   /home/haoxin/github/klee/runtime/klee-libc/strcmp.c

@@ -66,7 +66,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 # Utility rule file for clean_doxygen.
 
@@ -74,7 +74,7 @@ CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
 include docs/CMakeFiles/clean_doxygen.dir/progress.make
 
 docs/CMakeFiles/clean_doxygen:
-	cd /home/haoxin/github/klee/build/docs && /home/haoxin/corpus-compilers/package/cmake-3.17.4/bin/cmake -E remove_directory /home/haoxin/github/klee/build/docs/doxygen
+	cd /home/haoxin/github/klee/build-u1604/docs && /home/haoxin/corpus-compilers/package/cmake-3.17.4/bin/cmake -E remove_directory /home/haoxin/github/klee/build-u1604/docs/doxygen
 
 clean_doxygen: docs/CMakeFiles/clean_doxygen
 clean_doxygen: docs/CMakeFiles/clean_doxygen.dir/build.make
@@ -87,10 +87,10 @@ docs/CMakeFiles/clean_doxygen.dir/build: clean_doxygen
 .PHONY : docs/CMakeFiles/clean_doxygen.dir/build
 
 docs/CMakeFiles/clean_doxygen.dir/clean:
-	cd /home/haoxin/github/klee/build/docs && $(CMAKE_COMMAND) -P CMakeFiles/clean_doxygen.dir/cmake_clean.cmake
+	cd /home/haoxin/github/klee/build-u1604/docs && $(CMAKE_COMMAND) -P CMakeFiles/clean_doxygen.dir/cmake_clean.cmake
 .PHONY : docs/CMakeFiles/clean_doxygen.dir/clean
 
 docs/CMakeFiles/clean_doxygen.dir/depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/docs /home/haoxin/github/klee/build /home/haoxin/github/klee/build/docs /home/haoxin/github/klee/build/docs/CMakeFiles/clean_doxygen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/docs /home/haoxin/github/klee/build-u1604 /home/haoxin/github/klee/build-u1604/docs /home/haoxin/github/klee/build-u1604/docs/CMakeFiles/clean_doxygen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : docs/CMakeFiles/clean_doxygen.dir/depend
 

@@ -1165,7 +1165,7 @@ void Executor::addConstraint(ExecutionState &state, ref<Expr> condition) {
 const Cell& Executor::eval(KInstruction *ki, unsigned index,
                            ExecutionState &state) const {
   assert(index < ki->inst->getNumOperands());
-  printf("index = %d \t ki->inst->getNumOperands = %d \t vnumber = %d \n", index, ki->inst->getNumOperands(), ki->operands[index]);
+  //printf("index = %d \t ki->inst->getNumOperands = %d \t vnumber = %d \n", index, ki->inst->getNumOperands(), ki->operands[index]);
   int vnumber = ki->operands[index];
 
   assert(vnumber != -1 &&
@@ -1708,18 +1708,29 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       printf("The following contents are callee's StackFrame before pop it:\n"); // useful information of callee are all in stack already
       printf("  caller is \n");
       printf("  kf : %s\n", temp_stack_last.kf->function->getName().str().c_str());
+      printf("      numRegisters = %d\n", temp_stack_last.kf->numRegisters);
+      printf("      numArgs = %d\n", temp_stack_last.kf->numArgs);
+      printf("      getArgRegister = %d\n", temp_stack_last.kf->getArgRegister(0));
       printf("  allocas : \n");
       printf("      size = %d\n", (int)temp_stack_last.allocas.size());
       for (int i = 0; i <  temp_stack_last.allocas.size(); i++){
             printf("    MO_%d in allocas\n", i);
+            //printf("        counter = %d\n", temp_stack_last.allocas[i]->counter);
+            std::string str_temp;
+            temp_stack_last.allocas[i]->getAllocInfo(str_temp);
+            printf("        getAllocInfo = : %s\n", str_temp.c_str());
             printf("        id = %d\n", temp_stack_last.allocas[i]->id);
             printf("        address = %d\n", temp_stack_last.allocas[i]->address);
             printf("        size = %d\n", temp_stack_last.allocas[i]->size);
             printf("        name = %s\n", temp_stack_last.allocas[i]->name.c_str());
             printf("        isLocal = %d\n", temp_stack_last.allocas[i]->isLocal);
+            printf("        allocSite (register index) = %s\n", temp_stack_last.allocas[i]->allocSite->getName().str().c_str());
+            //const Instruction *inst = dyn_cast<Instruction>(temp_stack_last.allocas[i]->allocSite);
+            //const AllocaInst *alloca = dyn_cast<AllocaInst>(&*inst);
+            //printf("        test = %s\n", alloca->getName().str().c_str());
       }
       printf("  locals : \n");
-      printf("  allocSite : \n");
+      printf("      locals[0].value.ptr.get().getKid() = %d\n", temp_stack_last.locals[0].value->getKind());
       //printf("      size = %s", temp_stack_last.locals[0].value->dump());
       //printf("Here print the contents in getAddressInfo\n");
       //ref<Expr> address = &state.stack[1].allocas[4]->address;
@@ -2336,6 +2347,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     // Memory instructions...
   case Instruction::Alloca: {//allocate memory for current function, a.k.a, local variable
     AllocaInst *ai = cast<AllocaInst>(i);
+    //printf("ai in Alloca = %s\n", ki->dest);
     unsigned elementSize =
       kmodule->targetData->getTypeStoreSize(ai->getAllocatedType());
     ref<Expr> size = Expr::createPointer(elementSize);
@@ -2350,15 +2362,17 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
 
   case Instruction::Load: { //read operation
     ref<Expr> base = eval(ki, 0, state).value;
-    printf("print addressInfo in load instruction:\n");
-    std::string str_addressInfo = getAddressInfo(state, base);
-    printf("    %s\n", str_addressInfo.c_str());
+    //printf("print addressInfo in load instruction:\n");
+    //std::string str_addressInfo = getAddressInfo(state, base);
+    //printf("    %s\n", str_addressInfo.c_str());
     executeMemoryOperation(state, false, base, 0, ki);
     break;
   }
   case Instruction::Store: { //load operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
+    //ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
+    //printf("temp_value = %d\n", temp_value->getZExtValue());
     executeMemoryOperation(state, true, base, value, 0);
     break;
   }

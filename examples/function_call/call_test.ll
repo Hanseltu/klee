@@ -12,35 +12,43 @@ define dso_local i32 @func1(i32) #0 {
   %4 = alloca i32, align 4
   %5 = alloca i32, align 4
   %6 = alloca i64, align 8
+  %7 = alloca i32, align 4
+  %8 = alloca i32, align 4
   store i32 %0, i32* %3, align 4
   store i32 1111, i32* %4, align 4
   store i32 2222, i32* %5, align 4
   store i64 3333, i64* %6, align 8
-  %7 = load i32, i32* %3, align 4
-  %8 = icmp sgt i32 %7, 0
-  br i1 %8, label %9, label %19
+  store i64 4444, i64* %6, align 8
+  store i64 5555, i64* %6, align 8
+  %9 = load i32, i32* %3, align 4
+  %10 = icmp sgt i32 %9, 0
+  br i1 %10, label %11, label %23
 
-9:                                                ; preds = %1
-  %10 = load i32, i32* %3, align 4
-  %11 = load i32, i32* %4, align 4
-  %12 = add nsw i32 %10, %11
-  %13 = load i32, i32* %5, align 4
-  %14 = add nsw i32 %12, %13
-  %15 = sext i32 %14 to i64
-  %16 = load i64, i64* %6, align 8
-  %17 = add nsw i64 %15, %16
-  %18 = trunc i64 %17 to i32
-  store i32 %18, i32* %2, align 4
-  br label %21
+11:                                               ; preds = %1
+  store i64 6666, i64* %6, align 8
+  %12 = load i64, i64* %6, align 8
+  %13 = trunc i64 %12 to i32
+  store i32 %13, i32* %7, align 4
+  %14 = load i32, i32* %3, align 4
+  %15 = load i32, i32* %4, align 4
+  %16 = add nsw i32 %14, %15
+  %17 = load i32, i32* %5, align 4
+  %18 = add nsw i32 %16, %17
+  %19 = sext i32 %18 to i64
+  %20 = load i64, i64* %6, align 8
+  %21 = add nsw i64 %19, %20
+  %22 = trunc i64 %21 to i32
+  store i32 %22, i32* %2, align 4
+  br label %25
 
-19:                                               ; preds = %1
-  %20 = load i32, i32* %3, align 4
-  store i32 %20, i32* %2, align 4
-  br label %21
+23:                                               ; preds = %1
+  %24 = load i32, i32* %3, align 4
+  store i32 %24, i32* %2, align 4
+  br label %25
 
-21:                                               ; preds = %19, %9
-  %22 = load i32, i32* %2, align 4
-  ret i32 %22
+25:                                               ; preds = %23, %11
+  %26 = load i32, i32* %2, align 4
+  ret i32 %26
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable

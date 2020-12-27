@@ -66,7 +66,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 # Utility rule file for doc-doxygen.
 
@@ -74,8 +74,8 @@ CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
 include docs/CMakeFiles/doc-doxygen.dir/progress.make
 
 docs/CMakeFiles/doc-doxygen:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/haoxin/github/klee/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Doxygen documentation"
-	cd /home/haoxin/github/klee/build/docs && /usr/bin/doxygen /home/haoxin/github/klee/build/docs/doxygen.cfg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/haoxin/github/klee/build-u1604/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Doxygen documentation"
+	cd /home/haoxin/github/klee/build-u1604/docs && /usr/bin/doxygen /home/haoxin/github/klee/build-u1604/docs/doxygen.cfg
 
 doc-doxygen: docs/CMakeFiles/doc-doxygen
 doc-doxygen: docs/CMakeFiles/doc-doxygen.dir/build.make
@@ -88,10 +88,10 @@ docs/CMakeFiles/doc-doxygen.dir/build: doc-doxygen
 .PHONY : docs/CMakeFiles/doc-doxygen.dir/build
 
 docs/CMakeFiles/doc-doxygen.dir/clean:
-	cd /home/haoxin/github/klee/build/docs && $(CMAKE_COMMAND) -P CMakeFiles/doc-doxygen.dir/cmake_clean.cmake
+	cd /home/haoxin/github/klee/build-u1604/docs && $(CMAKE_COMMAND) -P CMakeFiles/doc-doxygen.dir/cmake_clean.cmake
 .PHONY : docs/CMakeFiles/doc-doxygen.dir/clean
 
 docs/CMakeFiles/doc-doxygen.dir/depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/docs /home/haoxin/github/klee/build /home/haoxin/github/klee/build/docs /home/haoxin/github/klee/build/docs/CMakeFiles/doc-doxygen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee/docs /home/haoxin/github/klee/build-u1604 /home/haoxin/github/klee/build-u1604/docs /home/haoxin/github/klee/build-u1604/docs/CMakeFiles/doc-doxygen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : docs/CMakeFiles/doc-doxygen.dir/depend
 

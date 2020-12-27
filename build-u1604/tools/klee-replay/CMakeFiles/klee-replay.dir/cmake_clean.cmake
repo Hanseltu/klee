@@ -1,7 +1,6 @@
 file(REMOVE_RECURSE
   "../../bin/klee-replay"
   "../../bin/klee-replay.pdb"
-  "CMakeFiles/CMakeRelink.dir/klee-replay"
   "CMakeFiles/klee-replay.dir/fd_init.c.o"
   "CMakeFiles/klee-replay.dir/file-creator.c.o"
   "CMakeFiles/klee-replay.dir/klee-replay.c.o"

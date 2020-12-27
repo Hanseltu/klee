@@ -66,7 +66,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/haoxin/github/klee
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
+CMAKE_BINARY_DIR = /home/haoxin/github/klee/build-u1604
 
 # Utility rule file for clean_all.
 
@@ -74,7 +74,7 @@ CMAKE_BINARY_DIR = /home/haoxin/github/klee/build
 include CMakeFiles/clean_all.dir/progress.make
 
 CMakeFiles/clean_all:
-	/home/haoxin/corpus-compilers/package/cmake-3.17.4/bin/cmake --build /home/haoxin/github/klee/build --target clean
+	/home/haoxin/corpus-compilers/package/cmake-3.17.4/bin/cmake --build /home/haoxin/github/klee/build-u1604 --target clean
 
 clean_all: CMakeFiles/clean_all
 clean_all: CMakeFiles/clean_all.dir/build.make
@@ -91,6 +91,6 @@ CMakeFiles/clean_all.dir/clean:
 .PHONY : CMakeFiles/clean_all.dir/clean
 
 CMakeFiles/clean_all.dir/depend:
-	cd /home/haoxin/github/klee/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee /home/haoxin/github/klee/build /home/haoxin/github/klee/build /home/haoxin/github/klee/build/CMakeFiles/clean_all.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/haoxin/github/klee/build-u1604 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/haoxin/github/klee /home/haoxin/github/klee /home/haoxin/github/klee/build-u1604 /home/haoxin/github/klee/build-u1604 /home/haoxin/github/klee/build-u1604/CMakeFiles/clean_all.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/clean_all.dir/depend
 
