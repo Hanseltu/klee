@@ -347,7 +347,7 @@ private:
   Cell& getDestCell(ExecutionState &state,
                     KInstruction *target) {
     //if (target->inst.getOpcode() == Instruction::alloca)
-    //    printf("    target->dest = %d\n", target->dest);
+    //printf("    target->dest = %d\n", target->dest);
     return state.stack.back().locals[target->dest];
   }
 

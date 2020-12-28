@@ -6,10 +6,11 @@
 
 //1 path function
 int func1(int a){
+    char s = 'c';
     int b =1111, c=2222;
     long long d=3333;
     d = 4444;
-    d = func2(b, c);
+    //d = func2(b, c);
     if (a > 0){
         d = 6666;
         int e = d;
@@ -53,18 +54,18 @@ int func4(int a, int b){
 
 
 int main() {
-  int a,b,c,d;
+  int a;
   //printf("hello\n");
   klee_make_symbolic(&a, sizeof(a), "a");
-  klee_make_symbolic(&b, sizeof(a), "b");
-  klee_make_symbolic(&c, sizeof(a), "c");
-  klee_make_symbolic(&d, sizeof(a), "d");
+  //klee_make_symbolic(&b, sizeof(a), "b");
+  //klee_make_symbolic(&c, sizeof(a), "c");
+  //klee_make_symbolic(&d, sizeof(a), "d");
   //klee_make_symbolic(&e, sizeof(a), "e");
   //klee_make_symbolic(&f, sizeof(a), "f");
   //klee_make_symbolic(&g, sizeof(a), "g");
 
   int ret1 = func1(a);
-  int ret2 = func2(b, c);
+  //int ret2 = func2(b, c);
   //int ret3 = func3(d);
   //int ret4 = func4(f, g);
   return 0;

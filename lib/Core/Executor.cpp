@@ -88,6 +88,9 @@
 using namespace llvm;
 using namespace klee;
 
+//global array to store the index of function arguments, local variable
+std::vector<int> argIndex;
+
 namespace klee {
 cl::OptionCategory DebugCat("Debugging options",
                             "These are debugging options.");
@@ -1713,6 +1716,12 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       printf("      getArgRegister = %d\n", temp_stack_last.kf->getArgRegister(0));
       printf("  allocas : \n");
       printf("      size = %d\n", (int)temp_stack_last.allocas.size());
+      std::vector<int> vecArgIndex;
+      std::vector<int> vecLocIndex;
+      //store arguments index in vector
+      for (int i = 0; i < temp_stack_last.kf->numArgs; i++)
+          vecArgIndex.push_back(i);
+      //store local variable index in vector
       for (int i = 0; i <  temp_stack_last.allocas.size(); i++){
             printf("    MO_%d in allocas\n", i);
             //printf("        counter = %d\n", temp_stack_last.allocas[i]->counter);
@@ -1724,13 +1733,37 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
             printf("        size = %d\n", temp_stack_last.allocas[i]->size);
             printf("        name = %s\n", temp_stack_last.allocas[i]->name.c_str());
             printf("        isLocal = %d\n", temp_stack_last.allocas[i]->isLocal);
-            printf("        allocSite (register index) = %s\n", temp_stack_last.allocas[i]->allocSite->getName().str().c_str());
+            printf("        allocSite (register index) = %d\n", temp_stack_last.kf->numArgs + 1 + i);
+            vecLocIndex.push_back(temp_stack_last.kf->numArgs + i);
             //const Instruction *inst = dyn_cast<Instruction>(temp_stack_last.allocas[i]->allocSite);
             //const AllocaInst *alloca = dyn_cast<AllocaInst>(&*inst);
             //printf("        test = %s\n", alloca->getName().str().c_str());
       }
+      printf("  sizeof(vecArgIndex) = %d\n", vecArgIndex.size());
+      for (auto i : vecArgIndex )
+        printf("        %d\t", i);
+      printf("\n");
+      printf("  sizeof(vecLocIndex) = %d\n", vecLocIndex.size());
+      for (auto i : vecLocIndex )
+        printf("        %d\t", i+1);
+      printf("\n");
       printf("  locals : \n");
-      printf("      locals[0].value.ptr.get().getKid() = %d\n", temp_stack_last.locals[0].value->getKind());
+      printf("      Arguments in locals\n");
+      for (auto i : vecArgIndex){
+        printf("        locals[%d].value.get().getKind() = %d\n", i, temp_stack_last.locals[i].value.get()->getKind());
+      }
+      printf("      Local variables in locals\n");
+      for (auto i : vecLocIndex){
+        int kind = temp_stack_last.locals[i].value.get()->getKind();
+        printf("        locals[%d].value.get().getKind() = %d\n", i+1, kind);
+        if (kind == 0){
+            ref<ConstantExpr> loc = toConstant(state, temp_stack_last.locals[i].value, "local variable in constant");
+            std::string res;
+            loc->toString(res);
+            printf("        %s\n", res.c_str());
+            printf("        %d\n", loc->getZExtValue());
+        }
+      }
       //printf("      size = %s", temp_stack_last.locals[0].value->dump());
       //printf("Here print the contents in getAddressInfo\n");
       //ref<Expr> address = &state.stack[1].allocas[4]->address;
@@ -2371,8 +2404,8 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   case Instruction::Store: { //load operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
-    //ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
-    //printf("temp_value = %d\n", temp_value->getZExtValue());
+    ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
+    printf("temp_value = %d\n", temp_value->getZExtValue());
     executeMemoryOperation(state, true, base, value, 0);
     break;
   }
