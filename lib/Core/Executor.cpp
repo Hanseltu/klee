@@ -1369,7 +1369,7 @@ void Executor::executeCall(ExecutionState &state,
                            Function *f,
                            std::vector< ref<Expr> > &arguments) {
   //new added test function
-  printf("No.%d executionCall in Executor::executeCall\n", num_ec);
+  //printf("No.%d executionCall in Executor::executeCall\n", num_ec);
   num_ec += 1;
   Instruction *i = ki->inst;
   // check Instrinsic, =0 if not dbg_declare, dbg_value, dbg_addr, dgb_label
@@ -1381,7 +1381,7 @@ void Executor::executeCall(ExecutionState &state,
     case Intrinsic::not_intrinsic:
       // state may be destroyed by this call, cannot touch
       callExternalFunction(state, ki, f, arguments);
-      printf("callExternalFunction executed in function executeCall!\n");
+      //printf("callExternalFunction executed in function executeCall!\n");
       break;
     // llvm.fabs return the absolute value of the operand
     case Intrinsic::fabs: {
@@ -1470,20 +1470,20 @@ void Executor::executeCall(ExecutionState &state,
     // guess. This just done to avoid having to pass KInstIterator everywhere
     // instead of the actual instruction, since we can't make a KInstIterator
     // from just an instruction (unlike LLVM).
-    printf("Here calling the target function!\n");
+    //printf("Here calling the target function!\n");
     KFunction *kf = kmodule->functionMap[f]; //KModule holds a map<llvm::Function*, KFunction*>
-    printf("Information in KFunction *kf :\n");
-    printf("    numArgs: %d\n", kf->numArgs);
-    printf("    numRegisters: %d\n", kf->numRegisters);
-    printf("    numInstructions: %d\n", kf->numInstructions);
-    printf("    trackCoverage: %d\n", kf->trackCoverage);
+    //printf("Information in KFunction *kf :\n");
+    //printf("    numArgs: %d\n", kf->numArgs);
+    //printf("    numRegisters: %d\n", kf->numRegisters);
+    //printf("    numInstructions: %d\n", kf->numInstructions);
+    //printf("    trackCoverage: %d\n", kf->trackCoverage);
     state.pushFrame(state.prevPC, kf); //save current inst (old EBP), as well as caller's inst (arguments, local variables)
     state.pc = kf->instructions; // restore EBP and ESP, let PC pointering to the caller inst
 
     // Here analyze the contents in StackFrame
     //StackFrame &temp_stack_last = state.stack.back();
 
-    printf("dumpStack output:\n");
+    //printf("dumpStack output:\n");
     std::string MsgString;
     llvm::raw_string_ostream out(MsgString);
     state.dumpStack(out);
@@ -1495,14 +1495,14 @@ void Executor::executeCall(ExecutionState &state,
      // TODO: support zeroext, signext, sret attributes
 
     unsigned callingArgs = arguments.size();
-    printf("callingArgs = %d\n", callingArgs);
+    //printf("callingArgs = %d\n", callingArgs);
     unsigned funcArgs = f->arg_size();
-    printf("funcArgs = %d\n", funcArgs);
+    //printf("funcArgs = %d\n", funcArgs);
     //bool llvm::Function::isVarArg Return true if this function takes a variable number of arguments (Note that here variable!)
     // here if this function takes no arguments
-    printf("f->isVarArg(): %d\n", f->isVarArg());
+    //printf("f->isVarArg(): %d\n", f->isVarArg());
     if (!f->isVarArg()) {
-      printf("1\n");
+      //printf("1\n");
       if (callingArgs > funcArgs) {
         klee_warning_once(f, "calling %s with extra arguments.",
                           f->getName().data());
@@ -1512,7 +1512,7 @@ void Executor::executeCall(ExecutionState &state,
         return;
       }
     } else { // start from here if this function takes variable arguments, not easy to reach this path?
-      printf("2\n");
+      //printf("2\n");
       Expr::Width WordSize = Context::get().getPointerWidth();
 
       if (callingArgs < funcArgs) {
@@ -1528,7 +1528,7 @@ void Executor::executeCall(ExecutionState &state,
       bool requires16ByteAlignment = false;
       for (unsigned i = funcArgs; i < callingArgs; i++) {
         //which condition will make this path execute?
-        printf("I don't think this path will be executed?\n");
+        //printf("I don't think this path will be executed?\n");
         // FIXME: This is really specific to the architecture, not the pointer
         // size. This happens to work for x86-32 and x86-64, however.
         if (WordSize == Expr::Int32) {
@@ -1600,11 +1600,11 @@ void Executor::executeCall(ExecutionState &state,
           }
         }
       }
-      printf("3 not execute here as well\n");
+      //printf("3 not execute here as well\n");
     }
 
     unsigned numFormals = f->arg_size();
-    printf("numFormals: %d\n", numFormals);
+    //printf("numFormals: %d\n", numFormals);
     for (unsigned i=0; i<numFormals; ++i)
       bindArgument(kf, i, state, arguments[i]);
   }
@@ -1687,7 +1687,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   switch (i->getOpcode()) {
     // Control flow
   case Instruction::Ret: {
-    printf("The content in Instruction::Ret: \n");
+    //printf("The content in Instruction::Ret: \n");
     //printf(" what's this?\n");
     ReturnInst *ri = cast<ReturnInst>(i);
     KInstIterator kcaller = state.stack.back().caller;
@@ -1708,6 +1708,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       //as the return value has already saved in results, here delete the current StackFrame
     // Here analyze the contents in StackFrame
       StackFrame &temp_stack_last = state.stack.back();
+      /*
       printf("The following contents are callee's StackFrame before pop it:\n"); // useful information of callee are all in stack already
       printf("  caller is \n");
       printf("  kf : %s\n", temp_stack_last.kf->function->getName().str().c_str());
@@ -1716,6 +1717,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       printf("      getArgRegister = %d\n", temp_stack_last.kf->getArgRegister(0));
       printf("  allocas : \n");
       printf("      size = %d\n", (int)temp_stack_last.allocas.size());
+      */
       std::vector<int> vecArgIndex;
       std::vector<int> vecLocIndex;
       //store arguments index in vector
@@ -1723,8 +1725,9 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
           vecArgIndex.push_back(i);
       //store local variable index in vector
       for (int i = 0; i <  temp_stack_last.allocas.size(); i++){
-            printf("    MO_%d in allocas\n", i);
+            //printf("    MO_%d in allocas\n", i);
             //printf("        counter = %d\n", temp_stack_last.allocas[i]->counter);
+            /*
             std::string str_temp;
             temp_stack_last.allocas[i]->getAllocInfo(str_temp);
             printf("        getAllocInfo = : %s\n", str_temp.c_str());
@@ -1734,11 +1737,13 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
             printf("        name = %s\n", temp_stack_last.allocas[i]->name.c_str());
             printf("        isLocal = %d\n", temp_stack_last.allocas[i]->isLocal);
             printf("        allocSite (register index) = %d\n", temp_stack_last.kf->numArgs + 1 + i);
+            */
             vecLocIndex.push_back(temp_stack_last.kf->numArgs + i);
             //const Instruction *inst = dyn_cast<Instruction>(temp_stack_last.allocas[i]->allocSite);
             //const AllocaInst *alloca = dyn_cast<AllocaInst>(&*inst);
             //printf("        test = %s\n", alloca->getName().str().c_str());
       }
+      /*
       printf("  sizeof(vecArgIndex) = %d\n", vecArgIndex.size());
       for (auto i : vecArgIndex )
         printf("        %d\t", i);
@@ -1753,15 +1758,16 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         printf("        locals[%d].value.get().getKind() = %d\n", i, temp_stack_last.locals[i].value.get()->getKind());
       }
       printf("      Local variables in locals\n");
+      */
       for (auto i : vecLocIndex){
         int kind = temp_stack_last.locals[i].value.get()->getKind();
-        printf("        locals[%d].value.get().getKind() = %d\n", i+1, kind);
+        //printf("        locals[%d].value.get().getKind() = %d\n", i+1, kind);
         if (kind == 0){
             ref<ConstantExpr> loc = toConstant(state, temp_stack_last.locals[i].value, "local variable in constant");
             std::string res;
             loc->toString(res);
-            printf("        %s\n", res.c_str());
-            printf("        %d\n", loc->getZExtValue());
+            //printf("        %s\n", res.c_str());
+            //printf("        %d\n", loc->getZExtValue());
         }
       }
       //printf("      size = %s", temp_stack_last.locals[0].value->dump());
@@ -2055,11 +2061,11 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     CallSite cs(i);
 
     unsigned numArgs = cs.arg_size();
-    printf("in case Instruction::Call numArgs = %d\n", numArgs);
+    //printf("in case Instruction::Call numArgs = %d\n", numArgs);
     Value *fp = cs.getCalledValue();
-    printf("in case Instruction::Call *fp data :\n");
-    printf("    hasName() = %d\n", fp->hasName());
-    printf("    getName() = %s\n", fp->getName().str().c_str());
+    //printf("in case Instruction::Call *fp data :\n");
+    //printf("    hasName() = %d\n", fp->hasName());
+    //printf("    getName() = %s\n", fp->getName().str().c_str());
     Function *f = getTargetFunction(fp, state);
     //printf("in case Instruction::Call *f function name = %s\n", f->getName().str().c_str());
 
@@ -2114,7 +2120,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
           i++;
         }
       }
-      printf(" No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
+      //printf(" No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
       executeCall(state, ki, f, arguments);
     } else { // call a not normal function?
       ref<Expr> v = eval(ki, 0, state).value;
@@ -2143,7 +2149,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                                 "resolved symbolic function pointer to: %s",
                                 f->getName().data());
 
-            printf("\n No.%d executeCall in else statement in Executor::executeInstruction executed! \n", numExecuteCall);
+            //printf("\n No.%d executeCall in else statement in Executor::executeInstruction executed! \n", numExecuteCall);
             executeCall(*res.first, ki, f, arguments);
           } else {
             if (!hasInvalid) {
@@ -2404,8 +2410,8 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   case Instruction::Store: { //load operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
-    ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
-    printf("temp_value = %d\n", temp_value->getZExtValue());
+    //ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
+    //printf("temp_value = %d\n", temp_value->getZExtValue());
     executeMemoryOperation(state, true, base, value, 0);
     break;
   }
@@ -3124,7 +3130,7 @@ std::string Executor::getAddressInfo(ExecutionState &state,
   uint64_t example;
   if (ConstantExpr *CE = dyn_cast<ConstantExpr>(address)) {
     example = CE->getZExtValue();
-    printf("example's value : %d\n", example);
+    //printf("example's value : %d\n", example);
   } else {
     ref<ConstantExpr> value;
     bool success = solver->getValue(state, address, value);
@@ -3896,7 +3902,7 @@ void Executor::runFunctionAsMain(Function *f, //the initial execution function
   //save f to KFunction structure, to help KLEE deal with function more convenient
   // KFunction is defined in /klee/include/klee/Internal/Module/KModule.h
   KFunction *kf = kmodule->functionMap[f];
-  printf("runFunctionAsMain *kf name : %s\n", kf->function->getName().str().c_str());
+  //printf("runFunctionAsMain *kf name : %s\n", kf->function->getName().str().c_str());
   assert(kf);
   // allocate memory for arguments and save them to the vector "argument"
   // Noted that the number of arguments should be no more than 3, why? whose arguments? KLEE main or test function main?
@@ -3937,9 +3943,9 @@ void Executor::runFunctionAsMain(Function *f, //the initial execution function
     statsTracker->framePushed(*state, 0);
 
   assert(arguments.size() == f->arg_size() && "wrong number of arguments");
-  printf("f->arg_size() = %d\n", (int)arguments.size());
+  //printf("f->arg_size() = %d\n", (int)arguments.size());
   for (unsigned i = 0, e = f->arg_size(); i != e; ++i){
-      printf("Num.%d of arg_size()\n", i);
+      //printf("Num.%d of arg_size()\n", i);
       bindArgument(kf, i, *state, arguments[i]);
   }
 

@@ -6,5 +6,5 @@ KLEE: WARNING: undefined reference to function: llvm.dbg.label
 KLEE: WARNING: undefined reference to function: open
 KLEE: WARNING: undefined reference to function: write
 KLEE: WARNING: undefined reference to function: kill (UNSAFE)!
-KLEE: WARNING ONCE: calling external: ioctl(0, 21505, 94538689928992) at libc/termios/tcgetattr.c:43 12
+KLEE: WARNING ONCE: calling external: ioctl(0, 21505, 100720640) at libc/termios/tcgetattr.c:43 12
 KLEE: WARNING ONCE: calling __user_main with extra arguments.
