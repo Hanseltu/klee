@@ -20,7 +20,7 @@
 
 #include <inttypes.h>
 #include <sys/mman.h>
-
+#include "klee/klee.h"
 using namespace klee;
 
 namespace {
@@ -136,8 +136,76 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
     }
   } else {
     // Use malloc for the standard case
-    if (alignment <= 8)
+    if (alignment <= 8) {
       address = (uint64_t)malloc(size);
+      //klee_make_symbolic(&address, sizeof(address), "sym_malloc");
+      //printf("the address in KLEE is %lld\n", address);
+    }
+    else {
+      int res = posix_memalign((void **)&address, alignment, size);
+      if (res < 0) {
+        klee_warning("Allocating aligned memory failed.");
+        address = 0;
+      }
+    }
+  }
+
+  if (!address)
+    return 0;
+
+  ++stats::allocations;
+  MemoryObject *res = new MemoryObject(address, size, isLocal, isGlobal, false,
+                                       allocSite, this);
+  objects.insert(res);
+  return res;
+}
+
+MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
+                                      bool isGlobal,
+                                      const llvm::Value *allocSite,
+                                      size_t alignment,
+                                      bool isMalloc) {
+  if (size > 10 * 1024 * 1024)
+    klee_warning_once(0, "Large alloc: %" PRIu64
+                         " bytes.  KLEE may run out of memory.",
+                      size);
+
+  // Return NULL if size is zero, this is equal to error during allocation
+  if (NullOnZeroMalloc && size == 0)
+    return 0;
+
+  if (!llvm::isPowerOf2_64(alignment)) {
+    klee_warning("Only alignment of power of two is supported");
+    return 0;
+  }
+
+  uint64_t address = 0;
+  if (DeterministicAllocation) {
+#if LLVM_VERSION_CODE >= LLVM_VERSION(3, 9)
+    address = llvm::alignTo((uint64_t)nextFreeSlot + alignment - 1, alignment);
+#else
+    address = llvm::RoundUpToAlignment((uint64_t)nextFreeSlot + alignment - 1,
+                                       alignment);
+#endif
+
+    // Handle the case of 0-sized allocations as 1-byte allocations.
+    // This way, we make sure we have this allocation between its own red zones
+    size_t alloc_size = std::max(size, (uint64_t)1);
+    if ((char *)address + alloc_size < deterministicSpace + spaceSize) {
+      nextFreeSlot = (char *)address + alloc_size + RedzoneSize;
+    } else {
+      klee_warning_once(0, "Couldn't allocate %" PRIu64
+                           " bytes. Not enough deterministic space left.",
+                        size);
+      address = 0;
+    }
+  } else {
+    // Use malloc for the standard case
+    if (alignment <= 8) {
+      address = (uint64_t)malloc(size);
+      //klee_make_symbolic(&address, sizeof(address), "sym_malloc");
+      printf("the address in KLEE is %lld\n", address);
+    }
     else {
       int res = posix_memalign((void **)&address, alignment, size);
       if (res < 0) {

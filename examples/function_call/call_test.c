@@ -68,5 +68,6 @@ int main() {
   //int ret2 = func2(b, c);
   //int ret3 = func3(d);
   //int ret4 = func4(f, g);
+  klee_print_expr("test:", a);
   return 0;
 }

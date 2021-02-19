@@ -1,0 +1,4 @@
+Error: external call with symbolic argument: printf
+Stack: 
+	#000000265 in test (array=64636080, nelem=4)
+	#100000371 in main ()

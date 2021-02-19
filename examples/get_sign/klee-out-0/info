@@ -1,14 +1,14 @@
 klee get_sign.bc
-PID: 1319195
+PID: 28901
 Using monotonic steady clock with 1/1000000000s resolution
-Started: 2020-10-12 16:00:33
+Started: 2021-02-19 20:30:48
 BEGIN searcher description
 <InterleavedSearcher> containing 2 searchers:
 RandomPathSearcher
 WeightedRandomSearcher::CoveringNew
 </InterleavedSearcher>
 END searcher description
-Finished: 2020-10-12 16:00:34
+Finished: 2021-02-19 20:30:49
 Elapsed: 00:00:01
 KLEE: done: explored paths = 72
 KLEE: done: avg. constructs per query = 22
@@ -17,6 +17,6 @@ KLEE: done: valid queries = 0
 KLEE: done: invalid queries = 9
 KLEE: done: query cex = 9
 
-KLEE: done: total instructions = 1400
+KLEE: done: total instructions = 1544
 KLEE: done: completed paths = 72
 KLEE: done: generated tests = 72

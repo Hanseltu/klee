@@ -4,6 +4,7 @@ target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16
 target triple = "x86_64-unknown-linux-gnu"
 
 @.str = private unnamed_addr constant [2 x i8] c"a\00", align 1
+@.str.1 = private unnamed_addr constant [6 x i8] c"test:\00", align 1
 
 ; Function Attrs: noinline nounwind optnone uwtable
 define dso_local i32 @func1(i32 %a) #0 {
@@ -153,10 +154,14 @@ entry:
   %1 = load i32, i32* %a, align 4
   %call = call i32 @func1(i32 %1)
   store i32 %call, i32* %ret1, align 4
+  %2 = load i32, i32* %a, align 4
+  call void (i8*, ...) @klee_print_expr(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.1, i64 0, i64 0), i32 %2)
   ret i32 0
 }
 
 declare dso_local void @klee_make_symbolic(i8*, i64, i8*) #1
+
+declare dso_local void @klee_print_expr(i8*, ...) #1
 
 attributes #0 = { noinline nounwind optnone uwtable "disable-tail-calls"="false" "frame-pointer"="all" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #1 = { "disable-tail-calls"="false" "frame-pointer"="all" "less-precise-fpmad"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "tune-cpu"="generic" "unsafe-fp-math"="false" "use-soft-float"="false" }
@@ -165,4 +170,4 @@ attributes #1 = { "disable-tail-calls"="false" "frame-pointer"="all" "less-preci
 !llvm.ident = !{!1}
 
 !0 = !{i32 1, !"wchar_size", i32 4}
-!1 = !{!"clang version 13.0.0 (https://github.com/llvm/llvm-project 48bdd676a1d1338c10541460bf5beb69ac17e451)"}
+!1 = !{!"clang version 13.0.0 (https://github.com/llvm/llvm-project 22f00f61dd5483a9fdaed3b7592d392c23b3646a)"}

@@ -50,5 +50,6 @@ int main() {
   int ret2 = add(b,c);
   int ret3 = compare(d, e);
   int ret4 = func(f, g);
+  klee_print_expr("test", a);
   return 0;
 }
