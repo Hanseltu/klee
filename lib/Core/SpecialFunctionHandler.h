@@ -98,7 +98,7 @@ namespace klee {
     /* Handlers */
 
     //special
-    void handleMakeSymbolicForMalloc (ExecutionState &state, KInstruction *target);
+    void handleMakeSymbolicForMalloc (ExecutionState &state, KInstruction *target, uint64_t address, uint64_t allocated_size);
 
 #define HANDLER(name) void name(ExecutionState &state, \
                                 KInstruction *target, \

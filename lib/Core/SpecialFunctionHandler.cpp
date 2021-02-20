@@ -794,6 +794,7 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
 
   for (Executor::ExactResolutionList::iterator it = rl.begin(),
          ie = rl.end(); it != ie; ++it) {
+    printf("rl for loop\n");
     const MemoryObject *mo = it->first.first;
     mo->setName(name);
 
@@ -827,7 +828,9 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
 }
 
 void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
-                                                KInstruction *target) {
+                                                         KInstruction *target,
+                                                         uint64_t address,
+                                                         uint64_t allocated_size) {
   std::string name;
 
   //if (arguments.size() != 3) {
@@ -843,9 +846,11 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
     klee_warning("klee_make_symbolic: renamed empty name to \"unnamed\"");
   }
 
-  /*
+
   Executor::ExactResolutionList rl;
-  executor.resolveExact(state, arguments[0], rl, "make_symbolic");
+  ref<ConstantExpr> tmp = ConstantExpr::create(address,64);
+  ref<Expr> argu =dyn_cast<Expr>(tmp);
+  executor.resolveExact(state, argu, rl, "make_symbolic");
 
   for (Executor::ExactResolutionList::iterator it = rl.begin(),
          ie = rl.end(); it != ie; ++it) {
@@ -861,11 +866,14 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
       return;
     }
 
+
     // FIXME: Type coercion should be done consistently somewhere.
     bool res;
+    ref<ConstantExpr> temp2 = ConstantExpr::create(allocated_size, 64);
+    ref<Expr> argu_1 = dyn_cast<Expr>(temp2);
     bool success __attribute__ ((unused)) =
       executor.solver->mustBeTrue(*s,
-                                  EqExpr::create(ZExtExpr::create(arguments[1],
+                                  EqExpr::create(ZExtExpr::create(argu_1,
                                                                   Context::get().getPointerWidth()),
                                                  mo->getSizeExpr()),
                                   res);
@@ -878,7 +886,7 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
                                      "wrong size given to klee_make_symbolic[_name]",
                                      Executor::User);
     }
-  }*/
+  }
 }
 
 

@@ -15,55 +15,54 @@ define dso_local i32 @main() #0 {
   %2 = alloca i32, align 4
   %3 = alloca i32, align 4
   %4 = alloca i32*, align 8
-  %5 = alloca i32*, align 8
   store i32 0, i32* %1, align 4
   store i32 0, i32* %2, align 4
-  %6 = bitcast i32* %2 to i8*
-  call void @klee_make_symbolic(i8* %6, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i64 0, i64 0))
-  %7 = load i32, i32* %2, align 4
-  %8 = icmp sgt i32 %7, 0
-  br i1 %8, label %9, label %10
+  %5 = bitcast i32* %2 to i8*
+  call void @klee_make_symbolic(i8* %5, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i64 0, i64 0))
+  %6 = load i32, i32* %2, align 4
+  %7 = icmp sgt i32 %6, 0
+  br i1 %7, label %8, label %9
+
+8:                                                ; preds = %0
+  store i32 999, i32* %3, align 4
+  br label %15
 
 9:                                                ; preds = %0
-  store i32 999, i32* %3, align 4
-  br label %16
+  %10 = load i32, i32* %2, align 4
+  %11 = icmp eq i32 %10, 0
+  br i1 %11, label %12, label %13
 
-10:                                               ; preds = %0
-  %11 = load i32, i32* %2, align 4
-  %12 = icmp eq i32 %11, 0
-  br i1 %12, label %13, label %14
-
-13:                                               ; preds = %10
+12:                                               ; preds = %9
   store i32 888, i32* %3, align 4
-  br label %15
+  br label %14
 
-14:                                               ; preds = %10
+13:                                               ; preds = %9
   store i32 777, i32* %3, align 4
+  br label %14
+
+14:                                               ; preds = %13, %12
   br label %15
 
-15:                                               ; preds = %14, %13
-  br label %16
-
-16:                                               ; preds = %15, %9
-  %17 = call noalias i8* @malloc(i64 800) #3
-  %18 = bitcast i8* %17 to i32*
-  store i32* %18, i32** %4, align 8
-  %19 = load i32*, i32** %4, align 8
-  %20 = getelementptr inbounds i32, i32* %19, i64 199
-  store i32 100, i32* %20, align 4
-  %21 = load i32*, i32** %4, align 8
-  store i32* %21, i32** %5, align 8
-  %22 = load i32*, i32** %5, align 8
-  %23 = load i32*, i32** %4, align 8
-  %24 = getelementptr inbounds i32, i32* %23, i64 100
-  %25 = icmp ult i32* %22, %24
+15:                                               ; preds = %14, %8
+  %16 = call noalias i8* @malloc(i64 1600) #3
+  %17 = bitcast i8* %16 to i32*
+  store i32* %17, i32** %4, align 8
+  %18 = load i32*, i32** %4, align 8
+  %19 = getelementptr inbounds i32, i32* %18, i64 199
+  store i32 100, i32* %19, align 4
+  %20 = load i32*, i32** %4, align 8
+  %21 = load i32, i32* %2, align 4
+  %22 = add nsw i32 %21, 100
+  %23 = sext i32 %22 to i64
+  %24 = inttoptr i64 %23 to i32*
+  %25 = icmp ult i32* %20, %24
   br i1 %25, label %26, label %28
 
-26:                                               ; preds = %16
+26:                                               ; preds = %15
   %27 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i64 0, i64 0))
   br label %30
 
-28:                                               ; preds = %16
+28:                                               ; preds = %15
   %29 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.2, i64 0, i64 0))
   br label %30
 

@@ -3633,8 +3633,10 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
     MemoryObject *mo =
         memory->allocate(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment, /*isMalloc*/true);
+    uint64_t allocated_size = CE->getZExtValue();
     //new added
-    specialFunctionHandler->handleMakeSymbolicForMalloc(state, target);
+    //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address);
+    //executeMakeSymbolic(state, mo, "test");
     /*
     std::string name = "test_sym";
     printf("executeMakeSymbolic executed!\n");
@@ -3666,6 +3668,7 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
           os->write(i, reallocFrom->read8(i));
         state.addressSpace.unbindObject(reallocFrom->getObject());
       }
+      specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, allocated_size);
     }
   } else {
     // XXX For now we just pick a size. Ideally we would support

@@ -12,11 +12,10 @@ int main(){
     else
         b = 777;
 
-    int *p1 = (int*) malloc(8*100);
-    //klee_make_symbolic(p1, sizeof(16), "test_sym");
+    int *p1 = (int*) malloc(8*200);
+    //klee_make_symbolic(p1, 800, "test_sym");
     *(p1 + 199) = 100;
-    int *p2 = p1;
-    if (p2 < p1 + 100)
+    if (p1 < a + 100)
         printf("1\n");
     else
         printf("2\n");
