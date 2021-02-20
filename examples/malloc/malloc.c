@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "klee/klee.h"
 int main(){
     int a = 0,b;
@@ -12,7 +13,11 @@ int main(){
     else
         b = 777;
 
-    int *p1 = (int*) malloc(8*200);
+    assert(klee_is_symbolic(a));
+    int *p1 = (int*) malloc(8*100);
+    int *p2 = (int*) malloc(8*100);
+    assert(klee_is_symbolic(*p1));
+    assert(klee_is_symbolic(*p2));
     //klee_make_symbolic(p1, 800, "test_sym");
     *(p1 + 199) = 100;
     if (p1 < a + 100)

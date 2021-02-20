@@ -12,6 +12,6 @@
 #define KLEE_COMPILETIMEINFO_H
 
 #define KLEE_BUILD_MODE "Debug (Asserts: ON)"
-#define KLEE_BUILD_REVISION "d5fb1dd890929c3b81ba2bfa1b6c2616cc0f251f"
+#define KLEE_BUILD_REVISION "56cd2778cfa8cefdab9d6d9aebbb9ad4478402e2"
 
 #endif /* KLEE_COMPILETIMEINFO_H */
