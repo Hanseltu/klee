@@ -17,6 +17,7 @@ define dso_local i32 @main() #0 {
   %4 = alloca i32*, align 8
   %5 = alloca i32*, align 8
   store i32 0, i32* %1, align 4
+  store i32 0, i32* %2, align 4
   %6 = bitcast i32* %2 to i8*
   call void @klee_make_symbolic(i8* %6, i64 4, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i64 0, i64 0))
   %7 = load i32, i32* %2, align 4

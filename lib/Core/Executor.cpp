@@ -3634,6 +3634,8 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
         memory->allocate(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment, /*isMalloc*/true);
     //new added
+    specialFunctionHandler->handleMakeSymbolicForMalloc(state, target);
+    /*
     std::string name = "test_sym";
     printf("executeMakeSymbolic executed!\n");
     executeMakeSymbolic(state, mo, name);
@@ -3645,7 +3647,7 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
     const Array *array = arrayCache.CreateArray(uniqueName, mo->size);
     bindObjectInState(state, mo, false, array);
     state.addSymbolic(mo, array);
-
+    */
     if (!mo) {
       bindLocal(target, state,
                 ConstantExpr::alloc(0, Context::get().getPointerWidth()));

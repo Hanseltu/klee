@@ -221,7 +221,21 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
   ++stats::allocations;
   MemoryObject *res = new MemoryObject(address, size, isLocal, isGlobal, false,
                                        allocSite, this);
+  /*
+  //new added
+  std::string name = "test_sym";
+  printf("executeMakeSymbolic executed!\n");
+  executor.executeMakeSymbolic(state, res, name);
+  unsigned id = 0;
+  std::string uniqueName = name;
+  while (!state.arrayNames.insert(uniqueName).second) {
+      uniqueName = name + "_" + llvm::utostr(++id);
+  }
+  const Array *array = arrayCache->CreateArray(uniqueName, res->size);
+  bindObjectInState(state, res, false, array);
+  state.addSymbolic(res, array);
   objects.insert(res);
+  */
   return res;
 }
 

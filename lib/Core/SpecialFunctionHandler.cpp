@@ -826,6 +826,62 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
   }
 }
 
+void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
+                                                KInstruction *target) {
+  std::string name;
+
+  //if (arguments.size() != 3) {
+  //  executor.terminateStateOnError(state, "Incorrect number of arguments to klee_make_symbolic(void*, size_t, char*)", Executor::User);
+  //  return;
+  //}
+
+  //name = arguments[2]->isZero() ? "" : readStringAtAddress(state, arguments[2]);
+  name = "test_sym_malloc";
+
+  if (name.length() == 0) {
+    name = "unnamed";
+    klee_warning("klee_make_symbolic: renamed empty name to \"unnamed\"");
+  }
+
+  /*
+  Executor::ExactResolutionList rl;
+  executor.resolveExact(state, arguments[0], rl, "make_symbolic");
+
+  for (Executor::ExactResolutionList::iterator it = rl.begin(),
+         ie = rl.end(); it != ie; ++it) {
+    const MemoryObject *mo = it->first.first;
+    mo->setName(name);
+
+    const ObjectState *old = it->first.second;
+    ExecutionState *s = it->second;
+
+    if (old->readOnly) {
+      executor.terminateStateOnError(*s, "cannot make readonly object symbolic",
+                                     Executor::User);
+      return;
+    }
+
+    // FIXME: Type coercion should be done consistently somewhere.
+    bool res;
+    bool success __attribute__ ((unused)) =
+      executor.solver->mustBeTrue(*s,
+                                  EqExpr::create(ZExtExpr::create(arguments[1],
+                                                                  Context::get().getPointerWidth()),
+                                                 mo->getSizeExpr()),
+                                  res);
+    assert(success && "FIXME: Unhandled solver failure");
+
+    if (res) {
+      executor.executeMakeSymbolic(*s, mo, name);
+    } else {
+      executor.terminateStateOnError(*s,
+                                     "wrong size given to klee_make_symbolic[_name]",
+                                     Executor::User);
+    }
+  }*/
+}
+
+
 void SpecialFunctionHandler::handleMarkGlobal(ExecutionState &state,
                                               KInstruction *target,
                                               std::vector<ref<Expr> > &arguments) {

@@ -43,6 +43,7 @@ public:
   MemoryObject *allocate(uint64_t size, bool isLocal, bool isGlobal,
                          const llvm::Value *allocSite, size_t alignment);
 
+  //allocate for malloc
   MemoryObject *allocate(uint64_t size, bool isLocal, bool isGlobal,
                          const llvm::Value *allocSite, size_t alignment, bool isMalloc);
 
