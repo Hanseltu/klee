@@ -839,7 +839,7 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
   //}
 
   //name = arguments[2]->isZero() ? "" : readStringAtAddress(state, arguments[2]);
-  name = "test_sym_malloc";
+  name = "symbolic_malloc_return_address_" + std::to_string(address);
 
   if (name.length() == 0) {
     name = "unnamed";
@@ -848,14 +848,15 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
 
 
   Executor::ExactResolutionList rl;
-  ref<ConstantExpr> tmp = ConstantExpr::create(address,64);
-  ref<Expr> argu =dyn_cast<Expr>(tmp);
-  executor.resolveExact(state, argu, rl, "make_symbolic");
+  ref<Expr> tmp = ConstantExpr::create(address,64);
+  //ref<Expr> argu =dyn_cast<Expr>(tmp);
+  executor.resolveExact(state, tmp, rl, "make_symbolic");
 
   for (Executor::ExactResolutionList::iterator it = rl.begin(),
          ie = rl.end(); it != ie; ++it) {
     const MemoryObject *mo = it->first.first;
     mo->setName(name);
+    //mo->setIsMallocAddress(1);
 
     const ObjectState *old = it->first.second;
     ExecutionState *s = it->second;
@@ -869,16 +870,16 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
 
     // FIXME: Type coercion should be done consistently somewhere.
     bool res;
-    ref<ConstantExpr> temp2 = ConstantExpr::create(allocated_size, 64);
-    ref<Expr> argu_1 = dyn_cast<Expr>(temp2);
+    //allocated_size = 64;
+    ref<Expr> temp2 = ConstantExpr::create(allocated_size, 64);
+    //iref<Expr> argu_1 = dyn_cast<Expr>(temp2);
     bool success __attribute__ ((unused)) =
       executor.solver->mustBeTrue(*s,
-                                  EqExpr::create(ZExtExpr::create(argu_1,
+                                  EqExpr::create(ZExtExpr::create(temp2,
                                                                   Context::get().getPointerWidth()),
                                                  mo->getSizeExpr()),
                                   res);
     assert(success && "FIXME: Unhandled solver failure");
-
     if (res) {
       executor.executeMakeSymbolic(*s, mo, name);
     } else {

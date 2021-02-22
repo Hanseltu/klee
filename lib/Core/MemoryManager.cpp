@@ -139,7 +139,7 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
     if (alignment <= 8) {
       address = (uint64_t)malloc(size);
       //klee_make_symbolic(&address, sizeof(address), "sym_malloc");
-      //printf("the address in KLEE is %lld\n", address);
+      printf("the normal variable address in KLEE is %lld\n", address);
     }
     else {
       int res = posix_memalign((void **)&address, alignment, size);
@@ -204,7 +204,7 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
     if (alignment <= 8) {
       address = (uint64_t)malloc(size);
       //klee_make_symbolic(&address, sizeof(address), "sym_malloc");
-      printf("the address in KLEE is %lld\n", address);
+      printf("the malloc return address in KLEE is %lld\n", address);
     }
     else {
       int res = posix_memalign((void **)&address, alignment, size);
@@ -221,6 +221,8 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
   ++stats::allocations;
   MemoryObject *res = new MemoryObject(address, size, isLocal, isGlobal, false,
                                        allocSite, this);
+  res->isMallocBuffer = 1;
+
   /*
   //new added
   std::string name = "test_sym";
@@ -234,8 +236,8 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
   const Array *array = arrayCache->CreateArray(uniqueName, res->size);
   bindObjectInState(state, res, false, array);
   state.addSymbolic(res, array);
-  objects.insert(res);
   */
+  objects.insert(res);
   return res;
 }
 

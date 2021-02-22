@@ -306,7 +306,7 @@ private:
                    ref<Expr> address,
                    KInstruction *target = 0);
 
-  void executeCall(ExecutionState &state,
+  int executeCall(ExecutionState &state,
                    KInstruction *ki,
                    llvm::Function *f,
                    std::vector< ref<Expr> > &arguments);
@@ -314,6 +314,12 @@ private:
   // do address resolution / object binding / out of bounds checking
   // and perform the operation
   void executeMemoryOperation(ExecutionState &state,
+                              bool isWrite,
+                              ref<Expr> address,
+                              ref<Expr> value /* undef if read */,
+                              KInstruction *target /* undef if write */);
+
+  int executeMemoryOperationForMalloc(ExecutionState &state,
                               bool isWrite,
                               ref<Expr> address,
                               ref<Expr> value /* undef if read */,

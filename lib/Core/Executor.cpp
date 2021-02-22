@@ -1364,32 +1364,43 @@ static inline const llvm::fltSemantics *fpWidthToSemantics(unsigned width) {
 }
 
 int num_ec = 0;
-void Executor::executeCall(ExecutionState &state,
+int Executor::executeCall(ExecutionState &state,
                            KInstruction *ki,
                            Function *f,
                            std::vector< ref<Expr> > &arguments) {
   //new added test function
   //printf("No.%d executionCall in Executor::executeCall\n", num_ec);
   num_ec += 1;
+  static int ret;
   Instruction *i = ki->inst;
   // check Instrinsic, =0 if not dbg_declare, dbg_value, dbg_addr, dgb_label
   if (i && isa<DbgInfoIntrinsic>(i))
-    return;
+    return 0;
   if (f && f->isDeclaration()) {
     //getIntrinsicID returns the ID number of the specified function, or Instrinsic:not_intrinsic if the function is not an intrinsic, or if the pointer is null
     switch(f->getIntrinsicID()) {
-    case Intrinsic::not_intrinsic:
+    case Intrinsic::not_intrinsic: {
       // state may be destroyed by this call, cannot touch
       callExternalFunction(state, ki, f, arguments);
+
+      std::string str("malloc");
+      std::string str_from_function = f->getName().str().c_str();
+      if (str_from_function.compare(str) == 0){
+        ret = 1;
+        printf("      function name of callExternalFunction: %s\n", f->getName().str().c_str());
+      }
       //printf("callExternalFunction executed in function executeCall!\n");
       break;
     // llvm.fabs return the absolute value of the operand
+     }
     case Intrinsic::fabs: {
       ref<ConstantExpr> arg =
           toConstant(state, eval(ki, 0, state).value, "floating point");
-      if (!fpWidthToSemantics(arg->getWidth()))
-        return terminateStateOnExecError(
+      if (!fpWidthToSemantics(arg->getWidth())){
+        terminateStateOnExecError(
             state, "Unsupported intrinsic llvm.fabs call");
+        return 0;
+      }
 
       llvm::APFloat Res(*fpWidthToSemantics(arg->getWidth()),
                         arg->getAPValue());
@@ -1406,7 +1417,7 @@ void Executor::executeCall(ExecutionState &state,
 
       // varargs can be zero if no varargs were provided
       if (!sf.varargs)
-        return;
+        return 0;
 
       // FIXME: This is really specific to the architecture, not the pointer
       // size. This happens to work for x86-32 and x86-64, however.
@@ -1463,7 +1474,7 @@ void Executor::executeCall(ExecutionState &state,
     if (RuntimeMaxStackFrames && state.stack.size() > RuntimeMaxStackFrames) {
       terminateStateEarly(state, "Maximum stack size reached.");
       klee_warning("Maximum stack size reached.");
-      return;
+      return 0;
     }
 
     // FIXME: I'm not really happy about this reliance on prevPC but it is ok, I
@@ -1509,7 +1520,7 @@ void Executor::executeCall(ExecutionState &state,
       } else if (callingArgs < funcArgs) {
         terminateStateOnError(state, "calling function with too few arguments",
                               User);
-        return;
+        return 0;
       }
     } else { // start from here if this function takes variable arguments, not easy to reach this path?
       //printf("2\n");
@@ -1518,7 +1529,7 @@ void Executor::executeCall(ExecutionState &state,
       if (callingArgs < funcArgs) {
         terminateStateOnError(state, "calling function with too few arguments",
                               User);
-        return;
+        return 0;
       }
 
       StackFrame &sf = state.stack.back(); // save the last stack frame in vector<StackFrame>, return value might be restored
@@ -1561,7 +1572,7 @@ void Executor::executeCall(ExecutionState &state,
                            (requires16ByteAlignment ? 16 : 8));
       if (!mo && size) {
         terminateStateOnExecError(state, "out of memory (varargs)");
-        return;
+        return 0;
       }
 
       if (mo) {
@@ -1609,6 +1620,7 @@ void Executor::executeCall(ExecutionState &state,
       bindArgument(kf, i, state, arguments[i]);
   }
   //printf("\n");
+  return ret;
 }
 
 void Executor::transferToBasicBlock(BasicBlock *dst, BasicBlock *src,
@@ -1683,6 +1695,8 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   printf("\n");
   i += 1;
   */
+  static int callMallocFunction = 0;
+  //int callBitcast = 0;
   Instruction *i = ki->inst;
   switch (i->getOpcode()) {
     // Control flow
@@ -2121,7 +2135,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         }
       }
       //printf(" No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
-      executeCall(state, ki, f, arguments);
+      callMallocFunction = executeCall(state, ki, f, arguments);
     } else { // call a not normal function?
       ref<Expr> v = eval(ki, 0, state).value;
 
@@ -2150,7 +2164,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                                 f->getName().data());
 
             //printf("\n No.%d executeCall in else statement in Executor::executeInstruction executed! \n", numExecuteCall);
-            executeCall(*res.first, ki, f, arguments);
+            callMallocFunction = executeCall(*res.first, ki, f, arguments);
           } else {
             if (!hasInvalid) {
               terminateStateOnExecError(state, "invalid function pointer");
@@ -2410,9 +2424,22 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   case Instruction::Store: { //load operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
-    //ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
-    //printf("temp_value = %d\n", temp_value->getZExtValue());
-    executeMemoryOperation(state, true, base, value, 0);
+
+    ref<ConstantExpr> temp_base = toConstant(state, base, "temp_base");
+    printf("temp_base = %d\n", temp_base->getZExtValue());
+
+    ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
+    printf("temp_value = %d\n", temp_value->getZExtValue());
+
+    printf("callMallocFunction = %d\n", callMallocFunction);
+    //here make the return address of malloc function to a symbol
+    if (callMallocFunction == 1) {
+        int success = executeMemoryOperationForMalloc(state, true, base, value, 0);
+        if (success == 1)
+            callMallocFunction = 0;
+    }
+    else
+        executeMemoryOperation(state, true, base, value, 0);
     break;
   }
 
@@ -3668,7 +3695,7 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
           os->write(i, reallocFrom->read8(i));
         state.addressSpace.unbindObject(reallocFrom->getObject());
       }
-      specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, allocated_size);
+      //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, allocated_size);
     }
   } else {
     // XXX For now we just pick a size. Ideally we would support
@@ -3845,6 +3872,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
   if (success) {
     const MemoryObject *mo = op.first;
+    //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
 
     if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
       address = toConstant(state, address, "max-sym-array-size");
@@ -3917,7 +3945,9 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         } else {
           ObjectState *wos = bound->addressSpace.getWriteable(mo, os);
           wos->write(mo->getOffsetExpr(address), value);
-        }
+          //unbindObject(mo);
+          //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, 8);
+       }
       } else {
         ref<Expr> result = os->read(mo->getOffsetExpr(address), type);
         bindLocal(target, *bound, result);
@@ -3940,6 +3970,160 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   }
 }
 
+int Executor::executeMemoryOperationForMalloc(ExecutionState &state,
+                                      bool isWrite,
+                                      ref<Expr> address,
+                                      ref<Expr> value /* undef if read */,
+                                      KInstruction *target /* undef if write */) {
+  int ret;
+  Expr::Width type = (isWrite ? value->getWidth() :
+                     getWidthForLLVMType(target->inst->getType()));
+  unsigned bytes = Expr::getMinBytesForWidth(type);
+
+  if (SimplifySymIndices) {
+    if (!isa<ConstantExpr>(address))
+      address = state.constraints.simplifyExpr(address);
+    if (isWrite && !isa<ConstantExpr>(value))
+      value = state.constraints.simplifyExpr(value);
+  }
+
+  address = optimizer.optimizeExpr(address, true);
+  ref<ConstantExpr> temp_address = toConstant(state, address, "temp_address");
+  printf("temp_address = %d\n", temp_address->getZExtValue());
+  //ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
+  //printf("  temp_value = %d\n", temp_value->getZExtValue());
+  // fast path: single in-bounds resolution
+  ObjectPair op;
+  bool success;
+  solver->setTimeout(coreSolverTimeout);
+  if (!state.addressSpace.resolveOne(state, solver, address, op, success)) {
+    address = toConstant(state, address, "resolveOne failure");
+    success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
+  }
+  solver->setTimeout(time::Span());
+
+  if (success) {
+    const MemoryObject *mo = op.first;
+    //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
+
+    if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
+      address = toConstant(state, address, "max-sym-array-size");
+    }
+
+    ref<Expr> offset = mo->getOffsetExpr(address);
+    ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
+    check = optimizer.optimizeExpr(check, true);
+
+    bool inBounds;
+    solver->setTimeout(coreSolverTimeout);
+    bool success = solver->mustBeTrue(state, check, inBounds);
+    solver->setTimeout(time::Span());
+    if (!success) {
+      state.pc = state.prevPC;
+      terminateStateEarly(state, "Query timed out (bounds check).");
+      return 0;
+    }
+
+    if (inBounds) {
+      const ObjectState *os = op.second;
+      if (isWrite) {
+        if (os->readOnly) {
+          terminateStateOnError(state, "memory error: object read only",
+                                ReadOnly);
+        } else {
+          ObjectState *wos = state.addressSpace.getWriteable(mo, os);
+          wos->write(offset, value);
+
+          //Here we find the MO of malloc buffer and make MO if malloc address to a symbol
+          //Here we also save the orginal [MO(address), OS(buffer)] to a new MemoryMap, so that we can find it later
+          ObjectPair opMallocBuffer;
+          bool success;
+          solver->setTimeout(coreSolverTimeout);
+          if (!state.addressSpace.resolveOne(state, solver, value, opMallocBuffer, success)) {
+             address = toConstant(state, address, "resolveOne failure");
+             success = state.addressSpace.resolveOne(cast<ConstantExpr>(value), opMallocBuffer);
+           }
+        solver->setTimeout(time::Span());
+
+        if (success) {
+            const MemoryObject *moMallocBuffer = opMallocBuffer.first;
+            printf("Find it! moMallocBuffer->address is %d\n", moMallocBuffer->address);
+            if (moMallocBuffer->isMallocBuffer){
+              //printf("YES---%d\n", mo->address);
+                specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
+                ret = 1;
+            }else
+                ret = 0;
+        }
+       }
+      } else {
+        ref<Expr> result = os->read(offset, type);
+
+        if (interpreterOpts.MakeConcreteSymbolic)
+          result = replaceReadWithSymbolic(state, result);
+
+        bindLocal(target, state, result);
+      }
+
+      return 0;
+    }
+  }
+
+  // we are on an error path (no resolution, multiple resolution, one
+  // resolution with out of bounds)
+
+  address = optimizer.optimizeExpr(address, true);
+  ResolutionList rl;
+  solver->setTimeout(coreSolverTimeout);
+  bool incomplete = state.addressSpace.resolve(state, solver, address, rl,
+                                               0, coreSolverTimeout);
+  solver->setTimeout(time::Span());
+
+  // XXX there is some query wasteage here. who cares?
+  ExecutionState *unbound = &state;
+
+  for (ResolutionList::iterator i = rl.begin(), ie = rl.end(); i != ie; ++i) {
+    const MemoryObject *mo = i->first;
+    const ObjectState *os = i->second;
+    ref<Expr> inBounds = mo->getBoundsCheckPointer(address, bytes);
+
+    StatePair branches = fork(*unbound, inBounds, true);
+    ExecutionState *bound = branches.first;
+
+    // bound can be 0 on failure or overlapped
+    if (bound) {
+      if (isWrite) {
+        if (os->readOnly) {
+          terminateStateOnError(*bound, "memory error: object read only",
+                                ReadOnly);
+        } else {
+          ObjectState *wos = bound->addressSpace.getWriteable(mo, os);
+          wos->write(mo->getOffsetExpr(address), value);
+          //unbindObject(mo);
+          //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, 8);
+       }
+      } else {
+        ref<Expr> result = os->read(mo->getOffsetExpr(address), type);
+        bindLocal(target, *bound, result);
+      }
+    }
+
+    unbound = branches.second;
+    if (!unbound)
+      break;
+  }
+
+  // XXX should we distinguish out of bounds and overlapped cases?
+  if (unbound) {
+    if (incomplete) {
+      terminateStateEarly(*unbound, "Query timed out (resolve).");
+    } else {
+      terminateStateOnError(*unbound, "memory error: out of bound pointer", Ptr,
+                            NULL, getAddressInfo(*unbound, address));
+    }
+  }
+  return ret;
+}
 
 void Executor::executeMakeSymbolic(ExecutionState &state,
                                    const MemoryObject *mo,

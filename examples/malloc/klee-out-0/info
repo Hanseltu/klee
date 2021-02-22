@@ -1,22 +1,22 @@
 klee --write-cvcs malloc.bc
-PID: 24601
+PID: 12684
 Using monotonic steady clock with 1/1000000000s resolution
-Started: 2021-02-20 18:45:43
+Started: 2021-02-22 20:43:22
 BEGIN searcher description
 <InterleavedSearcher> containing 2 searchers:
 RandomPathSearcher
 WeightedRandomSearcher::CoveringNew
 </InterleavedSearcher>
 END searcher description
-Finished: 2021-02-20 18:45:43
+Finished: 2021-02-22 20:43:22
 Elapsed: 00:00:00
-KLEE: done: explored paths = 5
-KLEE: done: avg. constructs per query = 57
-KLEE: done: total queries = 5
+KLEE: done: explored paths = 3
+KLEE: done: avg. constructs per query = 61
+KLEE: done: total queries = 3
 KLEE: done: valid queries = 0
-KLEE: done: invalid queries = 5
-KLEE: done: query cex = 5
+KLEE: done: invalid queries = 3
+KLEE: done: query cex = 3
 
-KLEE: done: total instructions = 176
-KLEE: done: completed paths = 5
-KLEE: done: generated tests = 5
+KLEE: done: total instructions = 79
+KLEE: done: completed paths = 3
+KLEE: done: generated tests = 3
