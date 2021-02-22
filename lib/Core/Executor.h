@@ -306,7 +306,7 @@ private:
                    ref<Expr> address,
                    KInstruction *target = 0);
 
-  int executeCall(ExecutionState &state,
+  void executeCall(ExecutionState &state,
                    KInstruction *ki,
                    llvm::Function *f,
                    std::vector< ref<Expr> > &arguments);
@@ -319,11 +319,6 @@ private:
                               ref<Expr> value /* undef if read */,
                               KInstruction *target /* undef if write */);
 
-  int executeMemoryOperationForMalloc(ExecutionState &state,
-                              bool isWrite,
-                              ref<Expr> address,
-                              ref<Expr> value /* undef if read */,
-                              KInstruction *target /* undef if write */);
 
   void executeMakeSymbolic(ExecutionState &state, const MemoryObject *mo,
                            const std::string &name);

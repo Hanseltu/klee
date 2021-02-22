@@ -839,8 +839,8 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
   //}
 
   //name = arguments[2]->isZero() ? "" : readStringAtAddress(state, arguments[2]);
-  name = "symbolic_malloc_return_address_" + std::to_string(address);
-
+  name = "symbolic_address_" + std::to_string(address);
+  printf("symbolic name = %s\n", name.c_str());
   if (name.length() == 0) {
     name = "unnamed";
     klee_warning("klee_make_symbolic: renamed empty name to \"unnamed\"");

@@ -20,10 +20,19 @@ int main(){
     //int *p4 = (int*) malloc(8*100);
     //*(p1 + 100) = 999;
     long long *p2 = malloc(8*100);
+    char *p3 = malloc(8*100);
+    double *p4 = malloc(8*100);
+    long  *p5 = malloc(8*100);
     assert(klee_is_symbolic(p1));
     assert(klee_is_symbolic(p2));
+    assert(klee_is_symbolic(p3));
+    assert(klee_is_symbolic(p4));
+    assert(klee_is_symbolic(p5));
+    int c = 0;
+    int d;
+    d = 10;
     //klee_make_symbolic(p1, 800, "test_sym");
-    //*p1 = 100;
+    //*p5 = 100;
     //if (p1 < a + 100)
     //    printf("1\n");
     //else

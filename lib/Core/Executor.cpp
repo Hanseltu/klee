@@ -1364,18 +1364,17 @@ static inline const llvm::fltSemantics *fpWidthToSemantics(unsigned width) {
 }
 
 int num_ec = 0;
-int Executor::executeCall(ExecutionState &state,
+void Executor::executeCall(ExecutionState &state,
                            KInstruction *ki,
                            Function *f,
                            std::vector< ref<Expr> > &arguments) {
   //new added test function
   //printf("No.%d executionCall in Executor::executeCall\n", num_ec);
   num_ec += 1;
-  static int ret;
   Instruction *i = ki->inst;
   // check Instrinsic, =0 if not dbg_declare, dbg_value, dbg_addr, dgb_label
   if (i && isa<DbgInfoIntrinsic>(i))
-    return 0;
+    return ;
   if (f && f->isDeclaration()) {
     //getIntrinsicID returns the ID number of the specified function, or Instrinsic:not_intrinsic if the function is not an intrinsic, or if the pointer is null
     switch(f->getIntrinsicID()) {
@@ -1383,12 +1382,14 @@ int Executor::executeCall(ExecutionState &state,
       // state may be destroyed by this call, cannot touch
       callExternalFunction(state, ki, f, arguments);
 
+      /*
       std::string str("malloc");
       std::string str_from_function = f->getName().str().c_str();
       if (str_from_function.compare(str) == 0){
         ret = 1;
         printf("      function name of callExternalFunction: %s\n", f->getName().str().c_str());
       }
+      */
       //printf("callExternalFunction executed in function executeCall!\n");
       break;
     // llvm.fabs return the absolute value of the operand
@@ -1399,7 +1400,7 @@ int Executor::executeCall(ExecutionState &state,
       if (!fpWidthToSemantics(arg->getWidth())){
         terminateStateOnExecError(
             state, "Unsupported intrinsic llvm.fabs call");
-        return 0;
+        return ;
       }
 
       llvm::APFloat Res(*fpWidthToSemantics(arg->getWidth()),
@@ -1417,7 +1418,7 @@ int Executor::executeCall(ExecutionState &state,
 
       // varargs can be zero if no varargs were provided
       if (!sf.varargs)
-        return 0;
+        return ;
 
       // FIXME: This is really specific to the architecture, not the pointer
       // size. This happens to work for x86-32 and x86-64, however.
@@ -1474,7 +1475,7 @@ int Executor::executeCall(ExecutionState &state,
     if (RuntimeMaxStackFrames && state.stack.size() > RuntimeMaxStackFrames) {
       terminateStateEarly(state, "Maximum stack size reached.");
       klee_warning("Maximum stack size reached.");
-      return 0;
+      return ;
     }
 
     // FIXME: I'm not really happy about this reliance on prevPC but it is ok, I
@@ -1520,7 +1521,7 @@ int Executor::executeCall(ExecutionState &state,
       } else if (callingArgs < funcArgs) {
         terminateStateOnError(state, "calling function with too few arguments",
                               User);
-        return 0;
+        return ;
       }
     } else { // start from here if this function takes variable arguments, not easy to reach this path?
       //printf("2\n");
@@ -1529,7 +1530,7 @@ int Executor::executeCall(ExecutionState &state,
       if (callingArgs < funcArgs) {
         terminateStateOnError(state, "calling function with too few arguments",
                               User);
-        return 0;
+        return ;
       }
 
       StackFrame &sf = state.stack.back(); // save the last stack frame in vector<StackFrame>, return value might be restored
@@ -1572,7 +1573,7 @@ int Executor::executeCall(ExecutionState &state,
                            (requires16ByteAlignment ? 16 : 8));
       if (!mo && size) {
         terminateStateOnExecError(state, "out of memory (varargs)");
-        return 0;
+        return ;
       }
 
       if (mo) {
@@ -1619,8 +1620,8 @@ int Executor::executeCall(ExecutionState &state,
     for (unsigned i=0; i<numFormals; ++i)
       bindArgument(kf, i, state, arguments[i]);
   }
-  //printf("\n");
-  return ret;
+  //printf("executeCall return = %d\n", ret);
+  return ;
 }
 
 void Executor::transferToBasicBlock(BasicBlock *dst, BasicBlock *src,
@@ -2135,7 +2136,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         }
       }
       //printf(" No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
-      callMallocFunction = executeCall(state, ki, f, arguments);
+      executeCall(state, ki, f, arguments);
     } else { // call a not normal function?
       ref<Expr> v = eval(ki, 0, state).value;
 
@@ -2164,7 +2165,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                                 f->getName().data());
 
             //printf("\n No.%d executeCall in else statement in Executor::executeInstruction executed! \n", numExecuteCall);
-            callMallocFunction = executeCall(*res.first, ki, f, arguments);
+            executeCall(*res.first, ki, f, arguments);
           } else {
             if (!hasInvalid) {
               terminateStateOnExecError(state, "invalid function pointer");
@@ -2425,21 +2426,17 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
 
+    /*
     ref<ConstantExpr> temp_base = toConstant(state, base, "temp_base");
     printf("temp_base = %d\n", temp_base->getZExtValue());
 
     ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
     printf("temp_value = %d\n", temp_value->getZExtValue());
+    */
 
-    printf("callMallocFunction = %d\n", callMallocFunction);
-    //here make the return address of malloc function to a symbol
-    if (callMallocFunction == 1) {
-        int success = executeMemoryOperationForMalloc(state, true, base, value, 0);
-        if (success == 1)
-            callMallocFunction = 0;
-    }
-    else
-        executeMemoryOperation(state, true, base, value, 0);
+    //printf("callMallocFunction = %d\n", callMallocFunction);
+    executeMemoryOperation(state, true, base, value, 0);
+    //executeMemoryOperationForMalloc(state, true, base, value, 0);
     break;
   }
 
@@ -3839,11 +3836,13 @@ void Executor::resolveExact(ExecutionState &state,
   }
 }
 
+/*
 void Executor::executeMemoryOperation(ExecutionState &state,
                                       bool isWrite,
                                       ref<Expr> address,
-                                      ref<Expr> value /* undef if read */,
-                                      KInstruction *target /* undef if write */) {
+                                      ref<Expr> value, // undef if read
+                                      KInstruction *target //  undef if write
+                                      ) {
   Expr::Width type = (isWrite ? value->getWidth() :
                      getWidthForLLVMType(target->inst->getType()));
   unsigned bytes = Expr::getMinBytesForWidth(type);
@@ -3969,13 +3968,13 @@ void Executor::executeMemoryOperation(ExecutionState &state,
     }
   }
 }
-
-int Executor::executeMemoryOperationForMalloc(ExecutionState &state,
+*/
+void Executor::executeMemoryOperation(ExecutionState &state,
                                       bool isWrite,
                                       ref<Expr> address,
                                       ref<Expr> value /* undef if read */,
                                       KInstruction *target /* undef if write */) {
-  int ret;
+
   Expr::Width type = (isWrite ? value->getWidth() :
                      getWidthForLLVMType(target->inst->getType()));
   unsigned bytes = Expr::getMinBytesForWidth(type);
@@ -4021,7 +4020,7 @@ int Executor::executeMemoryOperationForMalloc(ExecutionState &state,
     if (!success) {
       state.pc = state.prevPC;
       terminateStateEarly(state, "Query timed out (bounds check).");
-      return 0;
+      return ;
     }
 
     if (inBounds) {
@@ -4033,6 +4032,8 @@ int Executor::executeMemoryOperationForMalloc(ExecutionState &state,
         } else {
           ObjectState *wos = state.addressSpace.getWriteable(mo, os);
           wos->write(offset, value);
+
+          specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
 
           //Here we find the MO of malloc buffer and make MO if malloc address to a symbol
           //Here we also save the orginal [MO(address), OS(buffer)] to a new MemoryMap, so that we can find it later
@@ -4047,13 +4048,11 @@ int Executor::executeMemoryOperationForMalloc(ExecutionState &state,
 
         if (success) {
             const MemoryObject *moMallocBuffer = opMallocBuffer.first;
-            printf("Find it! moMallocBuffer->address is %d\n", moMallocBuffer->address);
+            //printf("Find it! moMallocBuffer->address is %d\n", moMallocBuffer->address);
             if (moMallocBuffer->isMallocBuffer){
               //printf("YES---%d\n", mo->address);
                 specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
-                ret = 1;
-            }else
-                ret = 0;
+            }
         }
        }
       } else {
@@ -4065,7 +4064,7 @@ int Executor::executeMemoryOperationForMalloc(ExecutionState &state,
         bindLocal(target, state, result);
       }
 
-      return 0;
+      return ;
     }
   }
 
@@ -4122,7 +4121,7 @@ int Executor::executeMemoryOperationForMalloc(ExecutionState &state,
                             NULL, getAddressInfo(*unbound, address));
     }
   }
-  return ret;
+  return ;
 }
 
 void Executor::executeMakeSymbolic(ExecutionState &state,
