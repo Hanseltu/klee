@@ -108,6 +108,20 @@ ObjectState::ObjectState(const MemoryObject *mo, const Array *array)
   memset(concreteStore, 0, size);
 }
 
+//new added construct for storing symbolic buffer address
+ObjectState::ObjectState(const MemoryObject *mo, const Array *array, uint64_t address)
+  : copyOnWriteOwner(0),
+    object(mo),
+    concreteStore(new uint8_t[address]),
+    concreteMask(0),
+    flushMask(0),
+    knownSymbolics(0),
+    updates(array, 0),
+    size(mo->size),
+    readOnly(false) {
+  makeSymbolic();
+  memset(concreteStore, 0, size);
+}
 ObjectState::ObjectState(const ObjectState &os)
   : copyOnWriteOwner(0),
     object(os.object),

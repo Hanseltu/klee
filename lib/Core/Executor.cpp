@@ -3988,38 +3988,17 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
   address = optimizer.optimizeExpr(address, true);
 
-  //here we add our new strategy to find the place for read/write
+  //here we add our new strategy to find the place of malloc buffer for read/write
   std::map<ref<Expr>, ObjectPair> shared_map = state.addressSpace.mobjects;
   std::map<ref<Expr>, ObjectPair>::iterator iter1 = shared_map.find(address);
   if (iter1 != shared_map.end()){ //we find address is in store
 
-    printf("This is a symbolic address, use our own stragetgy !\n");
+    printf("This is a symbolic address, use our own strategy !\n");
     ref<ConstantExpr> key = toConstant(state, iter1->first, "key");
     printf("Acctual address is %d\n", key->getZExtValue());
     const MemoryObject *mo = iter1->second.first;
     //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
     address = iter1->first;
-
-  ObjectPair op;
-  bool success;
-  //solver->setTimeout(coreSolverTimeout);
-  //if (!state.addressSpace.resolveOne(state, solver, address, op, success)) {
-   // address = toConstant(state, address, "resolveOne failure");
-    //here we use our own resolve strategy
-    //printf("address_t = %d\n", address_t->getZExtValue());
-    //std::map<uint64_t, ObjectPair> shared_map = state.addressSpace.mobjects;
-    //std::map<uint64_t, ObjectPair>::iterator iter = shared_map.find(address->getZExtValue());
-    //if (iter != shared_map.end()){ //we find address is in store
-    //    printf("This is a symbolic address, use our own resolver");
-    //}else{
-     //   success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
-    //}
-  //}
-  //solver->setTimeout(time::Span());
-
-  if (1) {
-    const MemoryObject *mo = iter1->second.first;
-    //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
 
     if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
       address = toConstant(state, address, "max-sym-array-size");
@@ -4029,19 +4008,22 @@ void Executor::executeMemoryOperation(ExecutionState &state,
     ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
     check = optimizer.optimizeExpr(check, true);
 
-    bool inBounds;
+    //why need this?
+
+    bool inBounds = 1;
+    bool success;
     //solver->setTimeout(coreSolverTimeout);
     //bool success = solver->mustBeTrue(state, check, inBounds);
     //solver->setTimeout(time::Span());
-    if (!success) {
-      state.pc = state.prevPC;
-      terminateStateEarly(state, "Query timed out (bounds check).");
-      return ;
-    }
 
-    if (1) {
-      const ObjectState *os = iter1->second.second;
-      if (isWrite) {
+    //if (!success) {
+    //  state.pc = state.prevPC;
+    //  terminateStateEarly(state, "Query timed out (bounds check).");
+    //  return ;
+    //}
+    if (inBounds) {
+    const ObjectState *os = iter1->second.second;
+    if (isWrite) {
         if (os->readOnly) {
           terminateStateOnError(state, "memory error: object read only",
                                 ReadOnly);
@@ -4049,38 +4031,6 @@ void Executor::executeMemoryOperation(ExecutionState &state,
           ObjectState *wos = state.addressSpace.getWriteable(mo, os);
           wos->write(offset, value);
 
-          /*
-          //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
-
-          //Here we find the MO of malloc buffer and make MO if malloc address to a symbol
-          //Here we also save the orginal [MO(address), OS(buffer)] to a new MemoryMap, so that we can find it later
-          ObjectPair opMallocBuffer;
-          bool success;
-          solver->setTimeout(coreSolverTimeout);
-          if (!state.addressSpace.resolveOne(state, solver, value, opMallocBuffer, success)) {
-             address = toConstant(state, address, "resolveOne failure");
-             success = state.addressSpace.resolveOne(cast<ConstantExpr>(value), opMallocBuffer);
-           }
-        solver->setTimeout(time::Span());
-
-        if (success) {
-            const MemoryObject *moMallocBuffer = opMallocBuffer.first;
-            //printf("Find it! moMallocBuffer->address is %d\n", moMallocBuffer->address);
-            if (moMallocBuffer->isMallocBuffer){
-                //printf("YES---%d\n", mo->address);
-                ObjectPair mallocOp;
-                mallocOp = std::make_pair(mo, wos);
-                state.addressSpace.mobjects.insert(std::pair<ref<Expr>, ObjectPair>(address, mallocOp));
-                MallocMemoryMap mmm = state.addressSpace.mobjects;
-                for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
-                    ref<ConstantExpr> key = toConstant(state, iter->first, "key");
-                    printf("key = %d,\t", key->getZExtValue());
-                    //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
-                    printf("value = (mo-address= %d, os)\n", iter->second.first->address);
-                }
-                specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
-            }
-        } */
        }
       } else {
         ref<Expr> result = os->read(offset, type);
@@ -4093,7 +4043,59 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
       return ;
     }
+    // can we reach here?
+    /*
+    address = optimizer.optimizeExpr(address, true);
+    ResolutionList rl;
+  solver->setTimeout(coreSolverTimeout);
+  bool incomplete = state.addressSpace.resolve(state, solver, address, rl,
+                                               0, coreSolverTimeout);
+  solver->setTimeout(time::Span());
+
+  // XXX there is some query wasteage here. who cares?
+  ExecutionState *unbound = &state;
+
+  for (ResolutionList::iterator i = rl.begin(), ie = rl.end(); i != ie; ++i) {
+    const MemoryObject *mo = i->first;
+    const ObjectState *os = i->second;
+    ref<Expr> inBounds = mo->getBoundsCheckPointer(address, bytes);
+
+    StatePair branches = fork(*unbound, inBounds, true);
+    ExecutionState *bound = branches.first;
+
+    // bound can be 0 on failure or overlapped
+    if (bound) {
+      if (isWrite) {
+        if (os->readOnly) {
+          terminateStateOnError(*bound, "memory error: object read only",
+                                ReadOnly);
+        } else {
+          ObjectState *wos = bound->addressSpace.getWriteable(mo, os);
+          wos->write(mo->getOffsetExpr(address), value);
+          //unbindObject(mo);
+          //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, 8);
+       }
+      } else {
+        ref<Expr> result = os->read(mo->getOffsetExpr(address), type);
+        bindLocal(target, *bound, result);
+      }
+    }
+
+    unbound = branches.second;
+    if (!unbound)
+      break;
   }
+
+  // XXX should we distinguish out of bounds and overlapped cases?
+  if (unbound) {
+    if (incomplete) {
+      terminateStateEarly(*unbound, "Query timed out (resolve).");
+    } else {
+      terminateStateOnError(*unbound, "memory error: out of bound pointer", Ptr,
+                            NULL, getAddressInfo(*unbound, address));
+    }
+  } */
+  return ;
   }//end if for our own strategy
  else {
 
@@ -4152,6 +4154,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         } else {
           ObjectState *wos = state.addressSpace.getWriteable(mo, os);
           wos->write(offset, value);
+          const ObjectState *wos_temp = const_cast<const ObjectState*>(wos);
 
           //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
 
@@ -4172,7 +4175,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
             if (moMallocBuffer->isMallocBuffer){
                 //printf("YES---%d\n", mo->address);
                 ObjectPair mallocOp;
-                mallocOp = std::make_pair(mo, wos);
+                mallocOp = std::make_pair(mo, wos_temp);
                 state.addressSpace.mobjects.insert(std::pair<ref<Expr>, ObjectPair>(address, mallocOp));
                 MallocMemoryMap mmm = state.addressSpace.mobjects;
                 for (auto iter = mmm.begin(); iter != mmm.end(); iter++){

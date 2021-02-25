@@ -1,0 +1,9 @@
+Error: memory error: out of bound pointer
+Stack: 
+	#000000015 in main ()
+Info: 
+	address: 67952760
+	next: object at 67952816 of size 4
+		MO7[4] allocated at main():  %1 = alloca i32, align 4
+	prev: object at 67952728 of size 8
+		MO8[8] allocated at main():  %2 = alloca i32*, align 8

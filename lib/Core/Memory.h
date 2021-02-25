@@ -219,6 +219,9 @@ public:
   /// contents.
   ObjectState(const MemoryObject *mo, const Array *array);
 
+  //new added
+  ObjectState(const MemoryObject *mo, const Array *array, uint64_t address);
+
   ObjectState(const ObjectState &os);
   ~ObjectState();
 

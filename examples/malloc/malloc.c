@@ -4,9 +4,10 @@
 #include "klee/klee.h"
 int main(){
 
+
     /*
-    int a;
-    //klee_make_symbolic(&a, sizeof(a), "a");
+    long long a;
+    klee_make_symbolic(&a, sizeof(a), "a");
     int b = a + 10;
     b = 100;
 
@@ -17,9 +18,9 @@ int main(){
         a = 888;
     else
         b = 777;
-    */
-    //assert(klee_is_symbolic(a));
 
+    //assert(klee_is_symbolic(a));
+    */
     int *p1 = (int*) malloc(8*100);
 
     //assert(klee_is_symbolic(p1));
@@ -27,13 +28,14 @@ int main(){
     //int *p4 = (int*) malloc(8*100);
     //*(p1 + 100) = 999;
     //long long *p2 = malloc(8*100);
-    int *pp1 = p1 + 99;
+    //int *pp1 = p1 + 99;
     *p1 = 100;
+    //*(p1 + 100) = 200;
     //char *p3 = malloc(8*100);
     //double *p4 = malloc(8*100);
     //long  *p5 = malloc(8*100);
-    assert(klee_is_symbolic(p1));
-    assert(klee_is_symbolic(pp1));
+    //assert(klee_is_symbolic(p1));
+    //assert(klee_is_symbolic(pp1));
     //assert(klee_is_symbolic(p1));
     //assert(klee_is_symbolic(p3));
     //assert(klee_is_symbolic(p4));
