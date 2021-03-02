@@ -6,15 +6,3 @@
 
 #IncludeRegexTransform: 
 
-../include/klee/Internal/ADT/KTest.h
-
-/home/haoxin/haoxin-data/smu-research/klee/lib/Basic/KTest.cpp
-klee/Internal/ADT/KTest.h
-/home/haoxin/haoxin-data/smu-research/klee/lib/Basic/klee/Internal/ADT/KTest.h
-stdlib.h
--
-string.h
--
-stdio.h
--
-

@@ -93,6 +93,24 @@ ObjectState::ObjectState(const MemoryObject *mo)
   memset(concreteStore, 0, size);
 }
 
+ObjectState::ObjectState(const MemoryObject *mo, uint8_t* address)
+  : copyOnWriteOwner(0),
+    object(mo),
+    concreteStore(address),
+    concreteMask(0),
+    flushMask(0),
+    knownSymbolics(0),
+    updates(0, 0),
+    size(mo->size),
+    readOnly(false) {
+  if (!UseConstantArrays) {
+    static unsigned id = 0;
+    const Array *array =
+        getArrayCache()->CreateArray("tmp_arr" + llvm::utostr(++id), size);
+    updates = UpdateList(array, 0);
+  }
+  memset(concreteStore, 0, size);
+}
 
 ObjectState::ObjectState(const MemoryObject *mo, const Array *array)
   : copyOnWriteOwner(0),

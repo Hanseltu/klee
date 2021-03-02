@@ -288,11 +288,12 @@ private:
                     size_t allocationAlignment=0);
 
 
-  //new executeAlloc for identifing malloc allocate
+  // *Haoxin* new executeAlloc for identifing malloc allocate
   void executeAllocForMalloc(ExecutionState &state,
                     ref<Expr> size,
                     bool isLocal,
                     KInstruction *target,
+                    std::string argumentFromUser,
                     bool zeroMemory=false,
                     const ObjectState *reallocFrom=0,
                     size_t allocationAlignment=0,

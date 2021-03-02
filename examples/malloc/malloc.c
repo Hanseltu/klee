@@ -4,10 +4,9 @@
 #include "klee/klee.h"
 int main(){
 
-
+    //long long a;
+    //klee_make_symbolic(&a, sizeof(a), "a");
     /*
-    long long a;
-    klee_make_symbolic(&a, sizeof(a), "a");
     int b = a + 10;
     b = 100;
 
@@ -18,24 +17,31 @@ int main(){
         a = 888;
     else
         b = 777;
+        */
 
     //assert(klee_is_symbolic(a));
-    */
+    klee_make_malloc_symbolic("sym_haoxin");
     int *p1 = (int*) malloc(8*100);
-
+    //klee_make_symbolic(p1, sizeof(int*), "p");
     //assert(klee_is_symbolic(p1));
+    int *p2 = (int*) malloc(8*100);
     //int *p3 = (int*) malloc(8*100);
-    //int *p4 = (int*) malloc(8*100);
-    //*(p1 + 100) = 999;
+    //*p1= 999;
+    //*p3 = 1000;
     //long long *p2 = malloc(8*100);
-    //int *pp1 = p1 + 99;
-    *p1 = 100;
-    //*(p1 + 100) = 200;
+    int *pp1 = p1 + 100;
+   // *(p1+100) = 100;
+    //*(pp1 + 100) = 200;
+    if (p1 < 10000){
+       printf("1th path\n");
+    }else{
+        printf("2th path\n");
+        }
     //char *p3 = malloc(8*100);
     //double *p4 = malloc(8*100);
     //long  *p5 = malloc(8*100);
-    //assert(klee_is_symbolic(p1));
-    //assert(klee_is_symbolic(pp1));
+    assert(klee_is_symbolic(p1));
+    assert(klee_is_symbolic(pp1));
     //assert(klee_is_symbolic(p1));
     //assert(klee_is_symbolic(p3));
     //assert(klee_is_symbolic(p4));

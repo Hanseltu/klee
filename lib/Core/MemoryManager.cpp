@@ -222,6 +222,7 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
   MemoryObject *res = new MemoryObject(address, size, isLocal, isGlobal, false,
                                        allocSite, this);
   res->isMallocBuffer = 1;
+  //MemoryObject *temp_p = new MemoryObject(address, 8, isLocal, isGlobal, false, allocSite, this);
 
   /*
   //new added
@@ -239,6 +240,7 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
   */
   objects.insert(res);
   return res;
+  //return temp_p;
 }
 
 MemoryObject *MemoryManager::allocateFixed(uint64_t address, uint64_t size,

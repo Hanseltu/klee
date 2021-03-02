@@ -38,6 +38,9 @@ namespace klee {
     handlers_ty handlers;
     class Executor &executor;
 
+    // *Haoxin* new added for store the arguments from klee_make_malloc_symbolic()
+    std::vector<ref<Expr>> argumentsFromUser;
+
     struct HandlerInfo {
       const char *name;
       SpecialFunctionHandler::Handler handler;
@@ -98,7 +101,7 @@ namespace klee {
     /* Handlers */
 
     //special
-    void handleMakeSymbolicForMalloc (ExecutionState &state, KInstruction *target, uint64_t address, uint64_t allocated_size);
+    void handleMakeSymbolicForMalloc (ExecutionState &state, KInstruction *target, uint64_t address, uint64_t allocated_size, std::string name);
 
 #define HANDLER(name) void name(ExecutionState &state, \
                                 KInstruction *target, \
@@ -120,6 +123,8 @@ namespace klee {
     HANDLER(handleGetValue);
     HANDLER(handleIsSymbolic);
     HANDLER(handleMakeSymbolic);
+    // *Haoxin* new added
+    HANDLER(handleMakeMallocSymbolic);
     HANDLER(handleMalloc);
     HANDLER(handleMemalign);
     HANDLER(handleMarkGlobal);

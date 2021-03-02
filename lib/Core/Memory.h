@@ -191,7 +191,7 @@ private:
 
   ref<const MemoryObject> object;
 
-  uint8_t *concreteStore;
+  //uint8_t *concreteStore;
 
   // XXX cleanup name of flushMask (its backwards or something)
   BitArray *concreteMask;
@@ -209,12 +209,15 @@ public:
 
   bool readOnly;
 
+  uint8_t *concreteStore;
 public:
   /// Create a new object state for the given memory object with concrete
   /// contents. The initial contents are undefined, it is the callers
   /// responsibility to initialize the object contents appropriately.
   ObjectState(const MemoryObject *mo);
 
+  //new added for storing buffer's address
+  ObjectState(const MemoryObject *mo, uint8_t* address);
   /// Create a new object state for the given memory object with symbolic
   /// contents.
   ObjectState(const MemoryObject *mo, const Array *array);
@@ -255,14 +258,16 @@ public:
   void flushToConcreteStore(TimingSolver *solver,
                             const ExecutionState &state) const;
 
-private:
   const UpdateList &getUpdates() const;
+  ref<Expr> read8(ref<Expr> offset) const;
+private:
+  //const UpdateList &getUpdates() const;
 
   void makeConcrete();
 
   void makeSymbolic();
 
-  ref<Expr> read8(ref<Expr> offset) const;
+  //ref<Expr> read8(ref<Expr> offset) const;
   void write8(unsigned offset, ref<Expr> value);
   void write8(ref<Expr> offset, ref<Expr> value);
 

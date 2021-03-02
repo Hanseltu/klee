@@ -98,6 +98,8 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
 #endif
   add("klee_is_symbolic", handleIsSymbolic, true),
   add("klee_make_symbolic", handleMakeSymbolic, false),
+  // *Haoxin* new added
+  add("klee_make_malloc_symbolic", handleMakeMallocSymbolic, false),
   add("klee_mark_global", handleMarkGlobal, false),
   add("klee_open_merge", handleOpenMerge, false),
   add("klee_close_merge", handleCloseMerge, false),
@@ -411,8 +413,16 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
                                   std::vector<ref<Expr> > &arguments) {
   // XXX should type check args
   assert(arguments.size()==1 && "invalid number of arguments to malloc");
-  //executor.executeAlloc(state, arguments[0], false, target);
-  executor.executeAllocForMalloc(state, arguments[0], false, target, true);
+  // *Haoxin* here we decide to make a malloc to a symbol
+  if (argumentsFromUser.size() == 0)  {//default in klee
+    executor.executeAlloc(state, arguments[0], false, target);
+  }
+  else{
+    std::string name = readStringAtAddress(state, argumentsFromUser[0]);
+    executor.executeAllocForMalloc(state, arguments[0], false, target, name);
+    // after use it, we clear the arguments buffer
+    argumentsFromUser.clear();
+  }
 }
 
 void SpecialFunctionHandler::handleMemalign(ExecutionState &state,
@@ -827,11 +837,28 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
   }
 }
 
+// *Haoxin* new added
+void SpecialFunctionHandler::handleMakeMallocSymbolic(ExecutionState &state,
+                                                KInstruction *target,
+                                                std::vector<ref<Expr> > &arguments) {
+    //the only thing does this function do is to pass the arguments to handleMalloc function
+    printf("calls klee_make_malloc_symbolic here, but did nothing!\n");
+    //check for arguments
+    if (arguments.size() != 1){
+        executor.terminateStateOnError(state, "Incorrect number of arguments to klee_make_malloc_symbolic(char*)", Executor::User);
+        return;
+    }
+    argumentsFromUser = arguments;
+    printf("size of arguments is %d\n", arguments.size());
+    return ;
+}
+
 void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
                                                          KInstruction *target,
                                                          uint64_t address,
-                                                         uint64_t allocated_size) {
-  std::string name;
+                                                         uint64_t allocated_size,
+                                                         std::string name) {
+  //std::string name;
 
   //if (arguments.size() != 3) {
   //  executor.terminateStateOnError(state, "Incorrect number of arguments to klee_make_symbolic(void*, size_t, char*)", Executor::User);
@@ -839,17 +866,18 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
   //}
 
   //name = arguments[2]->isZero() ? "" : readStringAtAddress(state, arguments[2]);
-  name = "symbolic_address_" + std::to_string(address);
-  printf("symbolic name = %s\n", name.c_str());
-  if (name.length() == 0) {
-    name = "unnamed";
-    klee_warning("klee_make_symbolic: renamed empty name to \"unnamed\"");
-  }
+  //name = "symbolic_address_" + std::to_string(address);
+  //name = "symbolic_address";
+  //printf("symbolic name = %s\n", name.c_str());
+  //if (name.length() == 0) {
+  //  name = "unnamed";
+  //  klee_warning("klee_make_symbolic: renamed empty name to \"unnamed\"");
+  //}
 
 
   Executor::ExactResolutionList rl;
   ref<Expr> tmp = ConstantExpr::create(address,64);
-  //ref<Expr> argu =dyn_cast<Expr>(tmp);
+  ref<Expr> argu =dyn_cast<Expr>(tmp);
   executor.resolveExact(state, tmp, rl, "make_symbolic");
 
   for (Executor::ExactResolutionList::iterator it = rl.begin(),
@@ -872,7 +900,7 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
     bool res;
     //allocated_size = 64;
     ref<Expr> temp2 = ConstantExpr::create(allocated_size, 64);
-    //iref<Expr> argu_1 = dyn_cast<Expr>(temp2);
+    ref<Expr> argu_1 = dyn_cast<Expr>(temp2);
     bool success __attribute__ ((unused)) =
       executor.solver->mustBeTrue(*s,
                                   EqExpr::create(ZExtExpr::create(temp2,

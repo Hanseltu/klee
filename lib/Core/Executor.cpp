@@ -3536,6 +3536,7 @@ void Executor::executeAlloc(ExecutionState &state,
     if (allocationAlignment == 0) {
       allocationAlignment = getAllocationAlignment(allocSite);
     }
+    printf("allocationAlignment in executeAlloc is %d\n", allocationAlignment);
     MemoryObject *mo =
         memory->allocate(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment);
@@ -3550,6 +3551,8 @@ void Executor::executeAlloc(ExecutionState &state,
       } else {
         os->initializeToRandom();
       }
+      ref<ConstantExpr> temp = mo->getBaseExpr();
+      printf("mo->getBaseExpr() in executeAlloc = %d\n", temp->getZExtValue());
       bindLocal(target, state, mo->getBaseExpr());
 
       if (reallocFrom) {
@@ -3644,47 +3647,83 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
                             ref<Expr> size,
                             bool isLocal,
                             KInstruction *target,
+                            std::string sym_name,
                             bool zeroMemory,
                             const ObjectState *reallocFrom,
                             size_t allocationAlignment,
-                            bool isMalloc) {
+                            bool isMalloc ) {
+
+  printf("symbolic malloc address name = %s\n", sym_name.c_str());
   size = toUnique(state, size);
   if (ConstantExpr *CE = dyn_cast<ConstantExpr>(size)) {
     const llvm::Value *allocSite = state.prevPC->inst;
     if (allocationAlignment == 0) {
       allocationAlignment = getAllocationAlignment(allocSite);
     }
+    printf("allocationAlignment in executeAllocForMalloc is %d\n", allocationAlignment);
     MemoryObject *mo =
         memory->allocate(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment, /*isMalloc*/true);
-    uint64_t allocated_size = CE->getZExtValue();
-    //new added
-    //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address);
-    //executeMakeSymbolic(state, mo, "test");
+
+    // *Haoxin* new added
+    //
+    ref<Expr> symBufferAddress = ConstantExpr::create(mo->address, 64);
+
+    MemoryObject *mo_temp = new MemoryObject(mo->address, 8, isLocal, false, false, allocSite, 0);
+    //MemoryObject *mo_temp = mo;
+
+    //ObjectState *os = new ObjectState(mo_temp);
+    //ObjectState *os = bindObjectInState(state, mo_temp, isLocal);
+    //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo_temp->address, mo_temp->size);
+    //executeMakeSymbolic(state, mo_temp, "tem_p"); // not work
+    // copy from executeMakeSymbolic
     /*
-    std::string name = "test_sym";
-    printf("executeMakeSymbolic executed!\n");
-    executeMakeSymbolic(state, mo, name);
-    unsigned id = 0;
-    std::string uniqueName = name;
-    while (!state.arrayNames.insert(uniqueName).second) {
-      uniqueName = name + "_" + llvm::utostr(++id);
-    }
-    const Array *array = arrayCache.CreateArray(uniqueName, mo->size);
-    bindObjectInState(state, mo, false, array);
-    state.addSymbolic(mo, array);
+    //if (!replayKTest) {
+        unsigned id = 0;
+        std::string uniqueName = sym_name;
+        while (!state.arrayNames.insert(uniqueName).second) {
+            uniqueName = sym_name + "_" + llvm::utostr(++id);
+        }
+    //}
+    const Array *array = arrayCache.CreateArray(uniqueName, mo_temp->size);
+    bindObjectInState(state, mo_temp, false, array);
+    state.addSymbolic(mo_temp, array);
+    //ref<Expr> symBufferAddress = ConstantExpr::create(1234567, 64);
     */
-    if (!mo) {
+    if (!mo_temp) {
       bindLocal(target, state,
                 ConstantExpr::alloc(0, Context::get().getPointerWidth()));
     } else {
-      ObjectState *os = bindObjectInState(state, mo, isLocal);
-      if (zeroMemory) {
-        os->initializeToZero();
-      } else {
-        os->initializeToRandom();
+        //ObjectState *os = new ObjectState(mo_temp);
+      ObjectState *os = bindObjectInState(state, mo_temp, isLocal);
+      //make mo_temp to a symbol
+      specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo_temp->address, mo_temp->size, sym_name);
+
+      //find mo_temp in mo_list
+      ObjectPair op;
+      bool success;
+      solver->setTimeout(coreSolverTimeout);
+      if (!state.addressSpace.resolveOne(state, solver, symBufferAddress, op, success)) {
+        symBufferAddress = toConstant(state, symBufferAddress, "resolveOne failure");
+        success = state.addressSpace.resolveOne(cast<ConstantExpr>(symBufferAddress), op);
       }
-      bindLocal(target, state, mo->getBaseExpr());
+      solver->setTimeout(time::Span());
+      printf("success = %d\n", success);
+      ref<ConstantExpr> offset = mo->getOffsetExpr(ConstantExpr::create(mo->address, Expr::Int64));
+      const ObjectState *sym_os = op.second;
+      printf("offset = %d\n", offset->getZExtValue());
+      //return a symbolic Expr from read8()
+      ref<Expr> symExpr = sym_os->read8(offset->getZExtValue());
+      //if (zeroMemory) {
+      //  sym_os->initializeToZero();
+      //} else {
+      //  sym_os->initializeToRandom();
+      //}
+      //ref<ConstantExpr> temp = mo_temp->getBaseExpr();
+      //printf("mo->getBaseExpr() in executeAllocForMalloc = %d\n", temp->getZExtValue());
+      bindLocal(target, state, symExpr);
+      //bindLocal(target, state, mo_temp->getBaseExpr());
+      //bindLocal(target, state, symBufferAddress);
 
       if (reallocFrom) {
         unsigned count = std::min(reallocFrom->size, os->size);
@@ -3692,7 +3731,6 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
           os->write(i, reallocFrom->read8(i));
         state.addressSpace.unbindObject(reallocFrom->getObject());
       }
-      //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, allocated_size);
     }
   } else {
     // XXX For now we just pick a size. Ideally we would support
@@ -3987,22 +4025,24 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   }
 
   address = optimizer.optimizeExpr(address, true);
+  ref<Expr> p_address = address;
 
   //here we add our new strategy to find the place of malloc buffer for read/write
   std::map<ref<Expr>, ObjectPair> shared_map = state.addressSpace.mobjects;
   std::map<ref<Expr>, ObjectPair>::iterator iter1 = shared_map.find(address);
-  if (iter1 != shared_map.end()){ //we find address is in store
+  //if (iter1 != shared_map.end()){ //we find address is in store
+  if (0){ //we find address is in store
 
     printf("This is a symbolic address, use our own strategy !\n");
     ref<ConstantExpr> key = toConstant(state, iter1->first, "key");
-    printf("Acctual address is %d\n", key->getZExtValue());
+    printf("Acctual address to read/write is %d\n", iter1->second.first->address);
     const MemoryObject *mo = iter1->second.first;
     //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
-    address = iter1->first;
+    ref<Expr> address = ConstantExpr::create(iter1->second.first->address, 64);
 
-    if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
-      address = toConstant(state, address, "max-sym-array-size");
-    }
+    //if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
+    //  address = toConstant(state, address, "max-sym-array-size");
+   // }
 
     ref<Expr> offset = mo->getOffsetExpr(address);
     ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
@@ -4010,8 +4050,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
     //why need this?
 
-    bool inBounds = 1;
-    bool success;
+    //bool inBounds = 1;
     //solver->setTimeout(coreSolverTimeout);
     //bool success = solver->mustBeTrue(state, check, inBounds);
     //solver->setTimeout(time::Span());
@@ -4019,9 +4058,9 @@ void Executor::executeMemoryOperation(ExecutionState &state,
     //if (!success) {
     //  state.pc = state.prevPC;
     //  terminateStateEarly(state, "Query timed out (bounds check).");
-    //  return ;
-    //}
-    if (inBounds) {
+     // return ;
+   // }
+    if (1) {
     const ObjectState *os = iter1->second.second;
     if (isWrite) {
         if (os->readOnly) {
@@ -4029,24 +4068,26 @@ void Executor::executeMemoryOperation(ExecutionState &state,
                                 ReadOnly);
         } else {
           ObjectState *wos = state.addressSpace.getWriteable(mo, os);
-          wos->write(offset, value);
+          //wos->write(offset, value);
+          printf("no write operation support, please implement this!\n");
 
        }
       } else {
         ref<Expr> result = os->read(offset, type);
 
-        if (interpreterOpts.MakeConcreteSymbolic)
-          result = replaceReadWithSymbolic(state, result);
+        //if (interpreterOpts.MakeConcreteSymbolic)
+        //  result = replaceReadWithSymbolic(state, result);
 
+        //result = address;
         bindLocal(target, state, result);
       }
 
       return ;
     }
-    // can we reach here?
+
     /*
     address = optimizer.optimizeExpr(address, true);
-    ResolutionList rl;
+  ResolutionList rl;
   solver->setTimeout(coreSolverTimeout);
   bool incomplete = state.addressSpace.resolve(state, solver, address, rl,
                                                0, coreSolverTimeout);
@@ -4077,6 +4118,8 @@ void Executor::executeMemoryOperation(ExecutionState &state,
        }
       } else {
         ref<Expr> result = os->read(mo->getOffsetExpr(address), type);
+        ref<ConstantExpr> tt = toConstant(state, result, "1");
+        printf("result return from load inst = %d\n", tt->getZExtValue());
         bindLocal(target, *bound, result);
       }
     }
@@ -4094,10 +4137,11 @@ void Executor::executeMemoryOperation(ExecutionState &state,
       terminateStateOnError(*unbound, "memory error: out of bound pointer", Ptr,
                             NULL, getAddressInfo(*unbound, address));
     }
-  } */
+  }*/
   return ;
   }//end if for our own strategy
  else {
+     printf("KLEE executeMemoryOperation !\n");
 
   //here is the normal operation in KLEE
  //ref<ConstantExpr> temp_address = toConstant(state, address, "temp_address");
@@ -4154,8 +4198,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         } else {
           ObjectState *wos = state.addressSpace.getWriteable(mo, os);
           wos->write(offset, value);
-          const ObjectState *wos_temp = const_cast<const ObjectState*>(wos);
-
+/*
           //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
 
           //Here we find the MO of malloc buffer and make MO if malloc address to a symbol
@@ -4175,18 +4218,22 @@ void Executor::executeMemoryOperation(ExecutionState &state,
             if (moMallocBuffer->isMallocBuffer){
                 //printf("YES---%d\n", mo->address);
                 ObjectPair mallocOp;
-                mallocOp = std::make_pair(mo, wos_temp);
+                mallocOp = std::make_pair(moMallocBuffer, opMallocBuffer.second);
+                ref<Expr> moMallocBufferAddress = ConstantExpr::create(moMallocBuffer->address, 64);
                 state.addressSpace.mobjects.insert(std::pair<ref<Expr>, ObjectPair>(address, mallocOp));
+                //state.addressSpace.unbindObject(moMallocBuffer);
                 MallocMemoryMap mmm = state.addressSpace.mobjects;
                 for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
                     ref<ConstantExpr> key = toConstant(state, iter->first, "key");
                     printf("key = %d,\t", key->getZExtValue());
                     //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
-                    printf("value = (mo-address= %d, os)\n", iter->second.first->address);
+                    printf("value = (mo->address= %d, os)\n", iter->second.first->address);
                 }
                 specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
             }
         }
+*/
+          //wos->write(offset, value);
        }
       } else {
         ref<Expr> result = os->read(offset, type);
@@ -4199,6 +4246,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
       return ;
     }
+  //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, toConstant(state, address, "1")->getZExtValue(), 64);
   }
 
   // we are on an error path (no resolution, multiple resolution, one
@@ -4533,8 +4581,13 @@ bool Executor::getSymbolicSolution(const ExecutionState &state,
 
   std::vector< std::vector<unsigned char> > values;
   std::vector<const Array*> objects;
-  for (unsigned i = 0; i != state.symbolics.size(); ++i)
+  for (unsigned i = 0; i != state.symbolics.size(); ++i){
+    for (auto s : state.symbolics){
+        printf("symbolic mo->address = %d\n", s.first->address);
+        printf("symbolic array->name = %s\n", s.second->name.c_str());
+    }
     objects.push_back(state.symbolics[i].second);
+  }
   bool success = solver->getInitialValues(tmp, objects, values);
   solver->setTimeout(time::Span());
   if (!success) {
