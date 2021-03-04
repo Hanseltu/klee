@@ -179,6 +179,8 @@ stack
 -
 
 ../include/klee/util/Ref.h
+string
+-
 llvm/Support/Casting.h
 ../include/klee/util/llvm/Support/Casting.h
 cassert

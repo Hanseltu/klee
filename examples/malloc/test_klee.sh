@@ -3,7 +3,7 @@
 rm -rf klee-*
 
 # recompile first
-clang-9 -emit-llvm -c malloc.c
+clang-9 -w -emit-llvm -c malloc.c
 
 # change .bc to readable .ll
 llvm-dis-9 malloc.bc

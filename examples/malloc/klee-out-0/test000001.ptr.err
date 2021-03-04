@@ -1,0 +1,7 @@
+Error: memory error: out of bound pointer
+Stack: 
+	#000000029 in main ()
+Info: 
+	address: 800
+	next: object at 80388168 of size 2
+		MO7[2] allocated at global:.str

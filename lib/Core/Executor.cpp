@@ -3661,77 +3661,51 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
       allocationAlignment = getAllocationAlignment(allocSite);
     }
     printf("allocationAlignment in executeAllocForMalloc is %d\n", allocationAlignment);
-    MemoryObject *mo =
+    MemoryObject *mo_buffer =
         memory->allocate(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment, /*isMalloc*/true);
 
     // *Haoxin* new added
-    //
-    ref<Expr> symBufferAddress = ConstantExpr::create(mo->address, 64);
 
-    MemoryObject *mo_temp = new MemoryObject(mo->address, 8, isLocal, false, false, allocSite, 0);
-    //MemoryObject *mo_temp = mo;
+    //store buffer map
+    ObjectState *os_buffer = new ObjectState(mo_buffer);
+    MemoryObject *mo_temp = new MemoryObject(mo_buffer->address, 8, isLocal, false, false, allocSite, 0);
 
-    //ObjectState *os = new ObjectState(mo_temp);
-    //ObjectState *os = bindObjectInState(state, mo_temp, isLocal);
-    //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo_temp->address, mo_temp->size);
-    //executeMakeSymbolic(state, mo_temp, "tem_p"); // not work
-    // copy from executeMakeSymbolic
-    /*
-    //if (!replayKTest) {
-        unsigned id = 0;
-        std::string uniqueName = sym_name;
-        while (!state.arrayNames.insert(uniqueName).second) {
-            uniqueName = sym_name + "_" + llvm::utostr(++id);
-        }
-    //}
-    const Array *array = arrayCache.CreateArray(uniqueName, mo_temp->size);
-    bindObjectInState(state, mo_temp, false, array);
-    state.addSymbolic(mo_temp, array);
-    //ref<Expr> symBufferAddress = ConstantExpr::create(1234567, 64);
-    */
-    if (!mo_temp) {
-      bindLocal(target, state,
-                ConstantExpr::alloc(0, Context::get().getPointerWidth()));
-    } else {
-        //ObjectState *os = new ObjectState(mo_temp);
-      ObjectState *os = bindObjectInState(state, mo_temp, isLocal);
-      //make mo_temp to a symbol
-      specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo_temp->address, mo_temp->size, sym_name);
+    ObjectPair mallocOp;
+    mallocOp = std::make_pair(mo_buffer, os_buffer);
+    ref<Expr> moMallocBufferAddress = ConstantExpr::create(mo_buffer->address, 64);
+    //state.addressSpace.mobjects.insert(std::pair<ref<Expr>, ObjectPair>(moMallocBufferAddress, mallocOp));
+    //state.addressSpace.unbindObject(moMallocBuffer);
 
-      //find mo_temp in mo_list
-      ObjectPair op;
-      bool success;
-      solver->setTimeout(coreSolverTimeout);
-      if (!state.addressSpace.resolveOne(state, solver, symBufferAddress, op, success)) {
-        symBufferAddress = toConstant(state, symBufferAddress, "resolveOne failure");
-        success = state.addressSpace.resolveOne(cast<ConstantExpr>(symBufferAddress), op);
-      }
-      solver->setTimeout(time::Span());
-      printf("success = %d\n", success);
-      ref<ConstantExpr> offset = mo->getOffsetExpr(ConstantExpr::create(mo->address, Expr::Int64));
-      const ObjectState *sym_os = op.second;
-      printf("offset = %d\n", offset->getZExtValue());
-      //return a symbolic Expr from read8()
-      ref<Expr> symExpr = sym_os->read8(offset->getZExtValue());
-      //if (zeroMemory) {
-      //  sym_os->initializeToZero();
-      //} else {
-      //  sym_os->initializeToRandom();
-      //}
-      //ref<ConstantExpr> temp = mo_temp->getBaseExpr();
-      //printf("mo->getBaseExpr() in executeAllocForMalloc = %d\n", temp->getZExtValue());
-      bindLocal(target, state, symExpr);
-      //bindLocal(target, state, mo_temp->getBaseExpr());
-      //bindLocal(target, state, symBufferAddress);
+    unsigned id = 0;
+    std::string uniqueName = sym_name;
+    while (!state.arrayNames.insert(uniqueName).second) {
+        uniqueName = sym_name + "_" + llvm::utostr(++id);
+    }
+    const Array *array = arrayCache.CreateArray(uniqueName, 8);
+    ObjectState *os = array ? new ObjectState(mo_temp, array) : new ObjectState(mo_temp);
+    state.addressSpace.bindObject(mo_temp, os);
+    // add or not add both are ok? Why?
+    //state.addSymbolic(mo_temp, array);
+    ref<Expr> symExpr = os->read(0, Expr::Int64);
+    symExpr.name = sym_name;
 
-      if (reallocFrom) {
+    bindLocal(target, state, symExpr);
+
+    state.addressSpace.mobjects.insert(std::pair<std::string, ObjectPair>(sym_name, mallocOp));
+    MallocMemoryMap mmm = state.addressSpace.mobjects;
+    for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
+        //ref<ConstantExpr> key = toConstant(state, iter->first, "key");
+        //printf("key = %d,\t", key->getZExtValue());
+        //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
+        printf("value = (mo->address= %d, os)\n", iter->second.first->address);
+    }
+    if (reallocFrom) {
         unsigned count = std::min(reallocFrom->size, os->size);
         for (unsigned i=0; i<count; i++)
           os->write(i, reallocFrom->read8(i));
         state.addressSpace.unbindObject(reallocFrom->getObject());
       }
-    }
   } else {
     // XXX For now we just pick a size. Ideally we would support
     // symbolic sizes fully but even if we don't it would be better to
@@ -4007,6 +3981,20 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   }
 }
 */
+  void scan2(ref<Expr> e, std::set<std::string> &symNameList) {
+    //std::set<std::string> symNameList;
+    Expr *ep = e.get();
+    //ep->dump();
+        for (unsigned i=0; i<ep->getNumKids(); i++)
+          scan2(ep->getKid(i), symNameList);
+        if (const ReadExpr *re = dyn_cast<ReadExpr>(e)) {
+          printf("In execution array->name = %s\n", re->updates.root->name.c_str());
+          symNameList.insert(re->updates.root->name);
+          //break;
+          //re->dump();
+        }
+        //return symNameList;
+}
 void Executor::executeMemoryOperation(ExecutionState &state,
                                       bool isWrite,
                                       ref<Expr> address,
@@ -4028,21 +4016,83 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   ref<Expr> p_address = address;
 
   //here we add our new strategy to find the place of malloc buffer for read/write
-  std::map<ref<Expr>, ObjectPair> shared_map = state.addressSpace.mobjects;
-  std::map<ref<Expr>, ObjectPair>::iterator iter1 = shared_map.find(address);
+  //std::map<ref<Expr>, ObjectPair> shared_map = state.addressSpace.mobjects;
+  //std::map<ref<Expr>, ObjectPair>::iterator iter1 = shared_map.find(address);
   //if (iter1 != shared_map.end()){ //we find address is in store
-  if (0){ //we find address is in store
+  if (!isa<ConstantExpr>(address)){ //we find address is in store
 
+    Expr *ep = address.get();
+    std::string str_name ("sym_haoxin");
+    //llvm::raw_ostream os;
+    std::set<std::string> nameList;
+    scan2(address, nameList);
+    printf("size of nameList = %d\n", nameList.size());
+    for (auto sym_name : nameList){
+    /*
+    // for testing the output of expression
+    printf("ep->getNumKids() = %d\n", ep->getNumKids());
+    for (unsigned i=0; i<ep->getNumKids(); i++){
+        printf ("--------No. %d\n", i);
+        if (const ReadExpr *re = dyn_cast<ReadExpr>(address)){
+            //e->dump();
+            //const ref<Expr> &e = et->getKid(0);
+            //const ReadExpr *re = dyn_cast<ReadExpr>(e);
+            str_name = re->updates.root->name;
+            //printf("str_name : %s\n", str_name.c_str());
+        }
+    }
+    */
+    std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
+    std::map<std::string, ObjectPair>::iterator iter1 = shared_map.find(sym_name);
+    //printf("address name is %s\n", address.name.c_str());
+    MallocMemoryMap mmm = state.addressSpace.mobjects;
+    for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
+        std::string key = iter->first;
+        printf("In our strategy --- key = %s,\t", key.c_str());
+        //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
+        printf("value = (mo->address= %d, os)\n", iter->second.first->address);
+    }
+    if (iter1 != shared_map.end()){
     printf("This is a symbolic address, use our own strategy !\n");
-    ref<ConstantExpr> key = toConstant(state, iter1->first, "key");
+    //ref<ConstantExpr> key = toConstant(state, iter1->first, "key");
     printf("Acctual address to read/write is %d\n", iter1->second.first->address);
     const MemoryObject *mo = iter1->second.first;
     //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
-    ref<Expr> address = ConstantExpr::create(iter1->second.first->address, 64);
+    //ref<Expr> address = ConstantExpr::create(iter1->second.first->address, 64);
+    //TODO Here we should concretize the input address by giving a concrete symbolic address
+    ref<Expr> address = toConstant(state, p_address, "cc");
+    Expr *pp = p_address.get();
+    ref<Expr> constantAddress;
+    for (int i = 0; i < pp->getNumKids(); i++){
+        if (isa<ConstantExpr>(pp->getKid(i))) {
+            printf("No.%d kid in p_address\n", i);
+            pp->getKid(i)->dump();
+            constantAddress = pp->getKid(i);
+            printf("constantAddress is %d\n", toConstant(state, constantAddress, "tt"));
+            //break;
+        }
+    }
+    printf("constantAddress is %d\n", toConstant(state, constantAddress, "constantAddress of p"));
+    //ref<ConstantExpr> p_address_left = ConstantExpr::create(111, 64);
+    //ref<ConstantExpr> p_address_right = ConstantExpr::create(222, 64);
+    //ref<ConcatExpr> p_address_new = p_address_left + p_address_right;
+    //printf("p_address_new is %d\n", toConstant(state, p_address_new, "p_address_new"));
+    //address = p_address_new;
+    //for test
 
     //if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
     //  address = toConstant(state, address, "max-sym-array-size");
    // }
+  ObjectPair op;
+  bool success;
+  solver->setTimeout(coreSolverTimeout);
+  if (!state.addressSpace.resolveOne(state, solver, address, op, success)) {
+    address = toConstant(state, address, "resolveOne failure");
+    success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
+  }
+  solver->setTimeout(time::Span());
+
+  if (success) {
 
     ref<Expr> offset = mo->getOffsetExpr(address);
     ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
@@ -4050,17 +4100,17 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
     //why need this?
 
-    //bool inBounds = 1;
-    //solver->setTimeout(coreSolverTimeout);
-    //bool success = solver->mustBeTrue(state, check, inBounds);
-    //solver->setTimeout(time::Span());
+    bool inBounds;
+    solver->setTimeout(coreSolverTimeout);
+    bool success = solver->mustBeTrue(state, check, inBounds);
+    solver->setTimeout(time::Span());
 
     //if (!success) {
     //  state.pc = state.prevPC;
     //  terminateStateEarly(state, "Query timed out (bounds check).");
      // return ;
    // }
-    if (1) {
+    if (inBounds) {
     const ObjectState *os = iter1->second.second;
     if (isWrite) {
         if (os->readOnly) {
@@ -4068,15 +4118,15 @@ void Executor::executeMemoryOperation(ExecutionState &state,
                                 ReadOnly);
         } else {
           ObjectState *wos = state.addressSpace.getWriteable(mo, os);
-          //wos->write(offset, value);
-          printf("no write operation support, please implement this!\n");
+          wos->write(offset, value);
+          //printf("no write operation support, please implement this!\n");
 
        }
       } else {
         ref<Expr> result = os->read(offset, type);
 
-        //if (interpreterOpts.MakeConcreteSymbolic)
-        //  result = replaceReadWithSymbolic(state, result);
+        if (interpreterOpts.MakeConcreteSymbolic)
+          result = replaceReadWithSymbolic(state, result);
 
         //result = address;
         bindLocal(target, state, result);
@@ -4084,8 +4134,8 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
       return ;
     }
+  }
 
-    /*
     address = optimizer.optimizeExpr(address, true);
   ResolutionList rl;
   solver->setTimeout(coreSolverTimeout);
@@ -4118,8 +4168,8 @@ void Executor::executeMemoryOperation(ExecutionState &state,
        }
       } else {
         ref<Expr> result = os->read(mo->getOffsetExpr(address), type);
-        ref<ConstantExpr> tt = toConstant(state, result, "1");
-        printf("result return from load inst = %d\n", tt->getZExtValue());
+        //ref<ConstantExpr> tt = toConstant(state, result, "1");
+        //printf("result return from load inst = %d\n", tt->getZExtValue());
         bindLocal(target, *bound, result);
       }
     }
@@ -4137,7 +4187,13 @@ void Executor::executeMemoryOperation(ExecutionState &state,
       terminateStateOnError(*unbound, "memory error: out of bound pointer", Ptr,
                             NULL, getAddressInfo(*unbound, address));
     }
-  }*/
+  }
+    }
+    else {
+        printf("no map in share_map!\n");
+        exit(0);
+    }
+    } //end of iteration of nameList
   return ;
   }//end if for our own strategy
  else {
@@ -4155,15 +4211,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   solver->setTimeout(coreSolverTimeout);
   if (!state.addressSpace.resolveOne(state, solver, address, op, success)) {
     address = toConstant(state, address, "resolveOne failure");
-    //here we use our own resolve strategy
-    //printf("address_t = %d\n", address_t->getZExtValue());
-    //std::map<uint64_t, ObjectPair> shared_map = state.addressSpace.mobjects;
-    //std::map<uint64_t, ObjectPair>::iterator iter = shared_map.find(address->getZExtValue());
-    //if (iter != shared_map.end()){ //we find address is in store
-    //    printf("This is a symbolic address, use our own resolver");
-    //}else{
-        success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
-    //}
+    success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
   }
   solver->setTimeout(time::Span());
 
@@ -4197,6 +4245,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
                                 ReadOnly);
         } else {
           ObjectState *wos = state.addressSpace.getWriteable(mo, os);
+          //value.name = "sym_haoxin";
           wos->write(offset, value);
 /*
           //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);

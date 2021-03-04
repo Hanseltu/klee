@@ -28,7 +28,7 @@
 
 #ifndef KLEE_REF_H
 #define KLEE_REF_H
-
+#include <string>
 #include "llvm/Support/Casting.h"
 using llvm::isa;
 using llvm::cast;
@@ -92,7 +92,7 @@ public:
   // default constructor: create a NULL reference
   ref() : ptr(nullptr) {}
   ~ref () { dec (); }
-
+  std::string name;
 private:
   void inc() const {
     if (ptr)

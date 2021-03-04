@@ -27,7 +27,7 @@ namespace klee {
   typedef std::vector<ObjectPair> ResolutionList;
 
   //new added
-  typedef std::map<ref<Expr>, ObjectPair> MallocMemoryMap;
+  typedef std::map<std::string, ObjectPair> MallocMemoryMap;
 
   /// Function object ordering MemoryObject's by address.
   struct MemoryObjectLT {
