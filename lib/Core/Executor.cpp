@@ -3666,6 +3666,8 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
                          allocSite, allocationAlignment, /*isMalloc*/true);
 
     // *Haoxin* new added
+    // bind to mo_list?
+    //bindObjectInState(state, mo_buffer, isLocal);
 
     //store buffer map
     ObjectState *os_buffer = new ObjectState(mo_buffer);
@@ -3981,7 +3983,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   }
 }
 */
-  void scan2(ref<Expr> e, std::set<std::string> &symNameList) {
+void scan2(ref<Expr> e, std::set<std::string> &symNameList) {
     //std::set<std::string> symNameList;
     Expr *ep = e.get();
     //ep->dump();
@@ -4022,7 +4024,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   if (!isa<ConstantExpr>(address)){ //we find address is in store
 
     Expr *ep = address.get();
-    std::string str_name ("sym_haoxin");
+    //std::string str_name ("sym_haoxin");
     //llvm::raw_ostream os;
     std::set<std::string> nameList;
     scan2(address, nameList);
@@ -4060,40 +4062,34 @@ void Executor::executeMemoryOperation(ExecutionState &state,
     //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
     //ref<Expr> address = ConstantExpr::create(iter1->second.first->address, 64);
     //TODO Here we should concretize the input address by giving a concrete symbolic address
-    ref<Expr> address = toConstant(state, p_address, "cc");
+    ref<Expr> bufferAddress = ConstantExpr::create(iter1->second.first->address, 64);
+    ref<Expr> address;// = toConstant(state, p_address, "cc");
     Expr *pp = p_address.get();
     ref<Expr> constantAddress;
+    bool hasConstant;
     for (int i = 0; i < pp->getNumKids(); i++){
         if (isa<ConstantExpr>(pp->getKid(i))) {
             printf("No.%d kid in p_address\n", i);
             pp->getKid(i)->dump();
             constantAddress = pp->getKid(i);
-            printf("constantAddress is %d\n", toConstant(state, constantAddress, "tt"));
-            //break;
+            hasConstant = 1;
         }
     }
-    printf("constantAddress is %d\n", toConstant(state, constantAddress, "constantAddress of p"));
-    //ref<ConstantExpr> p_address_left = ConstantExpr::create(111, 64);
-    //ref<ConstantExpr> p_address_right = ConstantExpr::create(222, 64);
-    //ref<ConcatExpr> p_address_new = p_address_left + p_address_right;
-    //printf("p_address_new is %d\n", toConstant(state, p_address_new, "p_address_new"));
-    //address = p_address_new;
-    //for test
+    if (hasConstant) {
+        ConstantExpr *tt = dyn_cast<ConstantExpr>(constantAddress);
+        printf("tt = %d\n", tt->getZExtValue());
+        int acctualAddressInt = tt->getZExtValue() + iter1->second.first->address;
+        printf("acctualAddress is %d\n", acctualAddressInt);
+        address = ConstantExpr::create(acctualAddressInt, 64);
+    } else {
+        address = bufferAddress;
+    }
+    if (MaxSymArraySize && iter1->second.first->size >= MaxSymArraySize) {
+      address = toConstant(state, address, "max-sym-array-size");
+    }
 
-    //if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
-    //  address = toConstant(state, address, "max-sym-array-size");
-   // }
-  ObjectPair op;
-  bool success;
-  solver->setTimeout(coreSolverTimeout);
-  if (!state.addressSpace.resolveOne(state, solver, address, op, success)) {
-    address = toConstant(state, address, "resolveOne failure");
-    success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
-  }
-  solver->setTimeout(time::Span());
-
-  if (success) {
-
+    address->dump();
+    address = toConstant(state, address, "ttttt");
     ref<Expr> offset = mo->getOffsetExpr(address);
     ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
     check = optimizer.optimizeExpr(check, true);
@@ -4105,51 +4101,49 @@ void Executor::executeMemoryOperation(ExecutionState &state,
     bool success = solver->mustBeTrue(state, check, inBounds);
     solver->setTimeout(time::Span());
 
-    //if (!success) {
-    //  state.pc = state.prevPC;
-    //  terminateStateEarly(state, "Query timed out (bounds check).");
-     // return ;
-   // }
-    if (inBounds) {
-    const ObjectState *os = iter1->second.second;
-    if (isWrite) {
-        if (os->readOnly) {
-          terminateStateOnError(state, "memory error: object read only",
-                                ReadOnly);
-        } else {
-          ObjectState *wos = state.addressSpace.getWriteable(mo, os);
-          wos->write(offset, value);
-          //printf("no write operation support, please implement this!\n");
-
-       }
-      } else {
-        ref<Expr> result = os->read(offset, type);
-
-        if (interpreterOpts.MakeConcreteSymbolic)
-          result = replaceReadWithSymbolic(state, result);
-
-        //result = address;
-        bindLocal(target, state, result);
-      }
-
+    if (!success) {
+      state.pc = state.prevPC;
+      terminateStateEarly(state, "Query timed out (bounds check).");
       return ;
     }
-  }
+    if (inBounds) {
+        const ObjectState *os = iter1->second.second;
+        if (isWrite) {
+            if (os->readOnly) {
+                terminateStateOnError(state, "memory error: object read only",
+                                ReadOnly);
+            } else {
+                ObjectState *wos = state.addressSpace.getWriteable(mo, os);
+                wos->write(offset, value);
+            //printf("no write operation support, please implement this!\n");
+            }
+        } else {
+            ref<Expr> result = os->read(offset, type);
+
+            if (interpreterOpts.MakeConcreteSymbolic)
+                result = replaceReadWithSymbolic(state, result);
+
+            //result = address;
+            bindLocal(target, state, result);
+            }
+
+        return ;
+    }
 
     address = optimizer.optimizeExpr(address, true);
-  ResolutionList rl;
-  solver->setTimeout(coreSolverTimeout);
-  bool incomplete = state.addressSpace.resolve(state, solver, address, rl,
+    ResolutionList rl;
+    solver->setTimeout(coreSolverTimeout);
+    bool incomplete = state.addressSpace.resolve(state, solver, address, rl,
                                                0, coreSolverTimeout);
-  solver->setTimeout(time::Span());
+    solver->setTimeout(time::Span());
 
-  // XXX there is some query wasteage here. who cares?
-  ExecutionState *unbound = &state;
+    // XXX there is some query wasteage here. who cares?
+    ExecutionState *unbound = &state;
 
-  for (ResolutionList::iterator i = rl.begin(), ie = rl.end(); i != ie; ++i) {
-    const MemoryObject *mo = i->first;
-    const ObjectState *os = i->second;
-    ref<Expr> inBounds = mo->getBoundsCheckPointer(address, bytes);
+    for (ResolutionList::iterator i = rl.begin(), ie = rl.end(); i != ie; ++i) {
+        const MemoryObject *mo = i->first;
+        const ObjectState *os = i->second;
+        ref<Expr> inBounds = mo->getBoundsCheckPointer(address, bytes);
 
     StatePair branches = fork(*unbound, inBounds, true);
     ExecutionState *bound = branches.first;
@@ -4187,14 +4181,16 @@ void Executor::executeMemoryOperation(ExecutionState &state,
       terminateStateOnError(*unbound, "memory error: out of bound pointer", Ptr,
                             NULL, getAddressInfo(*unbound, address));
     }
-  }
+    }
     }
     else {
-        printf("no map in share_map!\n");
-        exit(0);
-    }
+        //printf("no map in share_map!\n");
+        terminateStateOnError(state, "no shared_map found!",
+                                  User);
+        //exit(0);
+        }
     } //end of iteration of nameList
-  return ;
+    return ;
   }//end if for our own strategy
  else {
      printf("KLEE executeMemoryOperation !\n");

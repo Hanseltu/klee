@@ -28,15 +28,15 @@ CMAKE_BUILD_TYPE:STRING=Debug
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210208/bin/c++
+CMAKE_CXX_COMPILER:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/c++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
-CMAKE_CXX_COMPILER_AR:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210208/bin/gcc-ar
+CMAKE_CXX_COMPILER_AR:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ar
 
 //A wrapper around 'ranlib' adding the appropriate '--plugin' option
 // for the GCC compiler
-CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210208/bin/gcc-ranlib
+CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ranlib
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=
@@ -54,15 +54,15 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g
 
 //C compiler
-CMAKE_C_COMPILER:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210208/bin/gcc
+CMAKE_C_COMPILER:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
-CMAKE_C_COMPILER_AR:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210208/bin/gcc-ar
+CMAKE_C_COMPILER_AR:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ar
 
 //A wrapper around 'ranlib' adding the appropriate '--plugin' option
 // for the GCC compiler
-CMAKE_C_COMPILER_RANLIB:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210208/bin/gcc-ranlib
+CMAKE_C_COMPILER_RANLIB:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ranlib
 
 //Flags used by the C compiler during all build types.
 CMAKE_C_FLAGS:STRING=
@@ -294,7 +294,7 @@ ENABLE_SOLVER_METASMT:BOOL=OFF
 ENABLE_SOLVER_STP:BOOL=ON
 
 //Enable Z3 solver support
-ENABLE_SOLVER_Z3:BOOL=OFF
+ENABLE_SOLVER_Z3:BOOL=ON
 
 //Enable system tests
 ENABLE_SYSTEM_TESTS:BOOL=ON
@@ -372,10 +372,10 @@ USE_CMAKE_FIND_PACKAGE_LLVM:BOOL=OFF
 WARNINGS_AS_ERRORS:BOOL=OFF
 
 //Z3 C header
-Z3_INCLUDE_DIRS:PATH=/usr/include
+Z3_INCLUDE_DIRS:PATH=/usr/local/include
 
 //Z3 libraries
-Z3_LIBRARIES:FILEPATH=/usr/lib/x86_64-linux-gnu/libz3.so
+Z3_LIBRARIES:FILEPATH=/usr/local/lib/libz3.so
 
 //Path to a file.
 ZLIB_INCLUDE_DIR:PATH=/usr/include
@@ -390,7 +390,7 @@ ZLIB_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libz.so
 kleaverExpr_LIB_DEPENDS:STATIC=general;/usr/lib/x86_64-linux-gnu/libz.so;general;/usr/lib/x86_64-linux-gnu/libtcmalloc.so;general;LLVMSupport;general;LLVMDemangle;
 
 //Dependencies for the target
-kleaverSolver_LIB_DEPENDS:STATIC=general;/usr/lib/x86_64-linux-gnu/libz.so;general;/usr/lib/x86_64-linux-gnu/libtcmalloc.so;general;LLVMSupport;general;LLVMDemangle;general;kleeBasic;general;kleaverExpr;general;kleeSupport;general;stp;
+kleaverSolver_LIB_DEPENDS:STATIC=general;/usr/lib/x86_64-linux-gnu/libz.so;general;/usr/lib/x86_64-linux-gnu/libtcmalloc.so;general;LLVMSupport;general;LLVMDemangle;general;kleeBasic;general;kleaverExpr;general;kleeSupport;general;stp;general;/usr/local/lib/libz3.so;
 
 //Dependencies for the target
 kleeBasic_LIB_DEPENDS:STATIC=general;/usr/lib/x86_64-linux-gnu/libz.so;general;/usr/lib/x86_64-linux-gnu/libtcmalloc.so;general;LLVMSupport;general;LLVMDemangle;
@@ -598,7 +598,7 @@ FIND_PACKAGE_MESSAGE_DETAILS_Doxygen:INTERNAL=[/usr/bin/doxygen][cfound componen
 //Details about finding SQLITE3
 FIND_PACKAGE_MESSAGE_DETAILS_SQLITE3:INTERNAL=[/usr/lib/x86_64-linux-gnu/libsqlite3.so][/usr/include][v()]
 //Details about finding Z3
-FIND_PACKAGE_MESSAGE_DETAILS_Z3:INTERNAL=[/usr/include][/usr/lib/x86_64-linux-gnu/libz3.so][v()]
+FIND_PACKAGE_MESSAGE_DETAILS_Z3:INTERNAL=[/usr/local/include][/usr/local/lib/libz3.so][v()]
 //Details about finding ZLIB
 FIND_PACKAGE_MESSAGE_DETAILS_ZLIB:INTERNAL=[/usr/lib/x86_64-linux-gnu/libz.so][/usr/include][v1.2.11()]
 //Test HAS__Wall_C
@@ -647,6 +647,8 @@ HAVE_SYS_ACL_H:INTERNAL=
 HAVE_SYS_CAPABILITY_H:INTERNAL=1
 //Have include util.h
 HAVE_UTIL_H:INTERNAL=
+//Have correct prototype for Z3_get_error_msg
+HAVE_Z3_GET_ERROR_MSG_NEEDS_CONTEXT:INTERNAL=1
 //STRINGS property for variable: KLEE_RUNTIME_BUILD_TYPE
 KLEE_RUNTIME_BUILD_TYPE-STRINGS:INTERNAL=Release;Release+Debug;Release+Asserts;Release+Debug+Asserts;Debug;Debug+Asserts
 //ADVANCED property for variable: ZLIB_INCLUDE_DIR

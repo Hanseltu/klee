@@ -4,9 +4,8 @@ target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
 @.str = private unnamed_addr constant [2 x i8] c"x\00", align 1
-@.str.1 = private unnamed_addr constant [6 x i8] c"buff3\00", align 1
-@.str.2 = private unnamed_addr constant [41 x i8] c"buff3 == buff1 + 16 && buff3[32] == 1600\00", align 1
-@.str.3 = private unnamed_addr constant [7 x i8] c"case.c\00", align 1
+@.str.1 = private unnamed_addr constant [41 x i8] c"buff3 == buff1 + 16 && buff3[32] == 1600\00", align 1
+@.str.2 = private unnamed_addr constant [7 x i8] c"case.c\00", align 1
 @__PRETTY_FUNCTION__.main = private unnamed_addr constant [11 x i8] c"int main()\00", align 1
 
 ; Function Attrs: noinline nounwind optnone uwtable
@@ -40,48 +39,45 @@ define dso_local i32 @main() #0 {
   %17 = bitcast i8* %16 to i32*
   store i32* %17, i32** %5, align 8
   %18 = load i32*, i32** %5, align 8
-  %19 = bitcast i32* %18 to i8*
-  call void @klee_make_symbolic(i8* %19, i64 256, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.1, i64 0, i64 0))
-  %20 = load i32*, i32** %5, align 8
-  %21 = load i32*, i32** %3, align 8
-  %22 = getelementptr inbounds i32, i32* %21, i64 16
-  %23 = icmp eq i32* %20, %22
-  br i1 %23, label %24, label %27
+  %19 = load i32*, i32** %3, align 8
+  %20 = getelementptr inbounds i32, i32* %19, i64 16
+  %21 = icmp eq i32* %18, %20
+  br i1 %21, label %22, label %25
 
-24:                                               ; preds = %15
-  %25 = load i32*, i32** %5, align 8
-  %26 = getelementptr inbounds i32, i32* %25, i64 32
-  store i32 16, i32* %26, align 4
-  br label %30
+22:                                               ; preds = %15
+  %23 = load i32*, i32** %5, align 8
+  %24 = getelementptr inbounds i32, i32* %23, i64 32
+  store i32 16, i32* %24, align 4
+  br label %28
 
-27:                                               ; preds = %15
-  %28 = load i32*, i32** %5, align 8
-  %29 = getelementptr inbounds i32, i32* %28, i64 32
-  store i32 1600, i32* %29, align 4
-  br label %30
+25:                                               ; preds = %15
+  %26 = load i32*, i32** %5, align 8
+  %27 = getelementptr inbounds i32, i32* %26, i64 32
+  store i32 1600, i32* %27, align 4
+  br label %28
 
-30:                                               ; preds = %27, %24
-  %31 = load i32*, i32** %5, align 8
-  %32 = load i32*, i32** %3, align 8
-  %33 = getelementptr inbounds i32, i32* %32, i64 16
-  %34 = icmp eq i32* %31, %33
-  br i1 %34, label %35, label %41
+28:                                               ; preds = %25, %22
+  %29 = load i32*, i32** %5, align 8
+  %30 = load i32*, i32** %3, align 8
+  %31 = getelementptr inbounds i32, i32* %30, i64 16
+  %32 = icmp eq i32* %29, %31
+  br i1 %32, label %33, label %39
 
-35:                                               ; preds = %30
-  %36 = load i32*, i32** %5, align 8
-  %37 = getelementptr inbounds i32, i32* %36, i64 32
-  %38 = load i32, i32* %37, align 4
-  %39 = icmp eq i32 %38, 1600
-  br i1 %39, label %40, label %41
+33:                                               ; preds = %28
+  %34 = load i32*, i32** %5, align 8
+  %35 = getelementptr inbounds i32, i32* %34, i64 32
+  %36 = load i32, i32* %35, align 4
+  %37 = icmp eq i32 %36, 1600
+  br i1 %37, label %38, label %39
 
-40:                                               ; preds = %35
-  br label %42
+38:                                               ; preds = %33
+  br label %40
 
-41:                                               ; preds = %35, %30
-  call void @__assert_fail(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @.str.2, i64 0, i64 0), i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.3, i64 0, i64 0), i32 27, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @__PRETTY_FUNCTION__.main, i64 0, i64 0)) #5
+39:                                               ; preds = %33, %28
+  call void @__assert_fail(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @.str.1, i64 0, i64 0), i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.2, i64 0, i64 0), i32 29, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @__PRETTY_FUNCTION__.main, i64 0, i64 0)) #5
   unreachable
 
-42:                                               ; preds = %40
+40:                                               ; preds = %38
   ret i32 0
 }
 

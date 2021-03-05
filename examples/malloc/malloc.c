@@ -29,9 +29,9 @@ int main(){
     //klee_make_malloc_symbolic("sym_haoxin_new");
     //int *p2 = (int*) malloc(8*100);
     //int *p3 = (int*) malloc(8*100);
-    *(p1 + 100+ 100)= 999;
+    *(p1 + 1)= 999;
     //*p2 = 999;
-    //int a = *(p1+100);
+    int aa = *(p1+1);
     //*p3 = 1000;
     //long long *p2 = malloc(8*100);
     // load symbolic (p1+100) first then write to pp1
@@ -64,7 +64,7 @@ int main(){
     //    printf("1\n");
     //else
     //    printf("2\n");
-    //printf("sizeof(int) = %d\n", sizeof(int));
+    printf("aa = %d\n", aa);
     //printf("the address of p1 is %d \n ", p1);
     //printf("the address of *p1 is %d \n ", *p1);
     //printf("the value of *p1 is %d\n", *(p1+199));
