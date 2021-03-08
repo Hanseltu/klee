@@ -68,7 +68,7 @@ namespace klee {
     MallocMemoryMap mobjects;
 
     AddressSpace() : cowKey(1) {}
-    AddressSpace(const AddressSpace &b) : cowKey(++b.cowKey), objects(b.objects) { }
+    AddressSpace(const AddressSpace &b) : cowKey(++b.cowKey), objects(b.objects), mobjects(b.mobjects){ }
     ~AddressSpace() {}
 
     /// Resolve address to an ObjectPair in result.

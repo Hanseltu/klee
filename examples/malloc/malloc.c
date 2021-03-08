@@ -4,10 +4,10 @@
 #include "klee/klee.h"
 int main(){
 
-    long long a;
-    klee_make_symbolic(&a, sizeof(a), "a");
-    int b = a + 100;
-    //b + 100 = 1;
+    //long long a;
+    //klee_make_symbolic(&a, sizeof(a), "a");
+    //int b = a + 100;
+    //b = 1;
     /*
     int b = a + 10;
     b = 100;
@@ -23,15 +23,22 @@ int main(){
 
     //assert(klee_is_symbolic(a));
     klee_make_malloc_symbolic("sym_address");
-    int *p1 = (int*) malloc(8*100);
+    int *p1 = (int*) malloc(4*64);
     //klee_make_symbolic(p1, sizeof(int*), "p");
     //assert(klee_is_symbolic(p1));
     //klee_make_malloc_symbolic("sym_haoxin_new");
     //int *p2 = (int*) malloc(8*100);
     //int *p3 = (int*) malloc(8*100);
-    *(p1 + 1)= 999;
+    //*(p1+100 + 50)= 999;
     //*p2 = 999;
-    int aa = *(p1+1);
+    if (p1 == 16) {
+        p1[32] = 999;
+        //int aa = p1[32];
+        //printf("aa = %d\n", aa);
+    }
+    else{
+        p1[33] = 888;
+    }
     //*p3 = 1000;
     //long long *p2 = malloc(8*100);
     // load symbolic (p1+100) first then write to pp1
@@ -64,7 +71,7 @@ int main(){
     //    printf("1\n");
     //else
     //    printf("2\n");
-    printf("aa = %d\n", aa);
+    //printf("aa = %d\n", aa);
     //printf("the address of p1 is %d \n ", p1);
     //printf("the address of *p1 is %d \n ", *p1);
     //printf("the value of *p1 is %d\n", *(p1+199));

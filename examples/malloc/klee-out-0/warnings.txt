@@ -1,4 +1,2 @@
 KLEE: WARNING: undefined reference to function: klee_make_malloc_symbolic
-KLEE: WARNING: undefined reference to function: printf
 KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
-KLEE: WARNING ONCE: calling external: printf(73310736, 0) at [no debug info]

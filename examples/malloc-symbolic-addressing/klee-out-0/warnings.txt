@@ -1,1 +1,2 @@
+KLEE: WARNING: undefined reference to function: klee_make_malloc_symbolic
 KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.

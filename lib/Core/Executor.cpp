@@ -3666,19 +3666,19 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
                          allocSite, allocationAlignment, /*isMalloc*/true);
 
     // *Haoxin* new added
-    // bind to mo_list?
     //bindObjectInState(state, mo_buffer, isLocal);
 
     //store buffer map
     ObjectState *os_buffer = new ObjectState(mo_buffer);
-    MemoryObject *mo_temp = new MemoryObject(mo_buffer->address, 8, isLocal, false, false, allocSite, 0);
+
+    //create a temporary mo, just for creating a symbolic Expr
+    MemoryObject *mo_temp = new MemoryObject(1234567, 8, isLocal, false, false, allocSite, 0);
 
     ObjectPair mallocOp;
     mallocOp = std::make_pair(mo_buffer, os_buffer);
     ref<Expr> moMallocBufferAddress = ConstantExpr::create(mo_buffer->address, 64);
-    //state.addressSpace.mobjects.insert(std::pair<ref<Expr>, ObjectPair>(moMallocBufferAddress, mallocOp));
-    //state.addressSpace.unbindObject(moMallocBuffer);
 
+    // create a symbolic (mo, os);
     unsigned id = 0;
     std::string uniqueName = sym_name;
     while (!state.arrayNames.insert(uniqueName).second) {
@@ -3686,11 +3686,12 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
     }
     const Array *array = arrayCache.CreateArray(uniqueName, 8);
     ObjectState *os = array ? new ObjectState(mo_temp, array) : new ObjectState(mo_temp);
-    state.addressSpace.bindObject(mo_temp, os);
+    //state.addressSpace.bindObject(mo_temp, os);
     // add or not add both are ok? Why?
     //state.addSymbolic(mo_temp, array);
+
+    // get a symbolic Expr
     ref<Expr> symExpr = os->read(0, Expr::Int64);
-    symExpr.name = sym_name;
 
     bindLocal(target, state, symExpr);
 
@@ -3708,6 +3709,9 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
           os->write(i, reallocFrom->read8(i));
         state.addressSpace.unbindObject(reallocFrom->getObject());
       }
+    //can not delete
+    //delete mo_temp;
+    //delete os;
   } else {
     // XXX For now we just pick a size. Ideally we would support
     // symbolic sizes fully but even if we don't it would be better to
@@ -4017,19 +4021,17 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   address = optimizer.optimizeExpr(address, true);
   ref<Expr> p_address = address;
 
+  // *Haoxin*
   //here we add our new strategy to find the place of malloc buffer for read/write
-  //std::map<ref<Expr>, ObjectPair> shared_map = state.addressSpace.mobjects;
-  //std::map<ref<Expr>, ObjectPair>::iterator iter1 = shared_map.find(address);
-  //if (iter1 != shared_map.end()){ //we find address is in store
-  if (!isa<ConstantExpr>(address)){ //we find address is in store
 
-    Expr *ep = address.get();
-    //std::string str_name ("sym_haoxin");
-    //llvm::raw_ostream os;
+  if (!isa<ConstantExpr>(address)){ //a symbolic variable?
+
+    // store the symbolic name in a array
     std::set<std::string> nameList;
     scan2(address, nameList);
     printf("size of nameList = %d\n", nameList.size());
-    for (auto sym_name : nameList){
+
+    // iterate symbolic name and check if it's in shared_map
     /*
     // for testing the output of expression
     printf("ep->getNumKids() = %d\n", ep->getNumKids());
@@ -4044,176 +4046,286 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         }
     }
     */
-    std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
-    std::map<std::string, ObjectPair>::iterator iter1 = shared_map.find(sym_name);
-    //printf("address name is %s\n", address.name.c_str());
+    bool isSymbolicAddress;
+    std::string sym_name;
     MallocMemoryMap mmm = state.addressSpace.mobjects;
     for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
         std::string key = iter->first;
+        std::set<std::string>::iterator iter_set;
+        iter_set = nameList.find(key);
+        if (iter_set != nameList.end()){
+            sym_name = key;
+            isSymbolicAddress = 1;
+        }
         printf("In our strategy --- key = %s,\t", key.c_str());
         //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
         printf("value = (mo->address= %d, os)\n", iter->second.first->address);
     }
-    if (iter1 != shared_map.end()){
-    printf("This is a symbolic address, use our own strategy !\n");
-    //ref<ConstantExpr> key = toConstant(state, iter1->first, "key");
-    printf("Acctual address to read/write is %d\n", iter1->second.first->address);
-    const MemoryObject *mo = iter1->second.first;
-    //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
-    //ref<Expr> address = ConstantExpr::create(iter1->second.first->address, 64);
-    //TODO Here we should concretize the input address by giving a concrete symbolic address
-    ref<Expr> bufferAddress = ConstantExpr::create(iter1->second.first->address, 64);
-    ref<Expr> address;// = toConstant(state, p_address, "cc");
-    Expr *pp = p_address.get();
-    ref<Expr> constantAddress;
-    bool hasConstant;
-    for (int i = 0; i < pp->getNumKids(); i++){
-        if (isa<ConstantExpr>(pp->getKid(i))) {
-            printf("No.%d kid in p_address\n", i);
-            pp->getKid(i)->dump();
-            constantAddress = pp->getKid(i);
-            hasConstant = 1;
+    if (isSymbolicAddress){ // handle symbolic address
+        std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
+        printf("This is a symbolic address, use our own strategy !\n");
+        printf("Actual address to read/write is %d\n", shared_map[sym_name].first->address);
+        const MemoryObject *mo = shared_map[sym_name].first;
+        //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
+        //ref<Expr> address = ConstantExpr::create(iter1->second.first->address, 64);
+        //XXX Here we should concretize the input address by giving a concrete symbolic address
+        //For example *(p1 + 100) = 999;
+        //  we need to concretize p1 and return a ConstantExpr to (p1 + 100)
+        ref<Expr> bufferAddress = ConstantExpr::create(shared_map[sym_name].first->address, 64);
+        ref<Expr> address;// = toConstant(state, p_address, "cc");
+        Expr *pp = p_address.get();
+        ref<Expr> constantAddress;
+        bool hasConstant;
+        for (int i = 0; i < pp->getNumKids(); i++){
+            if (isa<ConstantExpr>(pp->getKid(i))) {
+                printf("No.%d kid in p_address\n", i);
+                pp->getKid(i)->dump();
+                constantAddress = pp->getKid(i);
+                hasConstant = 1;
+            }
         }
-    }
-    if (hasConstant) {
-        ConstantExpr *tt = dyn_cast<ConstantExpr>(constantAddress);
-        printf("tt = %d\n", tt->getZExtValue());
-        int acctualAddressInt = tt->getZExtValue() + iter1->second.first->address;
-        printf("acctualAddress is %d\n", acctualAddressInt);
-        address = ConstantExpr::create(acctualAddressInt, 64);
-    } else {
-        address = bufferAddress;
-    }
-    if (MaxSymArraySize && iter1->second.first->size >= MaxSymArraySize) {
-      address = toConstant(state, address, "max-sym-array-size");
-    }
+        if (hasConstant) {
+            ConstantExpr *tt = dyn_cast<ConstantExpr>(constantAddress);
+            printf("tt = %d\n", tt->getZExtValue());
+            int actualAddressInt = tt->getZExtValue() + shared_map[sym_name].first->address;
+            printf("acctualAddress is %d\n", actualAddressInt);
+            address = ConstantExpr::create(actualAddressInt, 64);
+        } else {
+            address = bufferAddress;
+        }
 
-    address->dump();
-    address = toConstant(state, address, "ttttt");
-    ref<Expr> offset = mo->getOffsetExpr(address);
-    ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
-    check = optimizer.optimizeExpr(check, true);
+        // normal operation in KLEE
+        address = toConstant(state, address, "actual address in read/write");
+        if (MaxSymArraySize && shared_map[sym_name].first->size >= MaxSymArraySize) {
+            address = toConstant(state, address, "max-sym-array-size");
+        }
 
-    //why need this?
+        address->dump();
+        ref<Expr> offset = mo->getOffsetExpr(address);
+        ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
+        check = optimizer.optimizeExpr(check, true);
 
-    bool inBounds;
-    solver->setTimeout(coreSolverTimeout);
-    bool success = solver->mustBeTrue(state, check, inBounds);
-    solver->setTimeout(time::Span());
+        bool inBounds;
+        solver->setTimeout(coreSolverTimeout);
+        bool success = solver->mustBeTrue(state, check, inBounds);
+        solver->setTimeout(time::Span());
 
-    if (!success) {
-      state.pc = state.prevPC;
-      terminateStateEarly(state, "Query timed out (bounds check).");
-      return ;
-    }
-    if (inBounds) {
-        const ObjectState *os = iter1->second.second;
-        if (isWrite) {
-            if (os->readOnly) {
-                terminateStateOnError(state, "memory error: object read only",
+        if (!success) {
+            state.pc = state.prevPC;
+            terminateStateEarly(state, "Query timed out (bounds check).");
+            return ;
+        }
+        if (inBounds) {
+            const ObjectState *os = state.addressSpace.mobjects[sym_name].second;
+            if (isWrite) {
+                if (os->readOnly) {
+                    terminateStateOnError(state, "memory error: object read only",
                                 ReadOnly);
+                } else {
+                    ObjectState *wos = state.addressSpace.getWriteable(mo, os);
+                    wos->write(offset, value);
+                    // Update new os to shared_map;
+                    state.addressSpace.mobjects[sym_name] = std::make_pair(mo, wos);
+                }
             } else {
-                ObjectState *wos = state.addressSpace.getWriteable(mo, os);
-                wos->write(offset, value);
-            //printf("no write operation support, please implement this!\n");
-            }
-        } else {
-            ref<Expr> result = os->read(offset, type);
+                ref<Expr> result = os->read(offset, type);
 
-            if (interpreterOpts.MakeConcreteSymbolic)
-                result = replaceReadWithSymbolic(state, result);
+                if (interpreterOpts.MakeConcreteSymbolic)
+                    result = replaceReadWithSymbolic(state, result);
 
-            //result = address;
-            bindLocal(target, state, result);
-            }
+                bindLocal(target, state, result);
+                }
 
-        return ;
-    }
-
-    address = optimizer.optimizeExpr(address, true);
-    ResolutionList rl;
-    solver->setTimeout(coreSolverTimeout);
-    bool incomplete = state.addressSpace.resolve(state, solver, address, rl,
-                                               0, coreSolverTimeout);
-    solver->setTimeout(time::Span());
-
-    // XXX there is some query wasteage here. who cares?
-    ExecutionState *unbound = &state;
-
-    for (ResolutionList::iterator i = rl.begin(), ie = rl.end(); i != ie; ++i) {
-        const MemoryObject *mo = i->first;
-        const ObjectState *os = i->second;
-        ref<Expr> inBounds = mo->getBoundsCheckPointer(address, bytes);
-
-    StatePair branches = fork(*unbound, inBounds, true);
-    ExecutionState *bound = branches.first;
-
-    // bound can be 0 on failure or overlapped
-    if (bound) {
-      if (isWrite) {
-        if (os->readOnly) {
-          terminateStateOnError(*bound, "memory error: object read only",
-                                ReadOnly);
-        } else {
-          ObjectState *wos = bound->addressSpace.getWriteable(mo, os);
-          wos->write(mo->getOffsetExpr(address), value);
-          //unbindObject(mo);
-          //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, 8);
-       }
-      } else {
-        ref<Expr> result = os->read(mo->getOffsetExpr(address), type);
-        //ref<ConstantExpr> tt = toConstant(state, result, "1");
-        //printf("result return from load inst = %d\n", tt->getZExtValue());
-        bindLocal(target, *bound, result);
-      }
-    }
-
-    unbound = branches.second;
-    if (!unbound)
-      break;
-  }
-
-  // XXX should we distinguish out of bounds and overlapped cases?
-  if (unbound) {
-    if (incomplete) {
-      terminateStateEarly(*unbound, "Query timed out (resolve).");
-    } else {
-      terminateStateOnError(*unbound, "memory error: out of bound pointer", Ptr,
-                            NULL, getAddressInfo(*unbound, address));
-    }
-    }
-    }
-    else {
-        //printf("no map in share_map!\n");
-        terminateStateOnError(state, "no shared_map found!",
-                                  User);
-        //exit(0);
+            return ;
         }
-    } //end of iteration of nameList
-    return ;
-  }//end if for our own strategy
+        /*
+        address = optimizer.optimizeExpr(address, true);
+        ResolutionList rl;
+        solver->setTimeout(coreSolverTimeout);
+        bool incomplete = state.addressSpace.resolve(state, solver, address, rl,
+                                               0, coreSolverTimeout);
+        solver->setTimeout(time::Span());
+
+        // XXX there is some query wasteage here. who cares?
+        ExecutionState *unbound = &state;
+
+        for (ResolutionList::iterator i = rl.begin(), ie = rl.end(); i != ie; ++i) {
+            const MemoryObject *mo = i->first;
+            const ObjectState *os = i->second;
+            ref<Expr> inBounds = mo->getBoundsCheckPointer(address, bytes);
+
+        StatePair branches = fork(*unbound, inBounds, true);
+        ExecutionState *bound = branches.first;
+
+        // bound can be 0 on failure or overlapped
+        if (bound) {
+            if (isWrite) {
+                if (os->readOnly) {
+                    terminateStateOnError(*bound, "memory error: object read only",
+                                ReadOnly);
+                } else {
+                    ObjectState *wos = bound->addressSpace.getWriteable(mo, os);
+                    wos->write(mo->getOffsetExpr(address), value);
+                    //unbindObject(mo);
+                    //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, 8);
+                }
+            } else {
+                ref<Expr> result = os->read(mo->getOffsetExpr(address), type);
+                //ref<ConstantExpr> tt = toConstant(state, result, "1");
+                //printf("result return from load inst = %d\n", tt->getZExtValue());
+                bindLocal(target, *bound, result);
+            }
+        }
+
+        unbound = branches.second;
+        if (!unbound)
+         break;
+        }
+
+        // XXX should we distinguish out of bounds and overlapped cases?
+        if (unbound) {
+            if (incomplete) {
+                terminateStateEarly(*unbound, "Query timed out (resolve).");
+            } else {
+                terminateStateOnError(*unbound, "memory error: out of bound pointer", Ptr,
+                            NULL, getAddressInfo(*unbound, address));
+            }
+        }
+        */
+        } else { // handle a normal symbolic variable
+            printf("no map in share_map!\n");
+
+            address = p_address;
+            ObjectPair op;
+            bool success;
+            solver->setTimeout(coreSolverTimeout);
+            if (!state.addressSpace.resolveOne(state, solver, address, op, success)) {
+                address = toConstant(state, address, "resolveOne failure");
+                success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
+            }
+            solver->setTimeout(time::Span());
+
+            if (success) {
+                const MemoryObject *mo = op.first;
+                //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
+
+            if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
+                address = toConstant(state, address, "max-sym-array-size");
+            }
+
+            ref<Expr> offset = mo->getOffsetExpr(address);
+            ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
+            check = optimizer.optimizeExpr(check, true);
+
+            bool inBounds;
+            solver->setTimeout(coreSolverTimeout);
+            bool success = solver->mustBeTrue(state, check, inBounds);
+            solver->setTimeout(time::Span());
+            if (!success) {
+                state.pc = state.prevPC;
+                terminateStateEarly(state, "Query timed out (bounds check).");
+                return ;
+            }
+
+            if (inBounds) {
+                const ObjectState *os = op.second;
+                if (isWrite) {
+                    if (os->readOnly) {
+                        terminateStateOnError(state, "memory error: object read only",
+                                ReadOnly);
+                    } else {
+                        ObjectState *wos = state.addressSpace.getWriteable(mo, os);
+                        wos->write(offset, value);
+                    }
+                } else {
+                    ref<Expr> result = os->read(offset, type);
+
+                    if (interpreterOpts.MakeConcreteSymbolic)
+                        result = replaceReadWithSymbolic(state, result);
+
+                    bindLocal(target, state, result);
+                }
+
+                return ;
+                }
+            }
+
+            // we are on an error path (no resolution, multiple resolution, one
+            // resolution with out of bounds)
+
+            address = optimizer.optimizeExpr(address, true);
+            ResolutionList rl;
+            solver->setTimeout(coreSolverTimeout);
+            bool incomplete = state.addressSpace.resolve(state, solver, address, rl,
+                                               0, coreSolverTimeout);
+            solver->setTimeout(time::Span());
+
+            // XXX there is some query wasteage here. who cares?
+            ExecutionState *unbound = &state;
+
+            for (ResolutionList::iterator i = rl.begin(), ie = rl.end(); i != ie; ++i) {
+                const MemoryObject *mo = i->first;
+                const ObjectState *os = i->second;
+                ref<Expr> inBounds = mo->getBoundsCheckPointer(address, bytes);
+
+                StatePair branches = fork(*unbound, inBounds, true);
+                ExecutionState *bound = branches.first;
+
+                // bound can be 0 on failure or overlapped
+                if (bound) {
+                    if (isWrite) {
+                        if (os->readOnly) {
+                            terminateStateOnError(*bound, "memory error: object read only",
+                                ReadOnly);
+                        } else {
+                            ObjectState *wos = bound->addressSpace.getWriteable(mo, os);
+                            wos->write(mo->getOffsetExpr(address), value);
+                        }
+                    } else {
+                        ref<Expr> result = os->read(mo->getOffsetExpr(address), type);
+                        bindLocal(target, *bound, result);
+                    }
+                }
+
+                unbound = branches.second;
+                if (!unbound)
+                    break;
+            }
+
+            // XXX should we distinguish out of bounds and overlapped cases?
+            if (unbound) {
+                if (incomplete) {
+                    terminateStateEarly(*unbound, "Query timed out (resolve).");
+                } else {
+                    terminateStateOnError(*unbound, "memory error: out of bound pointer", Ptr,
+                            NULL, getAddressInfo(*unbound, address));
+                }
+            }
+            return ;
+            }
+        }//end if for our own strategy
  else {
      printf("KLEE executeMemoryOperation !\n");
 
-  //here is the normal operation in KLEE
- //ref<ConstantExpr> temp_address = toConstant(state, address, "temp_address");
-  //printf("temp_address = %d\n", temp_address->getZExtValue());
-  //ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
-  //printf("  temp_value = %d\n", temp_value->getZExtValue());
-  // fast path: single in-bounds resolution
+    //here is the normal operation in KLEE
+    //ref<ConstantExpr> temp_address = toConstant(state, address, "temp_address");
+     //printf("temp_address = %d\n", temp_address->getZExtValue());
+    //ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
+    //printf("  temp_value = %d\n", temp_value->getZExtValue());
+    // fast path: single in-bounds resolution
 
-  ObjectPair op;
-  bool success;
-  solver->setTimeout(coreSolverTimeout);
-  if (!state.addressSpace.resolveOne(state, solver, address, op, success)) {
-    address = toConstant(state, address, "resolveOne failure");
-    success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
-  }
-  solver->setTimeout(time::Span());
+    ObjectPair op;
+    bool success;
+    solver->setTimeout(coreSolverTimeout);
+    if (!state.addressSpace.resolveOne(state, solver, address, op, success)) {
+        address = toConstant(state, address, "resolveOne failure");
+        success = state.addressSpace.resolveOne(cast<ConstantExpr>(address), op);
+    }
+    solver->setTimeout(time::Span());
 
-  if (success) {
-    const MemoryObject *mo = op.first;
-    //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
+    if (success) {
+        const MemoryObject *mo = op.first;
+        //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
 
     if (MaxSymArraySize && mo->size >= MaxSymArraySize) {
       address = toConstant(state, address, "max-sym-array-size");
@@ -4243,42 +4355,6 @@ void Executor::executeMemoryOperation(ExecutionState &state,
           ObjectState *wos = state.addressSpace.getWriteable(mo, os);
           //value.name = "sym_haoxin";
           wos->write(offset, value);
-/*
-          //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
-
-          //Here we find the MO of malloc buffer and make MO if malloc address to a symbol
-          //Here we also save the orginal [MO(address), OS(buffer)] to a new MemoryMap, so that we can find it later
-          ObjectPair opMallocBuffer;
-          bool success;
-          solver->setTimeout(coreSolverTimeout);
-          if (!state.addressSpace.resolveOne(state, solver, value, opMallocBuffer, success)) {
-             address = toConstant(state, address, "resolveOne failure");
-             success = state.addressSpace.resolveOne(cast<ConstantExpr>(value), opMallocBuffer);
-           }
-        solver->setTimeout(time::Span());
-
-        if (success) {
-            const MemoryObject *moMallocBuffer = opMallocBuffer.first;
-            //printf("Find it! moMallocBuffer->address is %d\n", moMallocBuffer->address);
-            if (moMallocBuffer->isMallocBuffer){
-                //printf("YES---%d\n", mo->address);
-                ObjectPair mallocOp;
-                mallocOp = std::make_pair(moMallocBuffer, opMallocBuffer.second);
-                ref<Expr> moMallocBufferAddress = ConstantExpr::create(moMallocBuffer->address, 64);
-                state.addressSpace.mobjects.insert(std::pair<ref<Expr>, ObjectPair>(address, mallocOp));
-                //state.addressSpace.unbindObject(moMallocBuffer);
-                MallocMemoryMap mmm = state.addressSpace.mobjects;
-                for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
-                    ref<ConstantExpr> key = toConstant(state, iter->first, "key");
-                    printf("key = %d,\t", key->getZExtValue());
-                    //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
-                    printf("value = (mo->address= %d, os)\n", iter->second.first->address);
-                }
-                specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, mo->address, mo->size);
-            }
-        }
-*/
-          //wos->write(offset, value);
        }
       } else {
         ref<Expr> result = os->read(offset, type);
@@ -4291,11 +4367,10 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
       return ;
     }
-  //specialFunctionHandler->handleMakeSymbolicForMalloc(state, target, toConstant(state, address, "1")->getZExtValue(), 64);
   }
 
-  // we are on an error path (no resolution, multiple resolution, one
-  // resolution with out of bounds)
+    // we are on an error path (no resolution, multiple resolution, one
+    // resolution with out of bounds)
 
   address = optimizer.optimizeExpr(address, true);
   ResolutionList rl;
