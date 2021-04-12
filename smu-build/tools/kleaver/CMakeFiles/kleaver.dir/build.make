@@ -79,15 +79,15 @@ include tools/kleaver/CMakeFiles/kleaver.dir/flags.make
 tools/kleaver/CMakeFiles/kleaver.dir/main.cpp.o: tools/kleaver/CMakeFiles/kleaver.dir/flags.make
 tools/kleaver/CMakeFiles/kleaver.dir/main.cpp.o: ../tools/kleaver/main.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object tools/kleaver/CMakeFiles/kleaver.dir/main.cpp.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/kleaver && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kleaver.dir/main.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/kleaver/main.cpp
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/kleaver && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kleaver.dir/main.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/kleaver/main.cpp
 
 tools/kleaver/CMakeFiles/kleaver.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kleaver.dir/main.cpp.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/kleaver && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/kleaver/main.cpp > CMakeFiles/kleaver.dir/main.cpp.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/kleaver && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/kleaver/main.cpp > CMakeFiles/kleaver.dir/main.cpp.i
 
 tools/kleaver/CMakeFiles/kleaver.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kleaver.dir/main.cpp.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/kleaver && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/kleaver/main.cpp -o CMakeFiles/kleaver.dir/main.cpp.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/kleaver && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/kleaver/main.cpp -o CMakeFiles/kleaver.dir/main.cpp.s
 
 # Object files for target kleaver
 kleaver_OBJECTS = \
@@ -107,7 +107,7 @@ bin/kleaver: /usr/lib/x86_64-linux-gnu/libtcmalloc.so
 bin/kleaver: /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/lib/libLLVMSupport.a
 bin/kleaver: /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/lib/libLLVMDemangle.a
 bin/kleaver: /usr/local/lib/libstp.so.2.3
-bin/kleaver: /usr/lib/libminisat.so
+bin/kleaver: /usr/local/lib/libminisat.so
 bin/kleaver: /usr/local/lib/libz3.so
 bin/kleaver: tools/kleaver/CMakeFiles/kleaver.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ../../bin/kleaver"

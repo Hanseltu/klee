@@ -3653,7 +3653,6 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
                             size_t allocationAlignment,
                             bool isMalloc ) {
 
-  printf("symbolic malloc address name = %s\n", sym_name.c_str());
   size = toUnique(state, size);
   if (ConstantExpr *CE = dyn_cast<ConstantExpr>(size)) {
     const llvm::Value *allocSite = state.prevPC->inst;
@@ -3668,11 +3667,15 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
     // *Haoxin* new added
     //bindObjectInState(state, mo_buffer, isLocal);
 
+    if (sym_name.size() == 0)
+      sym_name = "sym_" + std::to_string(mo_buffer->address);
+    printf("symbolic malloc address name = %s\n", sym_name.c_str());
     //store buffer map
     ObjectState *os_buffer = new ObjectState(mo_buffer);
 
     //create a temporary mo, just for creating a symbolic Expr
-    MemoryObject *mo_temp = new MemoryObject(1234567, 8, isLocal, false, false, allocSite, 0);
+    //no need new mo
+    //MemoryObject *mo_temp = new MemoryObject(1234567, 8, isLocal, false, false, allocSite, 0);
 
     ObjectPair mallocOp;
     mallocOp = std::make_pair(mo_buffer, os_buffer);
@@ -3685,13 +3688,15 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
         uniqueName = sym_name + "_" + llvm::utostr(++id);
     }
     const Array *array = arrayCache.CreateArray(uniqueName, 8);
-    ObjectState *os = array ? new ObjectState(mo_temp, array) : new ObjectState(mo_temp);
+    //no need new os
+    //ObjectState *os = array ? new ObjectState(mo_temp, array) : new ObjectState(mo_temp);
     //state.addressSpace.bindObject(mo_temp, os);
     // add or not add both are ok? Why?
     //state.addSymbolic(mo_temp, array);
 
     // get a symbolic Expr
-    ref<Expr> symExpr = os->read(0, Expr::Int64);
+    //ref<Expr> symExpr = os->read(0, Expr::Int64);
+    ref<Expr> symExpr = ReadExpr::createTempRead(array, Expr::Int64);
 
     bindLocal(target, state, symExpr);
 
@@ -3703,12 +3708,15 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
         //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
         printf("value = (mo->address= %d, os)\n", iter->second.first->address);
     }
+    //no need?
+    /*
     if (reallocFrom) {
         unsigned count = std::min(reallocFrom->size, os->size);
         for (unsigned i=0; i<count; i++)
           os->write(i, reallocFrom->read8(i));
         state.addressSpace.unbindObject(reallocFrom->getObject());
       }
+      */
     //can not delete
     //delete mo_temp;
     //delete os;
@@ -3987,8 +3995,9 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   }
 }
 */
-void scan2(ref<Expr> e, std::set<std::string> &symNameList) {
+const Array* scan2(ref<Expr> e, std::set<std::string> &symNameList) {
     //std::set<std::string> symNameList;
+    const Array *array;
     Expr *ep = e.get();
     //ep->dump();
         for (unsigned i=0; i<ep->getNumKids(); i++)
@@ -3996,10 +4005,11 @@ void scan2(ref<Expr> e, std::set<std::string> &symNameList) {
         if (const ReadExpr *re = dyn_cast<ReadExpr>(e)) {
           printf("In execution array->name = %s\n", re->updates.root->name.c_str());
           symNameList.insert(re->updates.root->name);
+          array = re->updates.root;
           //break;
           //re->dump();
         }
-        //return symNameList;
+        return array;
 }
 void Executor::executeMemoryOperation(ExecutionState &state,
                                       bool isWrite,
@@ -4028,7 +4038,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
 
     // store the symbolic name in a array
     std::set<std::string> nameList;
-    scan2(address, nameList);
+    const Array *array = scan2(address, nameList);
     printf("size of nameList = %d\n", nameList.size());
 
     // iterate symbolic name and check if it's in shared_map
@@ -4067,24 +4077,36 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         printf("Actual address to read/write is %d\n", shared_map[sym_name].first->address);
         const MemoryObject *mo = shared_map[sym_name].first;
         //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
-        //ref<Expr> address = ConstantExpr::create(iter1->second.first->address, 64);
+        ref<Expr> r = ConstantExpr::create(1111, 64);
+        ref<Expr> l = ConstantExpr::create(4444, 64);
+        //ref<Expr> p = ReadExpr::createTempRead(array, Expr::Int64);
+        //ref<Expr> re = toConstant(state, SubExpr::create(p_address,p), " ");
+        //ConstantExpr *con_re = dyn_cast<ConstantExpr>(re);
+        //printf("sub value = %d\n", con_re->getZExtValue());
+        //re->dump();
         //XXX Here we should concretize the input address by giving a concrete symbolic address
         //For example *(p1 + 100) = 999;
         //  we need to concretize p1 and return a ConstantExpr to (p1 + 100)
         ref<Expr> bufferAddress = ConstantExpr::create(shared_map[sym_name].first->address, 64);
         ref<Expr> address;// = toConstant(state, p_address, "cc");
         Expr *pp = p_address.get();
-        ref<Expr> constantAddress;
-        bool hasConstant;
+        //ref<Expr> constantAddress;
+        ref<Expr> symbolicAddress;
+        bool hasSymbolicAddress;
         for (int i = 0; i < pp->getNumKids(); i++){
-            if (isa<ConstantExpr>(pp->getKid(i))) {
+            if (!isa<ConstantExpr>(pp->getKid(i))) {
                 printf("No.%d kid in p_address\n", i);
                 pp->getKid(i)->dump();
-                constantAddress = pp->getKid(i);
-                hasConstant = 1;
+                //constantAddress = pp->getKid(i);
+                symbolicAddress = pp->getKid(i);
+                hasSymbolicAddress = 1;
             }
         }
-        if (hasConstant) {
+        //symbolicAddress->dump();
+        // the strategy is (p +/- 100) - p, then get the real constant in the given symbolic expr
+        ref<Expr> constantAddress = toConstant(state, SubExpr::create(p_address,symbolicAddress), " ");
+        //constantAddress->dump();
+        if (hasSymbolicAddress) {
             ConstantExpr *tt = dyn_cast<ConstantExpr>(constantAddress);
             printf("tt = %d\n", tt->getZExtValue());
             int actualAddressInt = tt->getZExtValue() + shared_map[sym_name].first->address;

@@ -1,4 +1,4 @@
-set(CMAKE_C_COMPILER "/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc")
+set(CMAKE_C_COMPILER "/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc")
 set(CMAKE_C_COMPILER_ARG1 "")
 set(CMAKE_C_COMPILER_ID "GNU")
 set(CMAKE_C_COMPILER_VERSION "11.0.1")
@@ -18,10 +18,10 @@ set(CMAKE_C_SIMULATE_VERSION "")
 
 
 
-set(CMAKE_AR "/usr/bin/ar")
-set(CMAKE_C_COMPILER_AR "/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ar")
-set(CMAKE_RANLIB "/usr/bin/ranlib")
-set(CMAKE_C_COMPILER_RANLIB "/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ranlib")
+set(CMAKE_AR "/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/ar")
+set(CMAKE_C_COMPILER_AR "/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc-ar")
+set(CMAKE_RANLIB "/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/ranlib")
+set(CMAKE_C_COMPILER_RANLIB "/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc-ranlib")
 set(CMAKE_LINKER "/usr/bin/ld")
 set(CMAKE_MT "")
 set(CMAKE_COMPILER_IS_GNUCC 1)
@@ -71,7 +71,7 @@ endif()
 
 
 
-set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "/usr/local/include/csmith-2.3.0;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/lib/gcc/x86_64-pc-linux-gnu/11.0.1/include;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/lib/gcc/x86_64-pc-linux-gnu/11.0.1/include-fixed;/usr/local/include;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/include;/usr/include/x86_64-linux-gnu;/usr/include")
+set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "/usr/local/include/csmith-2.3.0;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/lib/gcc/x86_64-pc-linux-gnu/11.0.1/include;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/lib/gcc/x86_64-pc-linux-gnu/11.0.1/include-fixed;/usr/local/include;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/include;/usr/include/x86_64-linux-gnu;/usr/include")
 set(CMAKE_C_IMPLICIT_LINK_LIBRARIES "gcc;gcc_s;c;gcc;gcc_s")
-set(CMAKE_C_IMPLICIT_LINK_DIRECTORIES "/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/lib/gcc/x86_64-pc-linux-gnu/11.0.1;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/lib/gcc;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/lib64;/lib/x86_64-linux-gnu;/lib64;/usr/lib/x86_64-linux-gnu;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/lib")
+set(CMAKE_C_IMPLICIT_LINK_DIRECTORIES "/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/lib/gcc/x86_64-pc-linux-gnu/11.0.1;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/lib/gcc;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/lib64;/lib/x86_64-linux-gnu;/lib64;/usr/lib/x86_64-linux-gnu;/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/lib")
 set(CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")

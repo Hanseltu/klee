@@ -15,10 +15,10 @@
 ########################
 
 //Path to a program.
-CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
+CMAKE_ADDR2LINE:FILEPATH=/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/addr2line
 
 //Path to a program.
-CMAKE_AR:FILEPATH=/usr/bin/ar
+CMAKE_AR:FILEPATH=/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/ar
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
@@ -28,15 +28,15 @@ CMAKE_BUILD_TYPE:STRING=Debug
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/c++
+CMAKE_CXX_COMPILER:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
-CMAKE_CXX_COMPILER_AR:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ar
+CMAKE_CXX_COMPILER_AR:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc-ar
 
 //A wrapper around 'ranlib' adding the appropriate '--plugin' option
 // for the GCC compiler
-CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ranlib
+CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc-ranlib
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=
@@ -54,15 +54,15 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g
 
 //C compiler
-CMAKE_C_COMPILER:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc
+CMAKE_C_COMPILER:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
-CMAKE_C_COMPILER_AR:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ar
+CMAKE_C_COMPILER_AR:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc-ar
 
 //A wrapper around 'ranlib' adding the appropriate '--plugin' option
 // for the GCC compiler
-CMAKE_C_COMPILER_RANLIB:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-20210304/bin/gcc-ranlib
+CMAKE_C_COMPILER_RANLIB:FILEPATH=/home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc-ranlib
 
 //Flags used by the C compiler during all build types.
 CMAKE_C_FLAGS:STRING=
@@ -181,10 +181,10 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 CMAKE_NM:FILEPATH=/usr/bin/nm
 
 //Path to a program.
-CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
+CMAKE_OBJCOPY:FILEPATH=/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/objcopy
 
 //Path to a program.
-CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
+CMAKE_OBJDUMP:FILEPATH=/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/objdump
 
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
@@ -196,10 +196,10 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 CMAKE_PROJECT_NAME:STATIC=KLEE
 
 //Path to a program.
-CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
+CMAKE_RANLIB:FILEPATH=/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/ranlib
 
 //Path to a program.
-CMAKE_READELF:FILEPATH=/usr/bin/readelf
+CMAKE_READELF:FILEPATH=/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/readelf
 
 //Flags used by the linker during the creation of shared libraries
 // during all build types.

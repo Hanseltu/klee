@@ -14,7 +14,7 @@ int main(){
     }
     else {
         klee_make_malloc_symbolic("sym_buffer2");
-        buff2 = (int*) malloc(1600);
+        buff1 = (int*) malloc(16);
     }
 
     klee_make_malloc_symbolic("sym_buffer3");

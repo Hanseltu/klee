@@ -1,20 +1,13 @@
-sym_address0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+sym_756368640  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 %----------------------------------------------------
-ASSERT( ( NOT( ((((((((0x10 = sym_address0[0x00000000]
-) AND (0x00 = sym_address0[0x00000001]
+ASSERT( BVGT((sym_756368640[0x00000007] @ (sym_756368640[0x00000006] @ (sym_756368640[0x00000005] @ (sym_756368640[0x00000004] @ (sym_756368640[0x00000003] @ (sym_756368640[0x00000002] @ (sym_756368640[0x00000001] @ sym_756368640[0x00000000]
 )
-) AND (0x00 = sym_address0[0x00000002]
 )
-) AND (0x00 = sym_address0[0x00000003]
 )
-) AND (0x00 = sym_address0[0x00000004]
 )
-) AND (0x00 = sym_address0[0x00000005]
 )
-) AND (0x00 = sym_address0[0x00000006]
 )
-) AND (0x00 = sym_address0[0x00000007]
-)
-))) );
+),0x0000000000000010)
+ );
 %----------------------------------------------------
 QUERY( FALSE  );

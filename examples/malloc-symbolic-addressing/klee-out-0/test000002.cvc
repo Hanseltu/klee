@@ -1,27 +1,31 @@
 x0  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 sym_buffer31  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
-sym_buffer12  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+sym_buffer22  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
+sym_buffer13  : ARRAY BITVECTOR(32) OF BITVECTOR(8);
 %----------------------------------------------------
 ASSERT( ( NOT( SBVGT((x0[0x00000003] @ (x0[0x00000002] @ (x0[0x00000001] @ x0[0x00000000]
 )
 )
 ),0x00000064)
 )) );
-ASSERT( ((((((((0xEB = sym_buffer31[0x00000000]
-) AND (0xAB = sym_buffer31[0x00000001]
+ASSERT( ((sym_buffer31[0x00000007] @ (sym_buffer31[0x00000006] @ (sym_buffer31[0x00000005] @ (sym_buffer31[0x00000004] @ (sym_buffer31[0x00000003] @ (sym_buffer31[0x00000002] @ (sym_buffer31[0x00000001] @ sym_buffer31[0x00000000]
 )
-) AND (0xAB = sym_buffer31[0x00000002]
 )
-) AND (0xAB = sym_buffer31[0x00000003]
 )
-) AND (0xAB = sym_buffer31[0x00000004]
 )
-) AND (0xAB = sym_buffer31[0x00000005]
 )
-) AND (0xAB = sym_buffer31[0x00000006]
 )
-) AND (0xAB = sym_buffer31[0x00000007]
+) = BVPLUS(64, 
+0x0000000000000040, 
+(sym_buffer22[0x00000007] @ (sym_buffer22[0x00000006] @ (sym_buffer22[0x00000005] @ (sym_buffer22[0x00000004] @ (sym_buffer22[0x00000003] @ (sym_buffer22[0x00000002] @ (sym_buffer22[0x00000001] @ sym_buffer22[0x00000000]
 )
+)
+)
+)
+)
+)
+))
+
 ) );
 %----------------------------------------------------
 QUERY( FALSE  );

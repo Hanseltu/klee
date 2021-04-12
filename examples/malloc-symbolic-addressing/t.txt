@@ -1,0 +1,216 @@
+the normal variable address in KLEE is 59957880
+the normal variable address in KLEE is 59966048
+the normal variable address in KLEE is 59965728
+the normal variable address in KLEE is 59965872
+the normal variable address in KLEE is 60222416
+the normal variable address in KLEE is 59957912
+the normal variable address in KLEE is 59965888
+the normal variable address in KLEE is 60224144
+allocationAlignment in executeAlloc is 4
+the normal variable address in KLEE is 59957952
+mo->getBaseExpr() in executeAlloc = 59957952
+allocationAlignment in executeAlloc is 4
+the normal variable address in KLEE is 59957976
+mo->getBaseExpr() in executeAlloc = 59957976
+allocationAlignment in executeAlloc is 8
+the normal variable address in KLEE is 59957968
+mo->getBaseExpr() in executeAlloc = 59957968
+allocationAlignment in executeAlloc is 8
+the normal variable address in KLEE is 59958000
+mo->getBaseExpr() in executeAlloc = 59958000
+allocationAlignment in executeAlloc is 8
+the normal variable address in KLEE is 59958016
+mo->getBaseExpr() in executeAlloc = 59958016
+KLEE executeMemoryOperation !
+rl for loop
+KLEE executeMemoryOperation !
+calls klee_make_malloc_symbolic here, but did nothing!
+size of arguments is 1
+symbolic malloc address name = sym_buffer2
+allocationAlignment in executeAllocForMalloc is 8
+the malloc return address in KLEE is 59966240
+value = (mo->address= 59966240, os)
+calls klee_make_malloc_symbolic here, but did nothing!
+size of arguments is 1
+symbolic malloc address name = sym_buffer1
+allocationAlignment in executeAllocForMalloc is 8
+the malloc return address in KLEE is 59966320
+value = (mo->address= 59966320, os)
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+calls klee_make_malloc_symbolic here, but did nothing!
+size of arguments is 1
+symbolic malloc address name = sym_buffer3
+allocationAlignment in executeAllocForMalloc is 8
+the malloc return address in KLEE is 60440832
+value = (mo->address= 59966240, os)
+value = (mo->address= 60440832, os)
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+calls klee_make_malloc_symbolic here, but did nothing!
+size of arguments is 1
+KLEE executeMemoryOperation !
+symbolic malloc address name = sym_buffer3
+allocationAlignment in executeAllocForMalloc is 8
+the malloc return address in KLEE is 60441344
+value = (mo->address= 59966320, os)
+value = (mo->address= 60441344, os)
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+size of nameList = 1
+In our strategy --- key = sym_buffer2,	value = (mo->address= 59966240, os)
+In our strategy --- key = sym_buffer3,	value = (mo->address= 60440832, os)
+This is a symbolic address, use our own strategy !
+Actual address to read/write is 60440832
+No.0 kid in p_address
+tt = 128
+acctualAddress is 60440960
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+size of nameList = 1
+In our strategy --- key = sym_buffer2,	value = (mo->address= 59966240, os)
+In our strategy --- key = sym_buffer3,	value = (mo->address= 60440832, os)
+This is a symbolic address, use our own strategy !
+Actual address to read/write is 60440832
+No.0 kid in p_address
+tt = 128
+acctualAddress is 60440960
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+size of nameList = 1
+In our strategy --- key = sym_buffer2,	value = (mo->address= 59966240, os)
+In our strategy --- key = sym_buffer3,	value = (mo->address= 60440832, os)
+This is a symbolic address, use our own strategy !
+Actual address to read/write is 60440832
+No.0 kid in p_address
+tt = 128
+acctualAddress is 60440960
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+size of nameList = 1
+In our strategy --- key = sym_buffer1,	value = (mo->address= 59966320, os)
+In our strategy --- key = sym_buffer3,	value = (mo->address= 60441344, os)
+This is a symbolic address, use our own strategy !
+Actual address to read/write is 60441344
+No.0 kid in p_address
+tt = 128
+acctualAddress is 60441472
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+size of nameList = 1
+In our strategy --- key = sym_buffer2,	value = (mo->address= 59966240, os)
+In our strategy --- key = sym_buffer3,	value = (mo->address= 60440832, os)
+This is a symbolic address, use our own strategy !
+Actual address to read/write is 60440832
+No.0 kid in p_address
+tt = 128
+acctualAddress is 60440960
+KLEE executeMemoryOperation !
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+size of nameList = 1
+In our strategy --- key = sym_buffer1,	value = (mo->address= 59966320, os)
+In our strategy --- key = sym_buffer3,	value = (mo->address= 60441344, os)
+This is a symbolic address, use our own strategy !
+Actual address to read/write is 60441344
+No.0 kid in p_address
+tt = 128
+acctualAddress is 60441472
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+KLEE executeMemoryOperation !
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+size of nameList = 1
+In our strategy --- key = sym_buffer1,	value = (mo->address= 59966320, os)
+In our strategy --- key = sym_buffer3,	value = (mo->address= 60441344, os)
+This is a symbolic address, use our own strategy !
+Actual address to read/write is 60441344
+No.0 kid in p_address
+tt = 128
+acctualAddress is 60441472
+symbolic mo->address = 59957976
+symbolic array->name = x
+
+symbolic mo->address = 59957976
+symbolic array->name = x
+
+symbolic mo->address = 59957976
+symbolic array->name = x
+
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+In execution array->name = sym_buffer3
+size of nameList = 1
+In our strategy --- key = sym_buffer1,	value = (mo->address= 59966320, os)
+In our strategy --- key = sym_buffer3,	value = (mo->address= 60441344, os)
+This is a symbolic address, use our own strategy !
+Actual address to read/write is 60441344
+No.0 kid in p_address
+tt = 128
+acctualAddress is 60441472
+symbolic mo->address = 59957976
+symbolic array->name = x
+

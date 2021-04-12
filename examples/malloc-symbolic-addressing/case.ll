@@ -35,9 +35,9 @@ define dso_local i32 @main() #0 {
 
 12:                                               ; preds = %0
   call void @klee_make_malloc_symbolic(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.2, i64 0, i64 0))
-  %13 = call noalias i8* @malloc(i64 1600) #4
+  %13 = call noalias i8* @malloc(i64 16) #4
   %14 = bitcast i8* %13 to i32*
-  store i32* %14, i32** %4, align 8
+  store i32* %14, i32** %3, align 8
   br label %15
 
 15:                                               ; preds = %12, %9

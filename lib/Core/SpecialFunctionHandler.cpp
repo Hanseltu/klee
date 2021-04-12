@@ -414,6 +414,8 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
   // XXX should type check args
   assert(arguments.size()==1 && "invalid number of arguments to malloc");
   // *Haoxin* here we decide to make a malloc to a symbol
+  // This is the version needed "klee_make_malloc_symbolic" API
+  /*
   if (argumentsFromUser.size() == 0)  {//default in klee
     executor.executeAlloc(state, arguments[0], false, target);
   }
@@ -423,6 +425,11 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
     // after use it, we clear the arguments buffer
     argumentsFromUser.clear();
   }
+  */
+
+  //This is the version does not need API
+  std::string name = "";
+  executor.executeAllocForMalloc(state, arguments[0], false, target, name);
 }
 
 void SpecialFunctionHandler::handleMemalign(ExecutionState &state,
