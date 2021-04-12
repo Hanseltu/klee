@@ -1774,6 +1774,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       }
       printf("      Local variables in locals\n");
       */
+      /*
       for (auto i : vecLocIndex){
         int kind = temp_stack_last.locals[i].value.get()->getKind();
         //printf("        locals[%d].value.get().getKind() = %d\n", i+1, kind);
@@ -1785,6 +1786,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
             //printf("        %d\n", loc->getZExtValue());
         }
       }
+      */
       //printf("      size = %s", temp_stack_last.locals[0].value->dump());
       //printf("Here print the contents in getAddressInfo\n");
       //ref<Expr> address = &state.stack[1].allocas[4]->address;
@@ -3536,7 +3538,7 @@ void Executor::executeAlloc(ExecutionState &state,
     if (allocationAlignment == 0) {
       allocationAlignment = getAllocationAlignment(allocSite);
     }
-    printf("allocationAlignment in executeAlloc is %d\n", allocationAlignment);
+    //printf("allocationAlignment in executeAlloc is %d\n", allocationAlignment);
     MemoryObject *mo =
         memory->allocate(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment);
@@ -3552,7 +3554,7 @@ void Executor::executeAlloc(ExecutionState &state,
         os->initializeToRandom();
       }
       ref<ConstantExpr> temp = mo->getBaseExpr();
-      printf("mo->getBaseExpr() in executeAlloc = %d\n", temp->getZExtValue());
+      //printf("mo->getBaseExpr() in executeAlloc = %d\n", temp->getZExtValue());
       bindLocal(target, state, mo->getBaseExpr());
 
       if (reallocFrom) {
@@ -3659,7 +3661,7 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
     if (allocationAlignment == 0) {
       allocationAlignment = getAllocationAlignment(allocSite);
     }
-    printf("allocationAlignment in executeAllocForMalloc is %d\n", allocationAlignment);
+    //printf("allocationAlignment in executeAllocForMalloc is %d\n", allocationAlignment);
     MemoryObject *mo_buffer =
         memory->allocate(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment, /*isMalloc*/true);
@@ -3669,7 +3671,7 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
 
     if (sym_name.size() == 0)
       sym_name = "sym_" + std::to_string(mo_buffer->address);
-    printf("symbolic malloc address name = %s\n", sym_name.c_str());
+    //printf("symbolic malloc address name = %s\n", sym_name.c_str());
     //store buffer map
     ObjectState *os_buffer = new ObjectState(mo_buffer);
 
@@ -3706,7 +3708,7 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
         //ref<ConstantExpr> key = toConstant(state, iter->first, "key");
         //printf("key = %d,\t", key->getZExtValue());
         //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
-        printf("value = (mo->address= %d, os)\n", iter->second.first->address);
+        ;//printf("value = (mo->address= %d, os)\n", iter->second.first->address);
     }
     //no need?
     /*
@@ -4003,7 +4005,7 @@ const Array* scan2(ref<Expr> e, std::set<std::string> &symNameList) {
         for (unsigned i=0; i<ep->getNumKids(); i++)
           scan2(ep->getKid(i), symNameList);
         if (const ReadExpr *re = dyn_cast<ReadExpr>(e)) {
-          printf("In execution array->name = %s\n", re->updates.root->name.c_str());
+          //printf("In execution array->name = %s\n", re->updates.root->name.c_str());
           symNameList.insert(re->updates.root->name);
           array = re->updates.root;
           //break;
@@ -4077,8 +4079,8 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         printf("Actual address to read/write is %d\n", shared_map[sym_name].first->address);
         const MemoryObject *mo = shared_map[sym_name].first;
         //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
-        ref<Expr> r = ConstantExpr::create(1111, 64);
-        ref<Expr> l = ConstantExpr::create(4444, 64);
+        //ref<Expr> r = ConstantExpr::create(1111, 64);
+        //ref<Expr> l = ConstantExpr::create(4444, 64);
         //ref<Expr> p = ReadExpr::createTempRead(array, Expr::Int64);
         //ref<Expr> re = toConstant(state, SubExpr::create(p_address,p), " ");
         //ConstantExpr *con_re = dyn_cast<ConstantExpr>(re);
@@ -4093,20 +4095,35 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         //ref<Expr> constantAddress;
         ref<Expr> symbolicAddress;
         bool hasSymbolicAddress;
+        p_address->dump();
+        std::vector<ref<Expr>> vec_kids;
         for (int i = 0; i < pp->getNumKids(); i++){
             if (!isa<ConstantExpr>(pp->getKid(i))) {
                 printf("No.%d kid in p_address\n", i);
+                vec_kids.push_back(pp->getKid(i));
                 pp->getKid(i)->dump();
-                //constantAddress = pp->getKid(i);
                 symbolicAddress = pp->getKid(i);
                 hasSymbolicAddress = 1;
+                //break;
             }
+        }
+        ref<Expr> kids[2];
+        if (vec_kids.size() == 2){
+            for (int i=0; i < vec_kids.size(); i++){
+                kids[i] = vec_kids[i];
+            }
+            ref<Expr> concat = ConcatExpr::createN(2, kids);
+            concat->dump();
+            symbolicAddress = concat;
         }
         //symbolicAddress->dump();
         // the strategy is (p +/- 100) - p, then get the real constant in the given symbolic expr
-        ref<Expr> constantAddress = toConstant(state, SubExpr::create(p_address,symbolicAddress), " ");
+        //ref<Expr> constantAddress = toConstant(state, SubExpr::create(p_address,symbolicAddress), " ");
         //constantAddress->dump();
         if (hasSymbolicAddress) {
+            //printf("symbolicAddress Width = %d", symbolicAddress->getWidth());
+            //symbolicAddress = concat;
+            ref<Expr> constantAddress = toConstant(state, SubExpr::create(p_address,symbolicAddress), " ");
             ConstantExpr *tt = dyn_cast<ConstantExpr>(constantAddress);
             printf("tt = %d\n", tt->getZExtValue());
             int actualAddressInt = tt->getZExtValue() + shared_map[sym_name].first->address;
@@ -4327,7 +4344,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
             }
         }//end if for our own strategy
  else {
-     printf("KLEE executeMemoryOperation !\n");
+     //printf("KLEE executeMemoryOperation !\n");
 
     //here is the normal operation in KLEE
     //ref<ConstantExpr> temp_address = toConstant(state, address, "temp_address");
@@ -4725,8 +4742,8 @@ bool Executor::getSymbolicSolution(const ExecutionState &state,
   std::vector<const Array*> objects;
   for (unsigned i = 0; i != state.symbolics.size(); ++i){
     for (auto s : state.symbolics){
-        printf("symbolic mo->address = %d\n", s.first->address);
-        printf("symbolic array->name = %s\n", s.second->name.c_str());
+        ;//printf("symbolic mo->address = %d\n", s.first->address);
+        //printf("symbolic array->name = %s\n", s.second->name.c_str());
     }
     objects.push_back(state.symbolics[i].second);
   }

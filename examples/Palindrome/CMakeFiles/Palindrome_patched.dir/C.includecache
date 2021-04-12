@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../challenges/Palindrome/lib/cgc_libc.h
+
+../include/libcgc.h
+
+/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/challenges/Palindrome/lib/cgc_libc.h
+
+/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/challenges/Palindrome/lib/libc.c
+libcgc.h
+/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/challenges/Palindrome/lib/libcgc.h
+cgc_libc.h
+/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/challenges/Palindrome/lib/cgc_libc.h
+
+/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/challenges/Palindrome/src/service.c
+libcgc.h
+/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/challenges/Palindrome/src/libcgc.h
+cgc_libc.h
+/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/challenges/Palindrome/src/cgc_libc.h
+

@@ -811,7 +811,7 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
 
   for (Executor::ExactResolutionList::iterator it = rl.begin(),
          ie = rl.end(); it != ie; ++it) {
-    printf("rl for loop\n");
+    //printf("rl for loop\n");
     const MemoryObject *mo = it->first.first;
     mo->setName(name);
 
@@ -849,14 +849,14 @@ void SpecialFunctionHandler::handleMakeMallocSymbolic(ExecutionState &state,
                                                 KInstruction *target,
                                                 std::vector<ref<Expr> > &arguments) {
     //the only thing does this function do is to pass the arguments to handleMalloc function
-    printf("calls klee_make_malloc_symbolic here, but did nothing!\n");
+    //printf("calls klee_make_malloc_symbolic here, but did nothing!\n");
     //check for arguments
     if (arguments.size() != 1){
         executor.terminateStateOnError(state, "Incorrect number of arguments to klee_make_malloc_symbolic(char*)", Executor::User);
         return;
     }
     argumentsFromUser = arguments;
-    printf("size of arguments is %d\n", arguments.size());
+    //printf("size of arguments is %d\n", arguments.size());
     return ;
 }
 

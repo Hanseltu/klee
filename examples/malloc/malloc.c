@@ -16,23 +16,31 @@ int main(){
     //else
     //    b = 777;
 
+    struct str {
+        int a;
+        int *p;
+        int c;
+    };
     //int c;
     //klee_make_symbolic(&c, sizeof(c), "c");
     //assert(klee_is_symbolic(a));
     //klee_make_malloc_symbolic("sym_address");
-    int *p1 = (int*) malloc(8*100);
-    int *p2 = (int*) malloc(8*100);
-    int *p3 = (int*) malloc(8*100);
+    //int *p1 = (int*) malloc(8*100);
+    //int *p2 = (int*) malloc(8*100);
+    //int *p3 = (int*) malloc(8*100);
+    struct str * p_str = (struct str*)malloc(sizeof(struct str*)*100);
     //int p1[800];
     //klee_make_symbolic(&p1, 8, "p");
     //assert(klee_is_symbolic(p1));
     //klee_make_malloc_symbolic("sym_haoxin_new");
     //int *p2 = (int*) malloc(8*100);
     //int *p3 = (int*) malloc(8*100);
-    *(p1+199)= 999;
-    *(p1+99)= 888;
+    p_str->a = 100;
+    p_str->c = 200;
+    //*(p1+1)= 999;
+    //*(p1+99)= 888;
     //*p2 = 999;
-    if (p1 > 16) {
+    if (p_str > 16) {
     //    p1[32] = 999;
         //int aa = p1[32];
         //printf("aa = %d\n", aa);
@@ -76,8 +84,10 @@ int main(){
     //printf("aa = %d\n", aa);
     //printf("the address of p1 is %d \n ", p1);
     //printf("the address of *p1 is %d \n ", *p1);
-    printf("the value of *p1 is %d\n", *(p1+99));
-    printf("the value of *p1 is %d\n", *(p1+199));
+    //printf("the value of *p1+99 is %d\n", *(p1+99));
+    //printf("the value of *p1+1 is %d\n", *(p1+1));
+    printf("the value of p_str.a is %d\n", p_str->a);
+    printf("the value of p_str.c is %d\n", p_str->c);
     //return b;
     //klee_print_expr("Expr:", a);
     return 0;
