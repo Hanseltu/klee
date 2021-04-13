@@ -1,0 +1,18 @@
+Error: memory error: out of bound pointer
+File: challenges/3D_Image_Toolkit/lib/string.c
+Line: 40
+assembly.ll line: 9476
+Stack: 
+	#000009476 in cgc_bzero (s=0, n=4096) at challenges/3D_Image_Toolkit/lib/string.c:40
+	#100012215 in cgc_init_freelist () at challenges/3D_Image_Toolkit/lib/malloc.c:134
+	#200012318 in cgc_freelist_alloc (length=3272) at challenges/3D_Image_Toolkit/lib/malloc.c:179
+	#300012503 in cgc_malloc (length=3272) at challenges/3D_Image_Toolkit/lib/malloc.c:259
+	#400016277 in cgc_menu () at challenges/3D_Image_Toolkit/src/main.c:76
+	#500016590 in __klee_posix_wrapped_main (cgc_argc=1, cgc_argv) at challenges/3D_Image_Toolkit/src/main.c:236
+	#600007066 in __user_main (argcPtr=1, argvPtr=90409792, envp=90409808) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c:245
+	#700000574 in __uClibc_main (=91515656, =1, =90409792, =0, =0, =0, =0) at libc/misc/internals/__uClibc_main.c:401
+	#800000740 in main (=1, =90409792)
+Info: 
+	address: 4095
+	next: object at 88335584 of size 400
+		MO259[400] allocated at global:static_utmp

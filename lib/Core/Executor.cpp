@@ -1839,7 +1839,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         }
       }
     }
-    printf("\n");
+    //printf("\n");
     break;
   }
   case Instruction::Br: {
@@ -3355,6 +3355,24 @@ static const char *okExternalsList[] = { "printf",
 static std::set<std::string> okExternals(okExternalsList,
                                          okExternalsList +
                                          (sizeof(okExternalsList)/sizeof(okExternalsList[0])));
+//*Haoxin
+//For find the special symbolic array
+const Array* scan2(ref<Expr> e, std::set<std::string> &symNameList) {
+    //std::set<std::string> symNameList;
+    const Array *array;
+    Expr *ep = e.get();
+    //ep->dump();
+        for (unsigned i=0; i<ep->getNumKids(); i++)
+          scan2(ep->getKid(i), symNameList);
+        if (const ReadExpr *re = dyn_cast<ReadExpr>(e)) {
+          //printf("In execution array->name = %s\n", re->updates.root->name.c_str());
+          symNameList.insert(re->updates.root->name);
+          array = re->updates.root;
+          //break;
+          //re->dump();
+        }
+        return array;
+}
 
 void Executor::callExternalFunction(ExecutionState &state,
                                     KInstruction *target,
@@ -3397,6 +3415,32 @@ void Executor::callExternalFunction(ExecutionState &state,
       wordIndex += (ce->getWidth()+63)/64;
     } else {
       ref<Expr> arg = toUnique(state, *ai);
+      // *Haoxin add for replace the symbolic arguments
+      if (!isa<ConstantExpr>(arg)){
+      std::set<std::string> nameList;
+      const Array *array = scan2(arg, nameList);
+      bool isSymbolicAddress;
+      std::string sym_name;
+      MallocMemoryMap mmm = state.addressSpace.mobjects;
+      for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
+        std::string key = iter->first;
+        std::set<std::string>::iterator iter_set;
+        iter_set = nameList.find(key);
+        if (iter_set != nameList.end()){
+            sym_name = key;
+            isSymbolicAddress = 1;
+        }
+      }
+      if (isSymbolicAddress){ // handle symbolic address
+        std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
+        const MemoryObject *mo = shared_map[sym_name].first;
+        arg = ConstantExpr::create(mo->address, 64);
+      }else {
+  	    terminateStateOnExecError(state,
+                                  "external call with symbolic argument and not in MallocMemoryMap" +
+                                  function->getName());
+       }
+      }
       if (ConstantExpr *ce = dyn_cast<ConstantExpr>(arg)) {
         // XXX kick toMemory functions from here
         ce->toMemory(&args[wordIndex]);
@@ -3807,6 +3851,10 @@ void Executor::executeFree(ExecutionState &state,
                            ref<Expr> address,
                            KInstruction *target) {
   address = optimizer.optimizeExpr(address, true);
+  //printf("executeFree!\n");
+  // *Haoxin
+  // Function : handle special symbolic free
+  if (isa<ConstantExpr>(address)){
   StatePair zeroPointer = fork(state, Expr::createIsZero(address), true);
   if (zeroPointer.first) {
     if (target)
@@ -3830,6 +3878,37 @@ void Executor::executeFree(ExecutionState &state,
         if (target)
           bindLocal(target, *it->second, Expr::createPointer(0));
       }
+    }
+  }
+  }
+  else {
+    //printf("executeFree!\n");
+    std::set<std::string> nameList;
+    const Array *array = scan2(address, nameList);
+    bool isSymbolicAddress;
+    std::string sym_name;
+    MallocMemoryMap mmm = state.addressSpace.mobjects;
+    for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
+        std::string key = iter->first;
+        std::set<std::string>::iterator iter_set;
+        iter_set = nameList.find(key);
+        if (iter_set != nameList.end()){
+            sym_name = key;
+            isSymbolicAddress = 1;
+        }
+    }
+    if (isSymbolicAddress){ // handle symbolic address
+        std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
+        const MemoryObject *mo = shared_map[sym_name].first;
+        //Not free here, if everything is done, then free all buffers in moMallocBufferAddress
+        uint64_t *p = (uint64_t*)mo->address;
+        //free(p); // free the symbolic buffer
+        //TODO just remove from MallocMemoryMap, when to free? Free now can be an error because stp will use it?
+        state.addressSpace.mobjects.erase(sym_name);
+    }
+    else { //handle a normal symbolic variable, should be an error
+        terminateStateOnExecError(state, "memory error: double free of a symbolic variable");
+        //printf("error, this symbolic address is not on MallocMemoryMap!\n");
     }
   }
 }
@@ -3997,22 +4076,6 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   }
 }
 */
-const Array* scan2(ref<Expr> e, std::set<std::string> &symNameList) {
-    //std::set<std::string> symNameList;
-    const Array *array;
-    Expr *ep = e.get();
-    //ep->dump();
-        for (unsigned i=0; i<ep->getNumKids(); i++)
-          scan2(ep->getKid(i), symNameList);
-        if (const ReadExpr *re = dyn_cast<ReadExpr>(e)) {
-          //printf("In execution array->name = %s\n", re->updates.root->name.c_str());
-          symNameList.insert(re->updates.root->name);
-          array = re->updates.root;
-          //break;
-          //re->dump();
-        }
-        return array;
-}
 void Executor::executeMemoryOperation(ExecutionState &state,
                                       bool isWrite,
                                       ref<Expr> address,
@@ -4041,14 +4104,14 @@ void Executor::executeMemoryOperation(ExecutionState &state,
     // store the symbolic name in a array
     std::set<std::string> nameList;
     const Array *array = scan2(address, nameList);
-    printf("size of nameList = %d\n", nameList.size());
+    //printf("size of nameList = %d\n", nameList.size());
 
     // iterate symbolic name and check if it's in shared_map
     /*
     // for testing the output of expression
     printf("ep->getNumKids() = %d\n", ep->getNumKids());
     for (unsigned i=0; i<ep->getNumKids(); i++){
-        printf ("--------No. %d\n", i);
+        //printf ("--------No. %d\n", i);
         if (const ReadExpr *re = dyn_cast<ReadExpr>(address)){
             //e->dump();
             //const ref<Expr> &e = et->getKid(0);
@@ -4069,14 +4132,14 @@ void Executor::executeMemoryOperation(ExecutionState &state,
             sym_name = key;
             isSymbolicAddress = 1;
         }
-        printf("In our strategy --- key = %s,\t", key.c_str());
+        //printf("In our strategy --- key = %s,\t", key.c_str());
         //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
-        printf("value = (mo->address= %d, os)\n", iter->second.first->address);
+        //printf("value = (mo->address= %d, os)\n", iter->second.first->address);
     }
     if (isSymbolicAddress){ // handle symbolic address
         std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
-        printf("This is a symbolic address, use our own strategy !\n");
-        printf("Actual address to read/write is %d\n", shared_map[sym_name].first->address);
+        //printf("This is a symbolic address, use our own strategy !\n");
+        //printf("Actual address to read/write is %d\n", shared_map[sym_name].first->address);
         const MemoryObject *mo = shared_map[sym_name].first;
         //printf("address = %d, name = %s\n", mo->address, mo->name.c_str());
         //ref<Expr> r = ConstantExpr::create(1111, 64);
@@ -4095,13 +4158,13 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         //ref<Expr> constantAddress;
         ref<Expr> symbolicAddress;
         bool hasSymbolicAddress;
-        p_address->dump();
+        //p_address->dump();
         std::vector<ref<Expr>> vec_kids;
         for (int i = 0; i < pp->getNumKids(); i++){
             if (!isa<ConstantExpr>(pp->getKid(i))) {
-                printf("No.%d kid in p_address\n", i);
+                //printf("No.%d kid in p_address\n", i);
                 vec_kids.push_back(pp->getKid(i));
-                pp->getKid(i)->dump();
+                //pp->getKid(i)->dump();
                 symbolicAddress = pp->getKid(i);
                 hasSymbolicAddress = 1;
                 //break;
@@ -4113,7 +4176,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
                 kids[i] = vec_kids[i];
             }
             ref<Expr> concat = ConcatExpr::createN(2, kids);
-            concat->dump();
+            //concat->dump();
             symbolicAddress = concat;
         }
         //symbolicAddress->dump();
@@ -4125,9 +4188,9 @@ void Executor::executeMemoryOperation(ExecutionState &state,
             //symbolicAddress = concat;
             ref<Expr> constantAddress = toConstant(state, SubExpr::create(p_address,symbolicAddress), " ");
             ConstantExpr *tt = dyn_cast<ConstantExpr>(constantAddress);
-            printf("tt = %d\n", tt->getZExtValue());
+            //printf("tt = %d\n", tt->getZExtValue());
             int actualAddressInt = tt->getZExtValue() + shared_map[sym_name].first->address;
-            printf("acctualAddress is %d\n", actualAddressInt);
+            //printf("acctualAddress is %d\n", actualAddressInt);
             address = ConstantExpr::create(actualAddressInt, 64);
         } else {
             address = bufferAddress;
@@ -4139,7 +4202,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
             address = toConstant(state, address, "max-sym-array-size");
         }
 
-        address->dump();
+        //address->dump();
         ref<Expr> offset = mo->getOffsetExpr(address);
         ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
         check = optimizer.optimizeExpr(check, true);
@@ -4232,7 +4295,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         }
         */
         } else { // handle a normal symbolic variable
-            printf("no map in share_map!\n");
+            //printf("no map in share_map!\n");
 
             address = p_address;
             ObjectPair op;

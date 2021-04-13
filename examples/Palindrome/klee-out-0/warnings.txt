@@ -1,15 +1,13 @@
 KLEE: WARNING ONCE: function "cgc_fdwait" has inline asm
-KLEE: WARNING: undefined reference to function: __fgetc_unlocked
-KLEE: WARNING: undefined reference to function: __fputc_unlocked
 KLEE: WARNING: undefined reference to function: __isoc99_sscanf
-KLEE: WARNING: undefined reference to function: endutent
 KLEE: WARNING: undefined reference to function: getenv
-KLEE: WARNING: undefined reference to function: getutent
 KLEE: WARNING: undefined reference to function: mprotect
-KLEE: WARNING: undefined reference to function: realpath
-KLEE: WARNING: undefined reference to function: setutent
-KLEE: WARNING: undefined reference to function: strcmp
+KLEE: WARNING: undefined reference to function: munmap
+KLEE: WARNING: undefined reference to function: read
+KLEE: WARNING: undefined reference to function: select
 KLEE: WARNING: undefined reference to function: strlen
-KLEE: WARNING: undefined reference to function: utmpname
+KLEE: WARNING: undefined reference to function: write
 KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
-KLEE: WARNING ONCE: calling external: getenv(91234096) at [no debug info]
+KLEE: WARNING ONCE: calling external: getenv(86324152) at [no debug info]
+KLEE: WARNING ONCE: calling external: write(1, 87147296, 31) at [no debug info]
+KLEE: WARNING ONCE: calling external: read(0, 87280384, 1) at [no debug info]

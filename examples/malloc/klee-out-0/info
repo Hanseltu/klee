@@ -1,22 +1,22 @@
-klee --write-cvcs malloc.ll
-PID: 8416
+klee --write-cvcs --libc=uclibc --posix-runtime malloc.ll
+PID: 28677
 Using monotonic steady clock with 1/1000000000s resolution
-Started: 2021-04-13 00:28:54
+Started: 2021-04-13 21:33:16
 BEGIN searcher description
 <InterleavedSearcher> containing 2 searchers:
 RandomPathSearcher
 WeightedRandomSearcher::CoveringNew
 </InterleavedSearcher>
 END searcher description
-Finished: 2021-04-13 00:28:54
+Finished: 2021-04-13 21:33:16
 Elapsed: 00:00:00
 KLEE: done: explored paths = 2
-KLEE: done: avg. constructs per query = 40
-KLEE: done: total queries = 2
+KLEE: done: avg. constructs per query = 37
+KLEE: done: total queries = 5
 KLEE: done: valid queries = 0
-KLEE: done: invalid queries = 2
-KLEE: done: query cex = 2
+KLEE: done: invalid queries = 5
+KLEE: done: query cex = 5
 
-KLEE: done: total instructions = 39
+KLEE: done: total instructions = 13466
 KLEE: done: completed paths = 2
-KLEE: done: generated tests = 2
+KLEE: done: generated tests = 1

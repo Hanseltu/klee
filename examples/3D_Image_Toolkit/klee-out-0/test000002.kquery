@@ -2,6 +2,6 @@ array model_version[4] : w32 -> w8 = symbolic
 array sym_123293696[8] : w32 -> w8 = symbolic
 (query [(Eq 1
              (ReadLSB w32 0 model_version))
-         (Eq 0
+         (Eq 18446744073709548316
              (ReadLSB w64 0 sym_123293696))]
         false)

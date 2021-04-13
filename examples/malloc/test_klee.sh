@@ -10,5 +10,5 @@ llvm-dis-9 malloc.bc
 
 # execute klee
 #klee --libc=uclibc malloc.bc
-klee --write-cvcs malloc.ll
+klee --write-cvcs --libc=uclibc --posix-runtime malloc.ll
 #klee malloc.ll

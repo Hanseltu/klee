@@ -1,22 +1,14 @@
 KLEE: WARNING ONCE: function "cgc_fdwait" has inline asm
-KLEE: WARNING: undefined reference to function: __fgetc_unlocked
-KLEE: WARNING: undefined reference to function: __fputc_unlocked
 KLEE: WARNING: undefined reference to function: __isoc99_sscanf
 KLEE: WARNING: undefined reference to function: cgc_cos
 KLEE: WARNING: undefined reference to function: cgc_log10
 KLEE: WARNING: undefined reference to function: cgc_pow
 KLEE: WARNING: undefined reference to function: cgc_rint
 KLEE: WARNING: undefined reference to function: cgc_sin
-KLEE: WARNING: undefined reference to function: endutent
-KLEE: WARNING: undefined reference to function: getenv
-KLEE: WARNING: undefined reference to function: getutent
 KLEE: WARNING: undefined reference to function: llvm.dbg.label
 KLEE: WARNING: undefined reference to function: llvm.fabs.f64
 KLEE: WARNING: undefined reference to function: mprotect
-KLEE: WARNING: undefined reference to function: realpath
-KLEE: WARNING: undefined reference to function: setutent
-KLEE: WARNING: undefined reference to function: strcmp
-KLEE: WARNING: undefined reference to function: strlen
-KLEE: WARNING: undefined reference to function: utmpname
 KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
-KLEE: WARNING ONCE: calling external: getenv(79437768) at [no debug info]
+KLEE: WARNING ONCE: calling external: syscall(16, 0, 21505, 122881008) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c:991 10
+KLEE: WARNING ONCE: calling __klee_posix_wrapped_main with extra arguments.
+KLEE: WARNING ONCE: calling external: mprotect((ReadLSB w64 0 sym_123293696), 4096, 3) at [no debug info]

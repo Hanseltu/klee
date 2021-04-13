@@ -5,7 +5,7 @@
 int main(){
 
     int a;
-    klee_make_symbolic(&a, sizeof(a), "a");
+    //klee_make_symbolic(&a, sizeof(a), "a");
     //int b = a + 100;
     //b = 1;
     int b;
@@ -25,7 +25,7 @@ int main(){
     //klee_make_symbolic(&c, sizeof(c), "c");
     //assert(klee_is_symbolic(a));
     //klee_make_malloc_symbolic("sym_address");
-    //int *p1 = (int*) malloc(8*100);
+    int *p1 = (int*) malloc(8*100);
     //int *p2 = (int*) malloc(8*100);
     //int *p3 = (int*) malloc(8*100);
     struct str * p_str = (struct str*)malloc(sizeof(struct str*)*100);
@@ -88,6 +88,9 @@ int main(){
     //printf("the value of *p1+1 is %d\n", *(p1+1));
     printf("the value of p_str.a is %d\n", p_str->a);
     printf("the value of p_str.c is %d\n", p_str->c);
+    printf("%p\n", p_str);
+    free(p1);
+    //free(p1);
     //return b;
     //klee_print_expr("Expr:", a);
     return 0;

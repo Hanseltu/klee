@@ -1,0 +1,6 @@
+Error: memory error: double free of a symbolic variable
+Stack: 
+	#000008773 in __klee_posix_wrapped_main ()
+	#100007014 in __user_main (argcPtr=1, argvPtr=76078400, envp=76078416) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c:245
+	#200000523 in __uClibc_main (=77759496, =1, =76078400, =0, =0, =0, =0) at libc/misc/internals/__uClibc_main.c:401
+	#300000688 in main (=1, =76078400)

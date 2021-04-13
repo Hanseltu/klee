@@ -139,7 +139,7 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
     if (alignment <= 8) {
       address = (uint64_t)malloc(size);
       //klee_make_symbolic(&address, sizeof(address), "sym_malloc");
-      printf("the normal variable address in KLEE is %lld\n", address);
+      //printf("the normal variable address in KLEE is %lld\n", address);
     }
     else {
       int res = posix_memalign((void **)&address, alignment, size);
