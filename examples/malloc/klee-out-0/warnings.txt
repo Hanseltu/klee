@@ -1,5 +1,6 @@
 KLEE: WARNING: undefined reference to function: llvm.dbg.label
-KLEE: WARNING ONCE: calling external: syscall(16, 0, 21505, 105942064) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c:991 10
-KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
+KLEE: WARNING ONCE: calling external: syscall(16, 0, 21505, 109638336) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c:991 10
+KLEE: WARNING ONCE: Alignment of memory from call "calloc" is not modelled. Using alignment of 8.
+KLEE: WARNING ONCE: calling external: printf(109296720) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c:233 32
 KLEE: WARNING ONCE: calling __klee_posix_wrapped_main with extra arguments.
-KLEE: WARNING ONCE: calling external: printf(102595680, 100) at [no debug info]
+KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.

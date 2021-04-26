@@ -3707,7 +3707,7 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
     }
     //printf("allocationAlignment in executeAllocForMalloc is %d\n", allocationAlignment);
     MemoryObject *mo_buffer =
-        memory->allocate(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
+        memory->allocateForMalloc(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment, /*isMalloc*/true);
 
     // *Haoxin* new added

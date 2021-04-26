@@ -9,6 +9,8 @@ clang-9 -w -emit-llvm -c malloc.c
 llvm-dis-9 malloc.bc
 
 # execute klee
-#klee --libc=uclibc malloc.bc
-klee --write-cvcs --libc=uclibc --posix-runtime malloc.ll
+klee --libc=uclibc --posix-runtime malloc.bc --sym-arg 3
+#../../../klee-offical/klee/build/bin/klee --libc=uclibc --posix-runtime malloc.bc --sym-arg 3
+#klee --write-cvcs  malloc.ll --sym-arg 3
+
 #klee malloc.ll

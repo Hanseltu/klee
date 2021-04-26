@@ -100,6 +100,7 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
                                       bool isGlobal,
                                       const llvm::Value *allocSite,
                                       size_t alignment) {
+  //printf("//Normal allocate executed!\n");
   if (size > 10 * 1024 * 1024)
     klee_warning_once(0, "Large alloc: %" PRIu64
                          " bytes.  KLEE may run out of memory.",
@@ -160,7 +161,7 @@ MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
   return res;
 }
 
-MemoryObject *MemoryManager::allocate(uint64_t size, bool isLocal,
+MemoryObject *MemoryManager::allocateForMalloc(uint64_t size, bool isLocal,
                                       bool isGlobal,
                                       const llvm::Value *allocSite,
                                       size_t alignment,

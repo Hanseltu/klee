@@ -2,19 +2,26 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "klee/klee.h"
-int main(){
+int main(int argc, char** argv){
 
+    if (argc < 2) {
+        printf("please give an input\n");
+        exit(1);
+    }
     int a;
     //klee_make_symbolic(&a, sizeof(a), "a");
     //int b = a + 100;
     //b = 1;
     int b;
 
+    int c = argv[1];
+    printf("input is %s\n", c);
+
     //a = 0;
-    //if (a > 0)
-    //    b = 999;
-    //else
-    //    b = 777;
+    if (a > 0)
+        b = 999;
+    else
+        b = 777;
 
     struct str {
         int a;

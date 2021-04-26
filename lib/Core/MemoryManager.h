@@ -44,7 +44,7 @@ public:
                          const llvm::Value *allocSite, size_t alignment);
 
   //allocate for malloc
-  MemoryObject *allocate(uint64_t size, bool isLocal, bool isGlobal,
+  MemoryObject *allocateForMalloc(uint64_t size, bool isLocal, bool isGlobal,
                          const llvm::Value *allocSite, size_t alignment, bool isMalloc);
 
   MemoryObject *allocateFixed(uint64_t address, uint64_t size,

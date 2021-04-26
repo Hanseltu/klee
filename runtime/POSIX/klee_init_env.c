@@ -26,7 +26,7 @@ static void __emit_error(const char *msg) {
 
 /* Helper function that converts a string to an integer, and
    terminates the program with an error message is the string is not a
-   proper number */   
+   proper number */
 static long int __str_to_int(char *s, const char *error_msg) {
   long int res = 0;
   char c;
@@ -62,13 +62,16 @@ static int __streq(const char *a, const char *b) {
 
 static char *__get_sym_str(int numChars, char *name) {
   int i;
-  char *s = malloc(numChars+1);
+  // Haoxin
+  // For reducing the mix-up with mallocs in target program
+  //char *s = malloc(numChars+1);
+  char *s = calloc(numChars+1, sizeof(char));
   klee_mark_global(s);
   klee_make_symbolic(s, numChars+1, name);
 
   for (i=0; i<numChars; i++)
     klee_posix_prefer_cex(s, __isprint(s[i]));
-  
+
   s[numChars] = '\0';
   return s;
 }
@@ -156,7 +159,7 @@ usage: (klee_init_env) [options] [program arguments]\n\
 
       if (sym_arg_num + max_argvs > 99)
         __emit_error("No more than 100 symbolic arguments allowed.");
-      
+
       for (i = 0; i < n_args; i++) {
         sym_arg_name[3] = '0' + sym_arg_num / 10;
         sym_arg_name[4] = '0' + sym_arg_num % 10;
@@ -223,7 +226,11 @@ usage: (klee_init_env) [options] [program arguments]\n\
     }
   }
 
-  final_argv = (char **)malloc((new_argc + 1) * sizeof(*final_argv));
+  // * Haoxin
+  // The same intention as the previous one
+  printf("CALLING RUNTIME klee_init_env() function\n");
+  //final_argv = (char **)malloc((new_argc + 1) * sizeof(*final_argv));
+  final_argv = (char **)calloc(new_argc + 1, sizeof(*final_argv));
   klee_mark_global(final_argv);
   memcpy(final_argv, new_argv, new_argc * sizeof(*final_argv));
   final_argv[new_argc] = 0;

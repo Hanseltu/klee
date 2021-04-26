@@ -428,6 +428,7 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
   */
 
   //This is the version does not need API
+  printf("Call handleMalloc here!\n");
   std::string name = "";
   executor.executeAllocForMalloc(state, arguments[0], false, target, name);
 }
@@ -806,6 +807,18 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
     klee_warning("klee_make_symbolic: renamed empty name to \"unnamed\"");
   }
 
+  // *Haoxin
+  // Add for sperate normal symbol and malloc symbol
+  bool isSymbolicAddress;
+  MallocMemoryMap mmm = state.addressSpace.mobjects;
+  std::map<std::string, ObjectPair>::iterator iter_m;
+  iter_m = mmm.find(name);
+  if (iter_m != mmm.end()){
+    isSymbolicAddress = 1;
+  }
+  if (isSymbolicAddress)
+      return;
+  else {
   Executor::ExactResolutionList rl;
   executor.resolveExact(state, arguments[0], rl, "make_symbolic");
 
@@ -841,6 +854,7 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
                                      "wrong size given to klee_make_symbolic[_name]",
                                      Executor::User);
     }
+  }
   }
 }
 
