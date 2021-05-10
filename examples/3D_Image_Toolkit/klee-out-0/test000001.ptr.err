@@ -8,11 +8,11 @@ Stack:
 	#200012338 in cgc_freelist_alloc (length=3272) at challenges/3D_Image_Toolkit/lib/malloc.c:179
 	#300012523 in cgc_malloc (length=3272) at challenges/3D_Image_Toolkit/lib/malloc.c:259
 	#400016297 in cgc_menu () at challenges/3D_Image_Toolkit/src/main.c:76
-	#500016610 in __klee_posix_wrapped_main (cgc_argc=1, cgc_argv=124488528) at challenges/3D_Image_Toolkit/src/main.c:236
-	#600007075 in __user_main (argcPtr=1, argvPtr=86324736, envp=86324752) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c:252
-	#700000580 in __uClibc_main (main=89008904, argc=1, argv=86324736, app_init=0, app_fini=0, rtld_fini=0, stack_end=0) at libc/misc/internals/__uClibc_main.c:401
-	#800000749 in main (=1, =86324736)
+	#500016610 in __klee_posix_wrapped_main (cgc_argc=1, cgc_argv=130902864) at challenges/3D_Image_Toolkit/src/main.c:236
+	#600007075 in __user_main (argcPtr=1, argvPtr=92297216, envp=92297232) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c:252
+	#700000580 in __uClibc_main (main=94980872, argc=1, argv=92297216, app_init=0, app_fini=0, rtld_fini=0, stack_end=0) at libc/misc/internals/__uClibc_main.c:401
+	#800000749 in main (=1, =92297216)
 Info: 
 	address: 4095
-	next: object at 85965376 of size 424
+	next: object at 91937344 of size 424
 		MO52[424] allocated at main():  call void @klee.ctor_stub()

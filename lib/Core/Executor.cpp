@@ -2320,8 +2320,8 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     case ICmpInst::ICMP_EQ: {
       ref<Expr> left = eval(ki, 0, state).value;
       ref<Expr> right = eval(ki, 1, state).value;
-      // *Haoxin new added
-      // few crashes here
+      // *Haoxin start
+      // few crashes here?
       if (left.get()){
       //printf("Stop here?\n");
       //printf("left Kind = %d\n", left->getKind());
@@ -2330,6 +2330,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       //right->dump();
       ref<Expr> result = EqExpr::create(left, right);
       bindLocal(ki, state, result);
+      // *Haoxin end
       break;
       }
       else{
@@ -3371,7 +3372,7 @@ static const char *okExternalsList[] = { "printf",
 static std::set<std::string> okExternals(okExternalsList,
                                          okExternalsList +
                                          (sizeof(okExternalsList)/sizeof(okExternalsList[0])));
-//*Haoxin
+//*Haoxin start
 //For find the special symbolic array
 const Array* scan2(ref<Expr> e, std::set<std::string> &symNameList) {
     //std::set<std::string> symNameList;
@@ -3389,6 +3390,7 @@ const Array* scan2(ref<Expr> e, std::set<std::string> &symNameList) {
         }
         return array;
 }
+// *Haoxin end
 
 void Executor::callExternalFunction(ExecutionState &state,
                                     KInstruction *target,
@@ -3431,6 +3433,7 @@ void Executor::callExternalFunction(ExecutionState &state,
       wordIndex += (ce->getWidth()+63)/64;
     } else {
       ref<Expr> arg = toUnique(state, *ai);
+      // *Haoxin start
       // *Haoxin add for replace the symbolic arguments
       if (!isa<ConstantExpr>(arg)){
       std::set<std::string> nameList;
@@ -3451,7 +3454,9 @@ void Executor::callExternalFunction(ExecutionState &state,
         std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
         const MemoryObject *mo = shared_map[sym_name].first;
         arg = ConstantExpr::create(mo->address, 64);
-      }else {
+      }
+      // *Haoxin end
+      else {
   	    terminateStateOnExecError(state,
                                   "external call with symbolic argument and not in MallocMemoryMap" +
                                   function->getName());
@@ -3706,6 +3711,7 @@ void Executor::executeAlloc(ExecutionState &state,
   }
 }
 
+// *Haoxin start
 void Executor::executeAllocForMalloc(ExecutionState &state,
                             ref<Expr> size,
                             bool isLocal,
@@ -3727,7 +3733,6 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
         memory->allocateForMalloc(CE->getZExtValue(), isLocal, /*isGlobal=*/false,
                          allocSite, allocationAlignment, /*isMalloc*/true);
 
-    // *Haoxin* new added
     //bindObjectInState(state, mo_buffer, isLocal);
 
     if (sym_name.size() == 0)
@@ -3863,15 +3868,17 @@ void Executor::executeAllocForMalloc(ExecutionState &state,
                    target, zeroMemory, reallocFrom);
   }
 }
+// *Haoxin end
 
 void Executor::executeFree(ExecutionState &state,
                            ref<Expr> address,
                            KInstruction *target) {
   address = optimizer.optimizeExpr(address, true);
   //printf("executeFree!\n");
-  // *Haoxin
+  // *Haoxin start
   // Function : handle special symbolic free
   if (isa<ConstantExpr>(address)){
+  // *Haoxin end
   StatePair zeroPointer = fork(state, Expr::createIsZero(address), true);
   if (zeroPointer.first) {
     if (target)
@@ -3898,6 +3905,7 @@ void Executor::executeFree(ExecutionState &state,
     }
   }
   }
+  // *Haoxin start
   else {
     //printf("executeFree!\n");
     std::set<std::string> nameList;
@@ -3928,6 +3936,7 @@ void Executor::executeFree(ExecutionState &state,
         //printf("error, this symbolic address is not on MallocMemoryMap!\n");
     }
   }
+  // *Haoxin end
 }
 
 void Executor::resolveExact(ExecutionState &state,
@@ -4093,7 +4102,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   }
 }
 */
-// *Haoxin new added
+// *Haoxin start
 bool hasSymbolicMallocVariable(ref<Expr> address, MallocMemoryMap mmm){
 
     std::set<std::string> nameList;
@@ -4112,6 +4121,8 @@ bool hasSymbolicMallocVariable(ref<Expr> address, MallocMemoryMap mmm){
     }
     return isSymbolicAddress;
 }
+
+// *Haoxin end
 void Executor::executeMemoryOperation(ExecutionState &state,
                                       bool isWrite,
                                       ref<Expr> address,
@@ -4132,7 +4143,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   address = optimizer.optimizeExpr(address, true);
   ref<Expr> p_address = address;
 
-  // *Haoxin*
+  // *Haoxin* start
   //here we add our new strategy to find the place of malloc buffer for read/write
 
   if (!isa<ConstantExpr>(address)){ //a symbolic variable?
@@ -4458,6 +4469,7 @@ void Executor::executeMemoryOperation(ExecutionState &state,
             }
         }//end if for our own strategy
  else {
+     // *Haoxin end
      //printf("KLEE executeMemoryOperation !\n");
 
     //here is the normal operation in KLEE

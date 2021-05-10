@@ -98,8 +98,9 @@ static SpecialFunctionHandler::HandlerInfo handlerInfo[] = {
 #endif
   add("klee_is_symbolic", handleIsSymbolic, true),
   add("klee_make_symbolic", handleMakeSymbolic, false),
-  // *Haoxin* new added
+  // *Haoxin start
   add("klee_make_malloc_symbolic", handleMakeMallocSymbolic, false),
+  // *Haoxin end
   add("klee_mark_global", handleMarkGlobal, false),
   add("klee_open_merge", handleOpenMerge, false),
   add("klee_close_merge", handleCloseMerge, false),
@@ -413,6 +414,7 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
                                   std::vector<ref<Expr> > &arguments) {
   // XXX should type check args
   assert(arguments.size()==1 && "invalid number of arguments to malloc");
+  // *Haoxin start
   // *Haoxin* here we decide to make a malloc to a symbol
   // This is the version needed "klee_make_malloc_symbolic" API
   /*
@@ -448,6 +450,7 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
   else {
     executor.executeAlloc(state, arguments[0], false, target);
   }
+  // *Haoxin end
 }
 
 void SpecialFunctionHandler::handleMemalign(ExecutionState &state,
@@ -664,8 +667,6 @@ void SpecialFunctionHandler::handleGetErrno(ExecutionState &state,
   bool resolved = state.addressSpace.resolveOne(
       ConstantExpr::create((uint64_t)errno_addr, Expr::Int64), result);
   if (!resolved) {
-    // *Haoxin
-    printf("Could not --- in SpecialFunctionHandler.cpp\n");
     executor.terminateStateOnError(state, "Could not resolve address for errno",
                                    Executor::User);
   }
@@ -748,7 +749,7 @@ void SpecialFunctionHandler::handleFree(ExecutionState &state,
          "invalid number of arguments to free");
   executor.executeFree(state, arguments[0]);
 }
-
+/*
 const Array* scan22(ref<Expr> e, std::set<std::string> &symNameList) {
     //std::set<std::string> symNameList;
     const Array *array;
@@ -765,7 +766,7 @@ const Array* scan22(ref<Expr> e, std::set<std::string> &symNameList) {
         }
         return array;
 }
-
+*/
 
 void SpecialFunctionHandler::handleCheckMemoryAccess(ExecutionState &state,
                                                      KInstruction *target,
@@ -882,7 +883,7 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
   }
 }
 
-// *Haoxin* new added
+// *Haoxin* start
 void SpecialFunctionHandler::handleMakeMallocSymbolic(ExecutionState &state,
                                                 KInstruction *target,
                                                 std::vector<ref<Expr> > &arguments) {
@@ -897,6 +898,7 @@ void SpecialFunctionHandler::handleMakeMallocSymbolic(ExecutionState &state,
     //printf("size of arguments is %d\n", arguments.size());
     return ;
 }
+// *Haoxin end
 /*
 void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
                                                          KInstruction *target,

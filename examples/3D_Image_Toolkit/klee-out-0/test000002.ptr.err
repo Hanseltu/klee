@@ -5,13 +5,13 @@ assembly.ll line: 14633
 Stack: 
 	#000014633 in cgc_ReadFile (px_list) at challenges/3D_Image_Toolkit/src/3dc.c:68
 	#100016307 in cgc_menu () at challenges/3D_Image_Toolkit/src/main.c:79
-	#200016610 in __klee_posix_wrapped_main (cgc_argc=1, cgc_argv=124488528) at challenges/3D_Image_Toolkit/src/main.c:236
-	#300007075 in __user_main (argcPtr=1, argvPtr=86324736, envp=86324752) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c:252
-	#400000580 in __uClibc_main (main=89008904, argc=1, argv=86324736, app_init=0, app_fini=0, rtld_fini=0, stack_end=0) at libc/misc/internals/__uClibc_main.c:401
-	#500000749 in main (=1, =86324736)
+	#200016610 in __klee_posix_wrapped_main (cgc_argc=1, cgc_argv=130902864) at challenges/3D_Image_Toolkit/src/main.c:236
+	#300007075 in __user_main (argcPtr=1, argvPtr=92297216, envp=92297232) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c:252
+	#400000580 in __uClibc_main (main=94980872, argc=1, argv=92297216, app_init=0, app_fini=0, rtld_fini=0, stack_end=0) at libc/misc/internals/__uClibc_main.c:401
+	#500000749 in main (=1, =92297216)
 Info: 
 	address: 1128775680
-	next: object at 140230435900224 of size 1536
+	next: object at 140199251381056 of size 1536
 		MO63[1536] (no allocation info)
-	prev: object at 125718528 of size 3072
+	prev: object at 131313664 of size 3072
 		MO8107503[3072] allocated at cgc_menu():  %out_data = alloca [3072 x i8], align 16

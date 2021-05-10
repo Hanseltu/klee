@@ -1,14 +1,14 @@
 ../../smu-build/bin/klee --libc=uclibc --posix-runtime malloc.bc
-PID: 16668
+PID: 18816
 Using monotonic steady clock with 1/1000000000s resolution
-Started: 2021-05-10 10:25:15
+Started: 2021-05-10 12:44:24
 BEGIN searcher description
 <InterleavedSearcher> containing 2 searchers:
 RandomPathSearcher
 WeightedRandomSearcher::CoveringNew
 </InterleavedSearcher>
 END searcher description
-Finished: 2021-05-10 10:25:15
+Finished: 2021-05-10 12:44:24
 Elapsed: 00:00:00
 KLEE: done: explored paths = 2
 KLEE: done: avg. constructs per query = 17

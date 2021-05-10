@@ -1,15 +1,15 @@
 klee -link-llvm-lib=/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/build64/include/libcgc.so.bc --write-cvcs -link-llvm-lib=/home/haoxin/haoxin-data/smu-research/cgc/cgc-env-64/cb-multios/build64/include/tiny-AES128-C/libtiny-AES128-C.so.bc --libc=uclibc --posix-runtime 3D_Image_Toolkit.bc
-PID: 26956
+PID: 18862
 Using monotonic steady clock with 1/1000000000s resolution
-Started: 2021-05-10 10:33:42
+Started: 2021-05-10 12:44:31
 BEGIN searcher description
 <InterleavedSearcher> containing 2 searchers:
 RandomPathSearcher
 WeightedRandomSearcher::CoveringNew
 </InterleavedSearcher>
 END searcher description
-Finished: 2021-05-10 10:35:25
-Elapsed: 00:01:43
+Finished: 2021-05-10 12:45:59
+Elapsed: 00:01:28
 KLEE: done: explored paths = 6
 KLEE: done: avg. constructs per query = 54
 KLEE: done: total queries = 9
