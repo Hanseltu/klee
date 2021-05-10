@@ -90,8 +90,8 @@ preinstall: docs/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/check.dir/clean
 clean: CMakeFiles/clean_all.dir/clean
+clean: CMakeFiles/check.dir/clean
 clean: lib/clean
 clean: runtime/clean
 clean: tools/clean
@@ -114,9 +114,9 @@ docs/preinstall:
 .PHONY : docs/preinstall
 
 # Recursive "clean" directory target.
-docs/clean: docs/CMakeFiles/clean_doxygen.dir/clean
 docs/clean: docs/CMakeFiles/doc-doxygen.dir/clean
 docs/clean: docs/CMakeFiles/docs.dir/clean
+docs/clean: docs/CMakeFiles/clean_doxygen.dir/clean
 
 .PHONY : docs/clean
 
@@ -500,33 +500,6 @@ tools/ktest-tool/clean:
 .PHONY : tools/ktest-tool/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/check.dir
-
-# All Build rule for target.
-CMakeFiles/check.dir/all: test/CMakeFiles/systemtests.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/check.dir/build.make CMakeFiles/check.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/check.dir/build.make CMakeFiles/check.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num= "Built target check"
-.PHONY : CMakeFiles/check.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/check.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles 99
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/check.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles 0
-.PHONY : CMakeFiles/check.dir/rule
-
-# Convenience name for target.
-check: CMakeFiles/check.dir/rule
-
-.PHONY : check
-
-# clean rule for target.
-CMakeFiles/check.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/check.dir/build.make CMakeFiles/check.dir/clean
-.PHONY : CMakeFiles/check.dir/clean
-
-#=============================================================================
 # Target rules for target CMakeFiles/clean_all.dir
 
 # All Build rule for target.
@@ -553,6 +526,33 @@ clean_all: CMakeFiles/clean_all.dir/rule
 CMakeFiles/clean_all.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/clean_all.dir/build.make CMakeFiles/clean_all.dir/clean
 .PHONY : CMakeFiles/clean_all.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/check.dir
+
+# All Build rule for target.
+CMakeFiles/check.dir/all: test/CMakeFiles/systemtests.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/check.dir/build.make CMakeFiles/check.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/check.dir/build.make CMakeFiles/check.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num= "Built target check"
+.PHONY : CMakeFiles/check.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/check.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles 99
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/check.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles 0
+.PHONY : CMakeFiles/check.dir/rule
+
+# Convenience name for target.
+check: CMakeFiles/check.dir/rule
+
+.PHONY : check
+
+# clean rule for target.
+CMakeFiles/check.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/check.dir/build.make CMakeFiles/check.dir/clean
+.PHONY : CMakeFiles/check.dir/clean
 
 #=============================================================================
 # Target rules for target lib/Basic/CMakeFiles/kleeBasic.dir
@@ -980,33 +980,6 @@ test/CMakeFiles/systemtests.dir/clean:
 .PHONY : test/CMakeFiles/systemtests.dir/clean
 
 #=============================================================================
-# Target rules for target docs/CMakeFiles/clean_doxygen.dir
-
-# All Build rule for target.
-docs/CMakeFiles/clean_doxygen.dir/all:
-	$(MAKE) $(MAKESILENT) -f docs/CMakeFiles/clean_doxygen.dir/build.make docs/CMakeFiles/clean_doxygen.dir/depend
-	$(MAKE) $(MAKESILENT) -f docs/CMakeFiles/clean_doxygen.dir/build.make docs/CMakeFiles/clean_doxygen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num= "Built target clean_doxygen"
-.PHONY : docs/CMakeFiles/clean_doxygen.dir/all
-
-# Build rule for subdir invocation for target.
-docs/CMakeFiles/clean_doxygen.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles 0
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 docs/CMakeFiles/clean_doxygen.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles 0
-.PHONY : docs/CMakeFiles/clean_doxygen.dir/rule
-
-# Convenience name for target.
-clean_doxygen: docs/CMakeFiles/clean_doxygen.dir/rule
-
-.PHONY : clean_doxygen
-
-# clean rule for target.
-docs/CMakeFiles/clean_doxygen.dir/clean:
-	$(MAKE) $(MAKESILENT) -f docs/CMakeFiles/clean_doxygen.dir/build.make docs/CMakeFiles/clean_doxygen.dir/clean
-.PHONY : docs/CMakeFiles/clean_doxygen.dir/clean
-
-#=============================================================================
 # Target rules for target docs/CMakeFiles/doc-doxygen.dir
 
 # All Build rule for target.
@@ -1059,6 +1032,33 @@ docs: docs/CMakeFiles/docs.dir/rule
 docs/CMakeFiles/docs.dir/clean:
 	$(MAKE) $(MAKESILENT) -f docs/CMakeFiles/docs.dir/build.make docs/CMakeFiles/docs.dir/clean
 .PHONY : docs/CMakeFiles/docs.dir/clean
+
+#=============================================================================
+# Target rules for target docs/CMakeFiles/clean_doxygen.dir
+
+# All Build rule for target.
+docs/CMakeFiles/clean_doxygen.dir/all:
+	$(MAKE) $(MAKESILENT) -f docs/CMakeFiles/clean_doxygen.dir/build.make docs/CMakeFiles/clean_doxygen.dir/depend
+	$(MAKE) $(MAKESILENT) -f docs/CMakeFiles/clean_doxygen.dir/build.make docs/CMakeFiles/clean_doxygen.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num= "Built target clean_doxygen"
+.PHONY : docs/CMakeFiles/clean_doxygen.dir/all
+
+# Build rule for subdir invocation for target.
+docs/CMakeFiles/clean_doxygen.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 docs/CMakeFiles/clean_doxygen.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles 0
+.PHONY : docs/CMakeFiles/clean_doxygen.dir/rule
+
+# Convenience name for target.
+clean_doxygen: docs/CMakeFiles/clean_doxygen.dir/rule
+
+.PHONY : clean_doxygen
+
+# clean rule for target.
+docs/CMakeFiles/clean_doxygen.dir/clean:
+	$(MAKE) $(MAKESILENT) -f docs/CMakeFiles/clean_doxygen.dir/build.make docs/CMakeFiles/clean_doxygen.dir/clean
+.PHONY : docs/CMakeFiles/clean_doxygen.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

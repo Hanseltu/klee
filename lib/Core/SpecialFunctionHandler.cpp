@@ -428,9 +428,26 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
   */
 
   //This is the version does not need API
-  printf("Call handleMalloc here!\n");
-  std::string name = "";
-  executor.executeAllocForMalloc(state, arguments[0], false, target, name);
+  //printf("Call handleMalloc here!\n");
+  printf("file name = %s\n",target->info->file.c_str());
+  std::string file_name = target->info->file;
+  printf("file_name size = %d\n",file_name.size());
+  bool isRuntimeLib;
+  if (file_name.size() != 0)
+    isRuntimeLib = file_name.find("runtime");
+  printf("isRuntimeLib = %d\n", isRuntimeLib);
+  //if (isRuntimeLib != std::string::npos){
+  //  executor.executeAlloc(state, arguments[0], false, target);
+  //}
+
+  if (file_name.size() == 0 || file_name.size() < 60 || isRuntimeLib == 0){
+    printf("Call executeAllocForMalloc here!\n");
+    std::string name = "";
+    executor.executeAllocForMalloc(state, arguments[0], false, target, name);
+  }
+  else {
+    executor.executeAlloc(state, arguments[0], false, target);
+  }
 }
 
 void SpecialFunctionHandler::handleMemalign(ExecutionState &state,
@@ -646,9 +663,12 @@ void SpecialFunctionHandler::handleGetErrno(ExecutionState &state,
   ObjectPair result;
   bool resolved = state.addressSpace.resolveOne(
       ConstantExpr::create((uint64_t)errno_addr, Expr::Int64), result);
-  if (!resolved)
+  if (!resolved) {
+    // *Haoxin
+    printf("Could not --- in SpecialFunctionHandler.cpp\n");
     executor.terminateStateOnError(state, "Could not resolve address for errno",
                                    Executor::User);
+  }
   executor.bindLocal(target, state, result.second->read(0, Expr::Int32));
 }
 
@@ -729,6 +749,24 @@ void SpecialFunctionHandler::handleFree(ExecutionState &state,
   executor.executeFree(state, arguments[0]);
 }
 
+const Array* scan22(ref<Expr> e, std::set<std::string> &symNameList) {
+    //std::set<std::string> symNameList;
+    const Array *array;
+    Expr *ep = e.get();
+    //ep->dump();
+        for (unsigned i=0; i<ep->getNumKids(); i++)
+          scan22(ep->getKid(i), symNameList);
+        if (const ReadExpr *re = dyn_cast<ReadExpr>(e)) {
+          //printf("In execution array->name = %s\n", re->updates.root->name.c_str());
+          symNameList.insert(re->updates.root->name);
+          array = re->updates.root;
+          //break;
+          //re->dump();
+        }
+        return array;
+}
+
+
 void SpecialFunctionHandler::handleCheckMemoryAccess(ExecutionState &state,
                                                      KInstruction *target,
                                                      std::vector<ref<Expr> >
@@ -806,19 +844,6 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
     name = "unnamed";
     klee_warning("klee_make_symbolic: renamed empty name to \"unnamed\"");
   }
-
-  // *Haoxin
-  // Add for sperate normal symbol and malloc symbol
-  bool isSymbolicAddress;
-  MallocMemoryMap mmm = state.addressSpace.mobjects;
-  std::map<std::string, ObjectPair>::iterator iter_m;
-  iter_m = mmm.find(name);
-  if (iter_m != mmm.end()){
-    isSymbolicAddress = 1;
-  }
-  if (isSymbolicAddress)
-      return;
-  else {
   Executor::ExactResolutionList rl;
   executor.resolveExact(state, arguments[0], rl, "make_symbolic");
 
@@ -855,7 +880,6 @@ void SpecialFunctionHandler::handleMakeSymbolic(ExecutionState &state,
                                      Executor::User);
     }
   }
-  }
 }
 
 // *Haoxin* new added
@@ -873,7 +897,7 @@ void SpecialFunctionHandler::handleMakeMallocSymbolic(ExecutionState &state,
     //printf("size of arguments is %d\n", arguments.size());
     return ;
 }
-
+/*
 void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
                                                          KInstruction *target,
                                                          uint64_t address,
@@ -938,7 +962,8 @@ void SpecialFunctionHandler::handleMakeSymbolicForMalloc(ExecutionState &state,
     }
   }
 }
-
+*/
+/*
 const Array* scan22(ref<Expr> e, std::set<std::string> &symNameList) {
     //std::set<std::string> symNameList;
     const Array *array;
@@ -955,41 +980,13 @@ const Array* scan22(ref<Expr> e, std::set<std::string> &symNameList) {
         }
         return array;
 }
+*/
 void SpecialFunctionHandler::handleMarkGlobal(ExecutionState &state,
                                               KInstruction *target,
                                               std::vector<ref<Expr> > &arguments) {
   assert(arguments.size()==1 &&
          "invalid number of arguments to klee_mark_global");
 
-  // *Haoxin
-  // Function : Special handler for runtime error
-  if (!isa<ConstantExpr>(arguments[0])){
-      std::set<std::string> nameList;
-      const Array *array = scan22(arguments[0], nameList);
-      bool isSymbolicAddress;
-      std::string sym_name;
-      MallocMemoryMap mmm = state.addressSpace.mobjects;
-      for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
-        std::string key = iter->first;
-        std::set<std::string>::iterator iter_set;
-        iter_set = nameList.find(key);
-        if (iter_set != nameList.end()){
-            sym_name = key;
-            isSymbolicAddress = 1;
-        }
-      }
-      if (isSymbolicAddress){ // handle symbolic address
-        std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
-        const MemoryObject *mo = shared_map[sym_name].first;
-        //TODO what should we do here? Just return from now
-        return ;
-        //arg = ConstantExpr::create(mo->address, 64);
-      }else {
-  	   // terminateStateOnExecError(state,
-           //                       "external call with symbolic argument and not in MallocMemoryMap");
-       }
-      }
-    else {
         Executor::ExactResolutionList rl;
         executor.resolveExact(state, arguments[0], rl, "mark_global");
 
@@ -999,7 +996,6 @@ void SpecialFunctionHandler::handleMarkGlobal(ExecutionState &state,
             assert(!mo->isLocal);
             mo->isGlobal = true;
         }
-    }
 }
 
 void SpecialFunctionHandler::handleAddOverflow(ExecutionState &state,

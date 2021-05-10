@@ -46,8 +46,8 @@ exe_sym_env_t __exe_env = {
 static void __create_new_dfile(exe_disk_file_t *dfile, unsigned size,
                                const char *name, struct stat64 *defaults) {
   // *Haoxin
-  //struct stat64 *s = malloc(sizeof(*s));
-  struct stat64 *s = calloc(1, sizeof(*s));
+  struct stat64 *s = malloc(sizeof(*s));
+  //struct stat64 *s = calloc(1, sizeof(*s));
   const char *sp;
   char sname[64];
   for (sp=name; *sp; ++sp)
@@ -59,8 +59,8 @@ static void __create_new_dfile(exe_disk_file_t *dfile, unsigned size,
   dfile->size = size;
   // *Haoxin
   printf("RUNTIME fd_init.c __create_new_dfile executed\n");
-  //dfile->contents = malloc(dfile->size);
-  dfile->contents = calloc(dfile->size, sizeof(exe_disk_file_t));
+  dfile->contents = malloc(dfile->size);
+  //dfile->contents = calloc(dfile->size, sizeof(exe_disk_file_t));
   //klee_make_symbolic(dfile->contents, dfile->size, name);
 
   klee_make_symbolic(s, sizeof(*s), sname);
@@ -123,8 +123,8 @@ void klee_init_fds(unsigned n_files, unsigned file_length,
 
   __exe_fs.n_sym_files = n_files;
   // *Haoxin
-  //__exe_fs.sym_files = malloc(sizeof(*__exe_fs.sym_files) * n_files);
-  __exe_fs.sym_files = calloc(sizeof(n_files),sizeof(*__exe_fs.sym_files));
+  __exe_fs.sym_files = malloc(sizeof(*__exe_fs.sym_files) * n_files);
+  //__exe_fs.sym_files = calloc(sizeof(n_files),sizeof(*__exe_fs.sym_files));
   for (k=0; k < n_files; k++) {
     name[0] = 'A' + k;
     __create_new_dfile(&__exe_fs.sym_files[k], file_length, name, &s);
@@ -134,8 +134,8 @@ void klee_init_fds(unsigned n_files, unsigned file_length,
   printf("RUNTIME fd_init.c klee_init_fds executed\n");
   if (stdin_length) {
     // *Haoxin
-    //__exe_fs.sym_stdin = malloc(sizeof(*__exe_fs.sym_stdin));
-    __exe_fs.sym_stdin = calloc(1, sizeof(*__exe_fs.sym_stdin));
+    __exe_fs.sym_stdin = malloc(sizeof(*__exe_fs.sym_stdin));
+    //__exe_fs.sym_stdin = calloc(1, sizeof(*__exe_fs.sym_stdin));
     __create_new_dfile(__exe_fs.sym_stdin, stdin_length, "stdin", &s);
     __exe_env.fds[0].dfile = __exe_fs.sym_stdin;
   }
@@ -147,13 +147,11 @@ void klee_init_fds(unsigned n_files, unsigned file_length,
     // *Haoxin
 
     printf("RUNTIME fd_init.c klee_init_fds (if __exe_fs.max_failures) executed\n");
-    /*
     __exe_fs.read_fail = malloc(sizeof(*__exe_fs.read_fail));
     __exe_fs.write_fail = malloc(sizeof(*__exe_fs.write_fail));
     __exe_fs.close_fail = malloc(sizeof(*__exe_fs.close_fail));
     __exe_fs.ftruncate_fail = malloc(sizeof(*__exe_fs.ftruncate_fail));
     __exe_fs.getcwd_fail = malloc(sizeof(*__exe_fs.getcwd_fail));
-    */
 
     /*
     __exe_fs.read_fail = calloc(1, sizeof(*__exe_fs.read_fail));

@@ -18,7 +18,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Module/PhiCleaner.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Module/CMakeFiles/kleeModule.dir/PhiCleaner.cpp.o"
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Module/RaiseAsm.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Module/CMakeFiles/kleeModule.dir/RaiseAsm.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX

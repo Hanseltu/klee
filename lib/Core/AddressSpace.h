@@ -26,7 +26,7 @@ namespace klee {
   typedef std::pair<const MemoryObject*, const ObjectState*> ObjectPair;
   typedef std::vector<ObjectPair> ResolutionList;
 
-  //new added
+  // *Haoxin new added
   typedef std::map<std::string, ObjectPair> MallocMemoryMap;
 
   /// Function object ordering MemoryObject's by address.
@@ -65,6 +65,8 @@ namespace klee {
     ///
     /// \invariant forall o in objects, o->copyOnWriteOwner <= cowKey
     MemoryMap objects;
+
+    // *Haoxin new added
     MallocMemoryMap mobjects;
 
     AddressSpace() : cowKey(1) {}

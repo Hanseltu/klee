@@ -274,8 +274,8 @@ char *canonicalize_file_name (const char *name) {
   // Although many C libraries allocate resolved_name in realpath() if it is NULL,
   // this behaviour is implementation-defined (POSIX) and not implemented in uclibc.
   // *Haoxin
-  //char * resolved_name = malloc(PATH_MAX);
-  char * resolved_name = calloc(PATH_MAX, sizeof(char));
+  char * resolved_name = malloc(PATH_MAX);
+  //char * resolved_name = calloc(PATH_MAX, sizeof(char));
   if (!resolved_name) return NULL;
   if (!realpath(name, resolved_name)) {
     free(resolved_name);

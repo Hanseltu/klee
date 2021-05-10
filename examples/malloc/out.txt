@@ -1,0 +1,246 @@
+call external function here, file name = libc/misc/locale/locale.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = libc/misc/internals/__uClibc_main.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+RUNTIME fd_init.c klee_init_fds executed
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+RUNTIME fd_init.c klee_init_fds executed
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+RUNTIME fd_init.c klee_init_fds executed
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+RUNTIME fd_init.c klee_init_fds executed
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+RUNTIME fd_init.c klee_init_fds executed
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+RUNTIME fd_init.c klee_init_fds executed
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+RUNTIME fd_init.c klee_init_fds executed
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+RUNTIME fd_init.c klee_init_fds executed
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+file name = 
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = 
+file name = 
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = 
+111
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+111
+call external function here, file name = 
+the value of p_str.a is 100
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+the value of p_str.c is 200
+call external function here, file name = 
+0x4878080
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = 
+call external function here, file name = 
+111
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+the value of p_str.a is 100
+call external function here, file name = 
+the value of p_str.c is 200
+call external function here, file name = 
+the value of p_str.a is 100
+call external function here, file name = 
+the value of p_str.c is 200
+call external function here, file name = 
+0x6bb4340
+call external function here, file name = 
+0x494f380
+call external function here, file name = 
+111
+call external function here, file name = /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/fd_init.c
+call external function here, file name = 
+call external function here, file name = 
+call external function here, file name = 
+the value of p_str.a is 100
+call external function here, file name = 
+the value of p_str.c is 200
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+0x4877a00
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+111
+call external function here, file name = 
+111
+call external function here, file name = 
+the value of p_str.a is 100
+call external function here, file name = 
+the value of p_str.c is 200
+call external function here, file name = 
+0x6bb4680
+call external function here, file name = 
+111
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+call external function here, file name = 
+the value of p_str.a is 100
+call external function here, file name = 
+file name = 
+call external function here, file name = 
+the value of p_str.a is 100
+call external function here, file name = 
+the value of p_str.c is 200
+call external function here, file name = 
+the value of p_str.c is 200
+call external function here, file name = 
+0x6bb5d40
+call external function here, file name = 
+0x6bb4d00
+call external function here, file name = 
+call external function here, file name = 
+call external function here, file name = 
+111
+call external function here, file name = 
+the value of p_str.a is 100
+call external function here, file name = 
+the value of p_str.c is 200
+call external function here, file name = 
+0x506d040
+call external function here, file name = 
+call external function here, file name = libc/stdlib/_atexit.c
+call external function here, file name = libc/stdlib/_atexit.c
+call external function here, file name = libc/stdlib/_atexit.c
+call external function here, file name = libc/stdlib/_atexit.c
+call external function here, file name = libc/stdlib/_atexit.c
+call external function here, file name = libc/stdlib/_atexit.c
+call external function here, file name = libc/stdlib/_atexit.c
+call external function here, file name = libc/stdlib/_atexit.c

@@ -7,7 +7,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_C
   "/home/haoxin/haoxin-data/smu-research/klee/runtime/Runtest/intrinsics.c" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/runtime/Runtest/CMakeFiles/kleeRuntest.dir/intrinsics.c.o"
   )
-set(CMAKE_C_COMPILER_ID "GNU")
+set(CMAKE_C_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_C
@@ -22,7 +22,7 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Basic/KTest.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/runtime/Runtest/CMakeFiles/kleeRuntest.dir/__/__/lib/Basic/KTest.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX

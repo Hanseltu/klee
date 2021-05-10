@@ -1,17 +1,18 @@
 Error: memory error: out of bound pointer
-File: challenges/3D_Image_Toolkit/src/3dc.c
-Line: 68
-assembly.ll line: 14613
+File: challenges/3D_Image_Toolkit/lib/string.c
+Line: 40
+assembly.ll line: 9496
 Stack: 
-	#000014613 in cgc_ReadFile (px_list=103268380) at challenges/3D_Image_Toolkit/src/3dc.c:68
-	#100016287 in cgc_menu () at challenges/3D_Image_Toolkit/src/main.c:79
-	#200016590 in __klee_posix_wrapped_main (cgc_argc=1, cgc_argv=102534032) at challenges/3D_Image_Toolkit/src/main.c:236
-	#300007066 in __user_main (argcPtr=1, argvPtr=67586176, envp=67586192) at /home/haoxin/haoxin-data/smu-research/klee-offical/klee/runtime/POSIX/klee_init_env.c:245
-	#400000574 in __uClibc_main (=70658824, =1, =67586176, =0, =0, =0, =0) at libc/misc/internals/__uClibc_main.c:401
-	#500000740 in main (=1, =67586176)
+	#000009496 in cgc_bzero (s=0, n=4096) at challenges/3D_Image_Toolkit/lib/string.c:40
+	#100012235 in cgc_init_freelist () at challenges/3D_Image_Toolkit/lib/malloc.c:134
+	#200012338 in cgc_freelist_alloc (length=3272) at challenges/3D_Image_Toolkit/lib/malloc.c:179
+	#300012523 in cgc_malloc (length=3272) at challenges/3D_Image_Toolkit/lib/malloc.c:259
+	#400016297 in cgc_menu () at challenges/3D_Image_Toolkit/src/main.c:76
+	#500016610 in __klee_posix_wrapped_main (cgc_argc=1, cgc_argv=124488528) at challenges/3D_Image_Toolkit/src/main.c:236
+	#600007075 in __user_main (argcPtr=1, argvPtr=86324736, envp=86324752) at /home/haoxin/haoxin-data/smu-research/klee/runtime/POSIX/klee_init_env.c:252
+	#700000580 in __uClibc_main (main=89008904, argc=1, argv=86324736, app_init=0, app_fini=0, rtld_fini=0, stack_end=0) at libc/misc/internals/__uClibc_main.c:401
+	#800000749 in main (=1, =86324736)
 Info: 
-	address: 1128775680
-	next: object at 140035792386880 of size 1536
-		MO67[1536] (no allocation info)
-	prev: object at 103356416 of size 3072
-		MO9428100[3072] allocated at cgc_menu():  %out_data = alloca [3072 x i8], align 16
+	address: 4095
+	next: object at 85965376 of size 424
+		MO52[424] allocated at main():  call void @klee.ctor_stub()

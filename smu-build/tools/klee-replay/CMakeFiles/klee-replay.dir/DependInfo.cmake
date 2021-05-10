@@ -9,7 +9,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "/home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee-replay.c" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.o"
   "/home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee_init_env.c" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.o"
   )
-set(CMAKE_C_COMPILER_ID "GNU")
+set(CMAKE_C_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_C

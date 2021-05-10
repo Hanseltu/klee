@@ -1320,8 +1320,8 @@ char *getcwd(char *buf, size_t size) {
       size = 1024;
     //* Haoxin
     // Changed for avoid the conflits with symbolic malloc
-    //buf = malloc(size);
-    buf = calloc(size, sizeof(char));
+    buf = malloc(size);
+   // buf = calloc(size, sizeof(char));
   }
 
   buf = __concretize_ptr(buf);

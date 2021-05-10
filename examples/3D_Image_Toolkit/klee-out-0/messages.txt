@@ -1,3 +1,5 @@
 KLEE: Using STP solver backend
+KLEE: ERROR: challenges/3D_Image_Toolkit/lib/string.c:40: memory error: out of bound pointer
+KLEE: NOTE: now ignoring this error at this location
 KLEE: ERROR: challenges/3D_Image_Toolkit/src/3dc.c:68: memory error: out of bound pointer
 KLEE: NOTE: now ignoring this error at this location

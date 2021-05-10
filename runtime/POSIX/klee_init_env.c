@@ -64,8 +64,8 @@ static char *__get_sym_str(int numChars, char *name) {
   int i;
   // Haoxin
   // For reducing the mix-up with mallocs in target program
-  //char *s = malloc(numChars+1);
-  char *s = calloc(numChars+1, sizeof(char));
+  char *s = malloc(numChars+1);
+  //char *s = calloc(numChars+1, sizeof(char));
   klee_mark_global(s);
   klee_make_symbolic(s, numChars+1, name);
 
@@ -228,9 +228,9 @@ usage: (klee_init_env) [options] [program arguments]\n\
 
   // * Haoxin
   // The same intention as the previous one
-  printf("CALLING RUNTIME klee_init_env() function\n");
-  //final_argv = (char **)malloc((new_argc + 1) * sizeof(*final_argv));
-  final_argv = (char **)calloc(new_argc + 1, sizeof(*final_argv));
+  //printf("CALLING RUNTIME klee_init_env() function\n");
+  final_argv = (char **)malloc((new_argc + 1) * sizeof(*final_argv));
+  //final_argv = (char **)calloc(new_argc + 1, sizeof(*final_argv));
   klee_mark_global(final_argv);
   memcpy(final_argv, new_argv, new_argc * sizeof(*final_argv));
   final_argv[new_argc] = 0;

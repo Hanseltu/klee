@@ -79,54 +79,54 @@ include tools/klee-replay/CMakeFiles/klee-replay.dir/flags.make
 tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.o: tools/klee-replay/CMakeFiles/klee-replay.dir/flags.make
 tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.o: ../tools/klee-replay/fd_init.c
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/klee-replay.dir/fd_init.c.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/fd_init.c
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/klee-replay.dir/fd_init.c.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/fd_init.c
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/klee-replay.dir/fd_init.c.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/fd_init.c > CMakeFiles/klee-replay.dir/fd_init.c.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/fd_init.c > CMakeFiles/klee-replay.dir/fd_init.c.i
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/fd_init.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/klee-replay.dir/fd_init.c.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/fd_init.c -o CMakeFiles/klee-replay.dir/fd_init.c.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/fd_init.c -o CMakeFiles/klee-replay.dir/fd_init.c.s
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.o: tools/klee-replay/CMakeFiles/klee-replay.dir/flags.make
 tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.o: ../tools/klee-replay/file-creator.c
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/klee-replay.dir/file-creator.c.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/file-creator.c
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/klee-replay.dir/file-creator.c.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/file-creator.c
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/klee-replay.dir/file-creator.c.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/file-creator.c > CMakeFiles/klee-replay.dir/file-creator.c.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/file-creator.c > CMakeFiles/klee-replay.dir/file-creator.c.i
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/file-creator.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/klee-replay.dir/file-creator.c.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/file-creator.c -o CMakeFiles/klee-replay.dir/file-creator.c.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/file-creator.c -o CMakeFiles/klee-replay.dir/file-creator.c.s
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.o: tools/klee-replay/CMakeFiles/klee-replay.dir/flags.make
 tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.o: ../tools/klee-replay/klee-replay.c
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/klee-replay.dir/klee-replay.c.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee-replay.c
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/klee-replay.dir/klee-replay.c.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee-replay.c
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/klee-replay.dir/klee-replay.c.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee-replay.c > CMakeFiles/klee-replay.dir/klee-replay.c.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee-replay.c > CMakeFiles/klee-replay.dir/klee-replay.c.i
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/klee-replay.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/klee-replay.dir/klee-replay.c.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee-replay.c -o CMakeFiles/klee-replay.dir/klee-replay.c.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee-replay.c -o CMakeFiles/klee-replay.dir/klee-replay.c.s
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.o: tools/klee-replay/CMakeFiles/klee-replay.dir/flags.make
 tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.o: ../tools/klee-replay/klee_init_env.c
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/klee-replay.dir/klee_init_env.c.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee_init_env.c
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/klee-replay.dir/klee_init_env.c.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee_init_env.c
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/klee-replay.dir/klee_init_env.c.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee_init_env.c > CMakeFiles/klee-replay.dir/klee_init_env.c.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee_init_env.c > CMakeFiles/klee-replay.dir/klee_init_env.c.i
 
 tools/klee-replay/CMakeFiles/klee-replay.dir/klee_init_env.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/klee-replay.dir/klee_init_env.c.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee_init_env.c -o CMakeFiles/klee-replay.dir/klee_init_env.c.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee-replay && /home/haoxin/haoxin-data/dut-research/compilers/llvm-9.0/llvm-src/build/bin/clang-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee-replay/klee_init_env.c -o CMakeFiles/klee-replay.dir/klee_init_env.c.s
 
 # Object files for target klee-replay
 klee__replay_OBJECTS = \

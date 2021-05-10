@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/haoxin/haoxin-data/smu-research/klee/tools/gen-random-bout/gen-random-bout.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX

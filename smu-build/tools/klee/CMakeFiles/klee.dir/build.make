@@ -79,15 +79,15 @@ include tools/klee/CMakeFiles/klee.dir/flags.make
 tools/klee/CMakeFiles/klee.dir/main.cpp.o: tools/klee/CMakeFiles/klee.dir/flags.make
 tools/klee/CMakeFiles/klee.dir/main.cpp.o: ../tools/klee/main.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object tools/klee/CMakeFiles/klee.dir/main.cpp.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/klee.dir/main.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee/main.cpp
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/klee.dir/main.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/klee/main.cpp
 
 tools/klee/CMakeFiles/klee.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/klee.dir/main.cpp.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee/main.cpp > CMakeFiles/klee.dir/main.cpp.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/klee/main.cpp > CMakeFiles/klee.dir/main.cpp.i
 
 tools/klee/CMakeFiles/klee.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/klee.dir/main.cpp.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee/main.cpp -o CMakeFiles/klee.dir/main.cpp.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/klee && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/klee/main.cpp -o CMakeFiles/klee.dir/main.cpp.s
 
 # Object files for target klee
 klee_OBJECTS = \

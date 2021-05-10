@@ -22,7 +22,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Expr/Parser.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Expr/CMakeFiles/kleaverExpr.dir/Parser.cpp.o"
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Expr/Updates.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Expr/CMakeFiles/kleaverExpr.dir/Updates.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX

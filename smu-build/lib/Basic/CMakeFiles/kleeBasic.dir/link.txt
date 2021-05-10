@@ -1,2 +1,2 @@
-/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/ar qc ../libkleeBasic.a CMakeFiles/kleeBasic.dir/KTest.cpp.o CMakeFiles/kleeBasic.dir/Statistics.cpp.o
-/home/haoxin/haoxin-data/packages/binutils-gdb/build/binutils/ranlib ../libkleeBasic.a
+/usr/bin/ar qc ../libkleeBasic.a CMakeFiles/kleeBasic.dir/KTest.cpp.o CMakeFiles/kleeBasic.dir/Statistics.cpp.o
+/usr/bin/ranlib ../libkleeBasic.a

@@ -28,7 +28,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Solver/Z3Builder.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Solver/CMakeFiles/kleaverSolver.dir/Z3Builder.cpp.o"
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Solver/Z3Solver.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Solver/CMakeFiles/kleaverSolver.dir/Z3Solver.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX

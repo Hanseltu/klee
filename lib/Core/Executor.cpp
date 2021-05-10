@@ -541,6 +541,7 @@ Executor::setModule(std::vector<std::unique_ptr<llvm::Module>> &modules,
   preservedFunctions.push_back("memcmp");
   preservedFunctions.push_back("memmove");
 
+
   kmodule->optimiseAndPrepare(opts, preservedFunctions);
   kmodule->checkModule();
 
@@ -1380,6 +1381,7 @@ void Executor::executeCall(ExecutionState &state,
     switch(f->getIntrinsicID()) {
     case Intrinsic::not_intrinsic: {
       // state may be destroyed by this call, cannot touch
+      //printf("call external function here, file name = %s\n", ki->info->file.c_str());
       callExternalFunction(state, ki, f, arguments);
 
       /*
@@ -2263,6 +2265,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     ref<Expr> left = eval(ki, 0, state).value;
     ref<Expr> right = eval(ki, 1, state).value;
     ref<Expr> result = AndExpr::create(left, right);
+    //result->dump();
     bindLocal(ki, state, result);
     break;
   }
@@ -2317,9 +2320,22 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     case ICmpInst::ICMP_EQ: {
       ref<Expr> left = eval(ki, 0, state).value;
       ref<Expr> right = eval(ki, 1, state).value;
+      // *Haoxin new added
+      // few crashes here
+      if (left.get()){
+      //printf("Stop here?\n");
+      //printf("left Kind = %d\n", left->getKind());
+      //printf("right Kind = %d\n", right->getKind());
+      //left->dump();
+      //right->dump();
       ref<Expr> result = EqExpr::create(left, right);
       bindLocal(ki, state, result);
       break;
+      }
+      else{
+        //printf("left is not a true Expr\n");
+        break;
+      }
     }
 
     case ICmpInst::ICMP_NE: {
@@ -3462,8 +3478,9 @@ void Executor::callExternalFunction(ExecutionState &state,
   ObjectPair result;
   bool resolved = state.addressSpace.resolveOne(
       ConstantExpr::create((uint64_t)errno_addr, Expr::Int64), result);
-  if (!resolved)
+  if (!resolved){
     klee_error("Could not resolve memory object for errno");
+  }
   ref<Expr> errValueExpr = result.second->read(0, sizeof(*errno_addr) * 8);
   ConstantExpr *errnoValue = dyn_cast<ConstantExpr>(errValueExpr);
   if (!errnoValue) {
@@ -4076,6 +4093,25 @@ void Executor::executeMemoryOperation(ExecutionState &state,
   }
 }
 */
+// *Haoxin new added
+bool hasSymbolicMallocVariable(ref<Expr> address, MallocMemoryMap mmm){
+
+    std::set<std::string> nameList;
+    const Array *array = scan2(address, nameList);
+    bool isSymbolicAddress;
+    std::string sym_name;
+    //MallocMemoryMap mmm = state.addressSpace.mobjects;
+    for (auto iter = mmm.begin(); iter != mmm.end(); iter++){
+        std::string key = iter->first;
+        std::set<std::string>::iterator iter_set;
+        iter_set = nameList.find(key);
+        if (iter_set != nameList.end()){
+            sym_name = key;
+            isSymbolicAddress = 1;
+        }
+    }
+    return isSymbolicAddress;
+}
 void Executor::executeMemoryOperation(ExecutionState &state,
                                       bool isWrite,
                                       ref<Expr> address,
@@ -4128,15 +4164,16 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         std::string key = iter->first;
         std::set<std::string>::iterator iter_set;
         iter_set = nameList.find(key);
-        if (iter_set != nameList.end()){
+        if (iter_set != nameList.end() && hasSymbolicMallocVariable(address, mmm)){
             sym_name = key;
+            //printf("\n 1 sym_name in find = %s\n", sym_name);
             isSymbolicAddress = 1;
         }
         //printf("In our strategy --- key = %s,\t", key.c_str());
         //printf("value = (mo-address= %d, os)\n", iter->second.first->address);
         //printf("value = (mo->address= %d, os)\n", iter->second.first->address);
     }
-    if (isSymbolicAddress){ // handle symbolic address
+    if (isSymbolicAddress && hasSymbolicMallocVariable(address, mmm)){ // handle symbolic address and aviod normal symbolic variable by comand
         std::map<std::string, ObjectPair> shared_map = state.addressSpace.mobjects;
         //printf("This is a symbolic address, use our own strategy !\n");
         //printf("Actual address to read/write is %d\n", shared_map[sym_name].first->address);
@@ -4152,6 +4189,8 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         //XXX Here we should concretize the input address by giving a concrete symbolic address
         //For example *(p1 + 100) = 999;
         //  we need to concretize p1 and return a ConstantExpr to (p1 + 100)
+        //printf("\n 2 sym_name = %s\n", sym_name);
+        //printf("shared_map[sym_name].first->address = %d", shared_map[sym_name].first->address);
         ref<Expr> bufferAddress = ConstantExpr::create(shared_map[sym_name].first->address, 64);
         ref<Expr> address;// = toConstant(state, p_address, "cc");
         Expr *pp = p_address.get();
@@ -4161,29 +4200,41 @@ void Executor::executeMemoryOperation(ExecutionState &state,
         //p_address->dump();
         std::vector<ref<Expr>> vec_kids;
         for (int i = 0; i < pp->getNumKids(); i++){
-            if (!isa<ConstantExpr>(pp->getKid(i))) {
+            // add getKind() to avoid complex Expr
+            //if (!isa<ConstantExpr>(pp->getKid(i)) && hasSymbolicMallocVariable(pp->getKid(i), mmm))  {
+            if (!isa<ConstantExpr>(pp->getKid(i)) && (pp->getKid(i)->getKind() == 3) || (pp->getKid(i)->getKind() == 5))  {
                 //printf("No.%d kid in p_address\n", i);
                 vec_kids.push_back(pp->getKid(i));
                 //pp->getKid(i)->dump();
+                //printf("kind = %d\n", pp->getKid(i)->getKind());
+                //printf("hasSymbolicMallocVariable = %d\n", hasSymbolicMallocVariable(pp->getKid(i), mmm)) ;
                 symbolicAddress = pp->getKid(i);
                 hasSymbolicAddress = 1;
                 //break;
             }
         }
-        ref<Expr> kids[2];
-        if (vec_kids.size() == 2){
+        int nu_size = vec_kids.size();
+        //printf("nu_size = %d\n", nu_size);
+        ref<Expr> kids[nu_size];
+        //if (vec_kids.size() == 2){
             for (int i=0; i < vec_kids.size(); i++){
                 kids[i] = vec_kids[i];
             }
-            ref<Expr> concat = ConcatExpr::createN(2, kids);
+            if (nu_size != 0) {
+            ref<Expr> concat = ConcatExpr::createN(nu_size, kids);
             //concat->dump();
             symbolicAddress = concat;
-        }
+            }
+        //}
+        //printf("--------------\n");
         //symbolicAddress->dump();
+        //printf("kind of symbolicAddress = %d\n", symbolicAddress->getKind());
+        //p_address->dump();
+        //printf("kind of p_address = %d\n", p_address->getKind());
         // the strategy is (p +/- 100) - p, then get the real constant in the given symbolic expr
         //ref<Expr> constantAddress = toConstant(state, SubExpr::create(p_address,symbolicAddress), " ");
         //constantAddress->dump();
-        if (hasSymbolicAddress) {
+        if (hasSymbolicAddress && p_address.get() && symbolicAddress.get()) {
             //printf("symbolicAddress Width = %d", symbolicAddress->getWidth());
             //symbolicAddress = concat;
             ref<Expr> constantAddress = toConstant(state, SubExpr::create(p_address,symbolicAddress), " ");

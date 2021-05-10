@@ -14,7 +14,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Support/Timer.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Support/CMakeFiles/kleeSupport.dir/Timer.cpp.o"
   "/home/haoxin/haoxin-data/smu-research/klee/lib/Support/TreeStream.cpp" "/home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Support/CMakeFiles/kleeSupport.dir/TreeStream.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX

@@ -79,28 +79,28 @@ include lib/Basic/CMakeFiles/kleeBasic.dir/flags.make
 lib/Basic/CMakeFiles/kleeBasic.dir/KTest.cpp.o: lib/Basic/CMakeFiles/kleeBasic.dir/flags.make
 lib/Basic/CMakeFiles/kleeBasic.dir/KTest.cpp.o: ../lib/Basic/KTest.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object lib/Basic/CMakeFiles/kleeBasic.dir/KTest.cpp.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kleeBasic.dir/KTest.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/KTest.cpp
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kleeBasic.dir/KTest.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/KTest.cpp
 
 lib/Basic/CMakeFiles/kleeBasic.dir/KTest.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kleeBasic.dir/KTest.cpp.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/KTest.cpp > CMakeFiles/kleeBasic.dir/KTest.cpp.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/KTest.cpp > CMakeFiles/kleeBasic.dir/KTest.cpp.i
 
 lib/Basic/CMakeFiles/kleeBasic.dir/KTest.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kleeBasic.dir/KTest.cpp.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/KTest.cpp -o CMakeFiles/kleeBasic.dir/KTest.cpp.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/KTest.cpp -o CMakeFiles/kleeBasic.dir/KTest.cpp.s
 
 lib/Basic/CMakeFiles/kleeBasic.dir/Statistics.cpp.o: lib/Basic/CMakeFiles/kleeBasic.dir/flags.make
 lib/Basic/CMakeFiles/kleeBasic.dir/Statistics.cpp.o: ../lib/Basic/Statistics.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object lib/Basic/CMakeFiles/kleeBasic.dir/Statistics.cpp.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kleeBasic.dir/Statistics.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/Statistics.cpp
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kleeBasic.dir/Statistics.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/Statistics.cpp
 
 lib/Basic/CMakeFiles/kleeBasic.dir/Statistics.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kleeBasic.dir/Statistics.cpp.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/Statistics.cpp > CMakeFiles/kleeBasic.dir/Statistics.cpp.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/Statistics.cpp > CMakeFiles/kleeBasic.dir/Statistics.cpp.i
 
 lib/Basic/CMakeFiles/kleeBasic.dir/Statistics.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kleeBasic.dir/Statistics.cpp.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/Statistics.cpp -o CMakeFiles/kleeBasic.dir/Statistics.cpp.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/lib/Basic && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/lib/Basic/Statistics.cpp -o CMakeFiles/kleeBasic.dir/Statistics.cpp.s
 
 # Object files for target kleeBasic
 kleeBasic_OBJECTS = \

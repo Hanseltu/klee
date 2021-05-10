@@ -4,18 +4,18 @@
 #include "klee/klee.h"
 int main(int argc, char** argv){
 
-    if (argc < 2) {
-        printf("please give an input\n");
-        exit(1);
-    }
+   // if (argc < 2) {
+   //     printf("please give an input\n");
+   //     exit(1);
+    //}
     int a;
     //klee_make_symbolic(&a, sizeof(a), "a");
     //int b = a + 100;
     //b = 1;
     int b;
 
-    int c = argv[1];
-    printf("input is %s\n", c);
+    //int c = argv[1];
+    //printf("input is %s\n", c);
 
     //a = 0;
     if (a > 0)
@@ -33,8 +33,8 @@ int main(int argc, char** argv){
     //assert(klee_is_symbolic(a));
     //klee_make_malloc_symbolic("sym_address");
     int *p1 = (int*) malloc(8*100);
-    //int *p2 = (int*) malloc(8*100);
-    //int *p3 = (int*) malloc(8*100);
+    int *p2 = (int*) malloc(8*100);
+    int *p3 = malloc(8*100);
     struct str * p_str = (struct str*)malloc(sizeof(struct str*)*100);
     //int p1[800];
     //klee_make_symbolic(&p1, 8, "p");
@@ -47,13 +47,14 @@ int main(int argc, char** argv){
     //*(p1+1)= 999;
     //*(p1+99)= 888;
     //*p2 = 999;
-    if (p_str > 16) {
+    if (p1> 16) {
     //    p1[32] = 999;
         //int aa = p1[32];
-        //printf("aa = %d\n", aa);
+        printf("111\n");
         ;
     }
     else{
+        printf("222\n");
      ;//    p1[33] = 888;
     }
     //*p3 = 1000;

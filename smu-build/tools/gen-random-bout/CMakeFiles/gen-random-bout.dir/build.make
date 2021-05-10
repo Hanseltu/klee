@@ -79,15 +79,15 @@ include tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/flags.make
 tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.o: tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/flags.make
 tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.o: ../tools/gen-random-bout/gen-random-bout.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haoxin/haoxin-data/smu-research/klee/smu-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.o"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/gen-random-bout && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/gen-random-bout/gen-random-bout.cpp
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/gen-random-bout && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.o -c /home/haoxin/haoxin-data/smu-research/klee/tools/gen-random-bout/gen-random-bout.cpp
 
 tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.i"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/gen-random-bout && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/gen-random-bout/gen-random-bout.cpp > CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.i
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/gen-random-bout && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/haoxin/haoxin-data/smu-research/klee/tools/gen-random-bout/gen-random-bout.cpp > CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.i
 
 tools/gen-random-bout/CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.s"
-	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/gen-random-bout && /home/haoxin/haoxin-data/dut-research/compilers/gcc/build-afl-20210407/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/gen-random-bout/gen-random-bout.cpp -o CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.s
+	cd /home/haoxin/haoxin-data/smu-research/klee/smu-build/tools/gen-random-bout && /usr/bin/clang++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/haoxin/haoxin-data/smu-research/klee/tools/gen-random-bout/gen-random-bout.cpp -o CMakeFiles/gen-random-bout.dir/gen-random-bout.cpp.s
 
 # Object files for target gen-random-bout
 gen__random__bout_OBJECTS = \

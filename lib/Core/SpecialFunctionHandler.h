@@ -100,7 +100,7 @@ namespace klee {
 
     /* Handlers */
 
-    //special
+    // *Haoxin new added
     void handleMakeSymbolicForMalloc (ExecutionState &state, KInstruction *target, uint64_t address, uint64_t allocated_size, std::string name);
 
 #define HANDLER(name) void name(ExecutionState &state, \
