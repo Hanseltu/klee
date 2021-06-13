@@ -1698,6 +1698,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   printf("\n");
   i += 1;
   */
+  printf("ki->info->file : assemblyLine = %s %d\n", ki->info->file.c_str(), ki->info->assemblyLine);
   static int callMallocFunction = 0;
   //int callBitcast = 0;
   Instruction *i = ki->inst;
