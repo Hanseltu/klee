@@ -2213,7 +2213,6 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                                 "resolved symbolic function pointer to: %s",
                                 f->getName().data());
 
-            //printf("\n No.%d executeCall in else statement in Executor::executeInstruction executed! \n", numExecuteCall);
             executeCall(*res.first, ki, f, arguments);
           } else {
             if (!hasInvalid) {
