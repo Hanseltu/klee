@@ -2184,12 +2184,11 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
           i++;
         }
       }
-      //printf(" No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
       executeCall(state, ki, f, arguments);
-    } else { // call a not normal function?
+    } else {
       printf("------ InDirect function call executed!\n");
       ref<Expr> v = eval(ki, 0, state).value;
-
+      v->dump();
       ExecutionState *free = &state;
       bool hasInvalid = false, first = true;
 
