@@ -636,7 +636,6 @@ MemoryObject * Executor::addExternalObject(ExecutionState &state,
 
 
 extern void *__dso_handle __attribute__ ((__weak__));
-
 void Executor::initializeGlobals(ExecutionState &state) {
   Module *m = kmodule->module.get();
 
@@ -648,6 +647,7 @@ void Executor::initializeGlobals(ExecutionState &state) {
   // since reading/writing via a function pointer is unsupported anyway.
   for (Module::iterator i = m->begin(), ie = m->end(); i != ie; ++i) {
     Function *f = &*i;
+    printf("Function name in initializeGlobals %s\n", f->getName().str().c_str());
     ref<ConstantExpr> addr(0);
 
     // If the symbol has external weak linkage then it is implicitly
@@ -659,6 +659,10 @@ void Executor::initializeGlobals(ExecutionState &state) {
     } else {
       addr = Expr::createPointer(reinterpret_cast<std::uint64_t>(f));
       legalFunctions.insert(reinterpret_cast<std::uint64_t>(f));
+    }
+    if (f->getName().str().find("_Z4func") != std::string::npos){
+          printf("address for func : \n");
+          addr->dump();
     }
 
     globalAddresses.insert(std::make_pair(f, addr));
@@ -706,6 +710,8 @@ void Executor::initializeGlobals(ExecutionState &state) {
          e = m->global_end();
        i != e; ++i) {
     const GlobalVariable *v = &*i;
+    printf("GlobalVariable = %s\n", v->getGlobalIdentifier().c_str());
+    std::string g_name = v->getGlobalIdentifier();
     size_t globalObjectAlignment = getAllocationAlignment(v);
     if (i->isDeclaration()) {
       // FIXME: We have no general way of handling unknown external
@@ -745,6 +751,12 @@ void Executor::initializeGlobals(ExecutionState &state) {
       globalObjects.insert(std::make_pair(v, mo));
       globalAddresses.insert(std::make_pair(v, mo->getBaseExpr()));
 
+      if (g_name.find("_Z4func") != std::string::npos){
+          printf("mo for func : \n");
+          printf("  mo->address = %d\n", mo->address);
+          printf("  mo->name = %s\n", mo->name.c_str());
+          printf("  os->concreteStore = %d\n", os->concreteStore);
+      }
       // Program already running = object already initialized.  Read
       // concrete value and write it to our copy.
       if (size) {
@@ -773,6 +785,33 @@ void Executor::initializeGlobals(ExecutionState &state) {
       globalObjects.insert(std::make_pair(v, mo));
       globalAddresses.insert(std::make_pair(v, mo->getBaseExpr()));
 
+      if (g_name == "handler"){
+          printf("mo for global handler : \n");
+          printf("  mo->address = %d\n", mo->address);
+          printf("  mo->name = %s\n", mo->name.c_str());
+          printf("  os->concreteStore = %d\n", os->concreteStore);
+
+          printf("Iterate globalAddresses:\n");
+          std::map<const llvm::GlobalValue*, ref<ConstantExpr>>::iterator iter;
+          for (iter = globalAddresses.begin(); iter != globalAddresses.end(); iter++){
+              std::string name = iter->first->getName().str();
+              if (name.find("handler") != std::string::npos){
+                  printf("find the address of handler!\n");
+                  iter->second->dump();
+              }
+          }
+          printf("Iterate legalFunctions:\n");
+          std::set<uint64_t>::iterator iter_set;
+          for (iter_set = legalFunctions.begin(); iter_set != legalFunctions.end(); iter_set++){
+            printf("iter_set : %d\n", *iter_set);
+          }
+      }
+      if (g_name.find("_Z4func") != std::string::npos){
+          printf("mo for func : \n");
+          printf("  mo->address = %d\n", mo->address);
+          printf("  mo->name = %s\n", mo->name.c_str());
+          printf("  os->concreteStore = %d\n", os->concreteStore);
+      }
       if (!i->hasInitializer())
           os->initializeToRandom();
     }
@@ -1698,7 +1737,11 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   printf("\n");
   i += 1;
   */
-  printf("ki->info->file : assemblyLine = %s %d\n", ki->info->file.c_str(), ki->info->assemblyLine);
+  std::string file_name = ki->info->file;
+  if (file_name.find("libc")){
+    printf("ki->getSourceLocation = %s\n", ki->getSourceLocation().c_str()); // not a real line number as all bc are intergreted
+    printf("ki->info->line = %d\n", ki->info->line);
+  }
   static int callMallocFunction = 0;
   //int callBitcast = 0;
   Instruction *i = ki->inst;
@@ -2101,6 +2144,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       arguments.push_back(eval(ki, j+1, state).value);
 
     if (f) {
+      printf("+++++ Direct function call executed!\n");
       const FunctionType *fType =
         dyn_cast<FunctionType>(cast<PointerType>(f->getType())->getElementType());
       const FunctionType *fpType =
@@ -2143,6 +2187,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       //printf(" No.%d executeCall in if statement in Executor::executeInstruction executed! \n", numExecuteCall);
       executeCall(state, ki, f, arguments);
     } else { // call a not normal function?
+      printf("------ InDirect function call executed!\n");
       ref<Expr> v = eval(ki, 0, state).value;
 
       ExecutionState *free = &state;
@@ -2439,13 +2484,21 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     //printf("print addressInfo in load instruction:\n");
     //std::string str_addressInfo = getAddressInfo(state, base);
     //printf("    %s\n", str_addressInfo.c_str());
+    if ((ki->info->line == 16)){
+        printf("dump line 16 (load)\n");
+        base->dump();
+    }
     executeMemoryOperation(state, false, base, 0, ki);
     break;
   }
   case Instruction::Store: { //load operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
-
+    if ((ki->info->line == 15)){
+        printf("dump line 15\n");
+        base->dump();
+        value->dump();
+    }
     /*
     ref<ConstantExpr> temp_base = toConstant(state, base, "temp_base");
     printf("temp_base = %d\n", temp_base->getZExtValue());
