@@ -783,11 +783,14 @@ void Executor::initializeGlobals(ExecutionState &state) {
         llvm::report_fatal_error("out of memory");
       ObjectState *os = bindObjectInState(state, mo, false);
       globalObjects.insert(std::make_pair(v, mo));
+      printf("Before insert  mo->address = %d\n", mo->address);
+      mo->getBaseExpr();
       globalAddresses.insert(std::make_pair(v, mo->getBaseExpr()));
 
       if (g_name == "handler"){
           printf("mo for global handler : \n");
           printf("  mo->address = %d\n", mo->address);
+          mo->getBaseExpr();
           printf("  mo->name = %s\n", mo->name.c_str());
           printf("  os->concreteStore = %d\n", os->concreteStore);
 
@@ -2189,6 +2192,71 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       printf("------ InDirect function call executed!\n");
       ref<Expr> v = eval(ki, 0, state).value;
       v->dump();
+      printf("Location of the instruction : %s\n", state.pc->getSourceLocation().c_str());
+      std::string location = state.pc->getSourceLocation();
+      if (location.find("test.cc") != std::string::npos)
+          printf("This is what I want\n");
+      // *Haoxin
+      printf("// This the current instruction : \n");
+      printf("  dest = %d, operand = %d\n", ki->dest, *ki->operands);
+      ki->inst->dump();
+      unsigned current_dest = ki->dest;
+      int op = *ki->operands;
+
+      // Solution 1
+      std::string opnd_name;
+
+      for (int i = 0; i < state.stack[state.stack.size()-1].kf->numInstructions; i++){
+          if (state.stack[state.stack.size()-1].kf->instructions[i]->dest == op) {
+              printf("//We found the operand instruction in current stack!\n");
+              llvm::Instruction * inst = state.stack[state.stack.size()-1].kf->instructions[i]->inst;
+              printf("  dest = %d, operand = %d\n", state.stack[state.stack.size()-1].kf->instructions[i]->dest,
+                      *state.stack[state.stack.size()-1].kf->instructions[i]->operands);
+              inst->dump();
+              //find the name
+              if (inst->getNumOperands() != 1)
+                terminateStateOnExecError(state, "Error in handle indirect function call!\n");
+              llvm::Value *opnd = inst->getOperand(0);
+              if (opnd->hasName()){
+                opnd_name = opnd->getName();
+              }
+              else{
+                 terminateStateOnExecError(state, "Error in handle indirect function call (Operand don't have a name)!\n");
+              }
+              printf("//We found the name of operand \n");
+              printf("  opnd_name = %s\n", opnd_name.c_str());
+          }
+      }
+
+      // Solution 2
+      /*n
+      KInstruction ** insts = state.stack[state.stack.size()-1].kf->instructions;
+      int i = current_dest;
+      // Find dest of load
+        printf("--%d %p\n", i, insts[i]);
+      //if (insts[i] != 0x0){
+      if (location.find("test.cc") != std::string::npos){
+        //while ((insts[i] != 0x0) && (insts[i-1] != 0x0) && (insts[i]->info->line == insts[i-1]->info->line)){
+        while ((insts[i]->dest != op)){
+               i --;
+        }
+        printf("We found the first instruction in the line of indirct function call\n");
+        printf("--%d \n", i);
+        insts[i]->inst->dump();
+        //find the name
+        if (insts[i]->inst->getNumOperands() != 1)
+            terminateStateOnExecError(state, "Error in handle indirect function call!\n");
+        llvm::Value *opnd = insts[i]->inst->getOperand(0);
+        if (opnd->hasName()){
+            opnd_name = opnd->getName();
+        }
+        else{
+            terminateStateOnExecError(state, "Error in handle indirect function call (Operand don't have a name)!\n");
+        }
+        printf("//We found the name of operand \n");
+        printf("  opnd_name = %s\n", opnd_name.c_str());
+      }
+      */
       ExecutionState *free = &state;
       bool hasInvalid = false, first = true;
 
@@ -2483,7 +2551,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     //std::string str_addressInfo = getAddressInfo(state, base);
     //printf("    %s\n", str_addressInfo.c_str());
     if ((ki->info->line == 16)){
-        printf("dump line 16 (load)\n");
+        printf("dump line 36 (load)\n");
         base->dump();
     }
     executeMemoryOperation(state, false, base, 0, ki);
@@ -2492,8 +2560,8 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   case Instruction::Store: { //load operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
-    if ((ki->info->line == 15)){
-        printf("dump line 15\n");
+    if ((ki->info->line == 15 || ki->info->line == 14)){
+        printf("dump line 14 || 15 \n");
         base->dump();
         value->dump();
     }
