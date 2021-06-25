@@ -666,6 +666,8 @@ void Executor::initializeGlobals(ExecutionState &state) {
     }
 
     globalAddresses.insert(std::make_pair(f, addr));
+    // Haoxin for AEG
+    FunctionCalls.insert(std::make_pair(f->getName().str(), addr->getZExtValue()));
   }
 
 #ifndef WINDOWS
@@ -710,7 +712,7 @@ void Executor::initializeGlobals(ExecutionState &state) {
          e = m->global_end();
        i != e; ++i) {
     const GlobalVariable *v = &*i;
-    printf("GlobalVariable = %s\n", v->getGlobalIdentifier().c_str());
+    //printf("GlobalVariable = %s\n", v->getGlobalIdentifier().c_str());
     std::string g_name = v->getGlobalIdentifier();
     size_t globalObjectAlignment = getAllocationAlignment(v);
     if (i->isDeclaration()) {
@@ -751,6 +753,9 @@ void Executor::initializeGlobals(ExecutionState &state) {
       globalObjects.insert(std::make_pair(v, mo));
       globalAddresses.insert(std::make_pair(v, mo->getBaseExpr()));
 
+      // Haoxin for AEG
+      FunctionCalls.insert(std::make_pair(g_name, mo->address));
+
       if (g_name.find("_Z4func") != std::string::npos){
           printf("mo for func : \n");
           printf("  mo->address = %d\n", mo->address);
@@ -783,9 +788,11 @@ void Executor::initializeGlobals(ExecutionState &state) {
         llvm::report_fatal_error("out of memory");
       ObjectState *os = bindObjectInState(state, mo, false);
       globalObjects.insert(std::make_pair(v, mo));
-      printf("Before insert  mo->address = %d\n", mo->address);
+      //printf("Before insert  mo->address = %d\n", mo->address);
       mo->getBaseExpr();
       globalAddresses.insert(std::make_pair(v, mo->getBaseExpr()));
+
+      FunctionCalls.insert(std::make_pair(g_name, mo->address));
 
       if (g_name == "handler"){
           printf("mo for global handler : \n");
@@ -803,11 +810,11 @@ void Executor::initializeGlobals(ExecutionState &state) {
                   iter->second->dump();
               }
           }
-          printf("Iterate legalFunctions:\n");
-          std::set<uint64_t>::iterator iter_set;
-          for (iter_set = legalFunctions.begin(); iter_set != legalFunctions.end(); iter_set++){
-            printf("iter_set : %d\n", *iter_set);
-          }
+          //printf("Iterate legalFunctions:\n");
+          //std::set<uint64_t>::iterator iter_set;
+          //for (iter_set = legalFunctions.begin(); iter_set != legalFunctions.end(); iter_set++){
+            //printf("iter_set : %d\n", *iter_set);
+          //}
       }
       if (g_name.find("_Z4func") != std::string::npos){
           printf("mo for func : \n");
@@ -815,6 +822,7 @@ void Executor::initializeGlobals(ExecutionState &state) {
           printf("  mo->name = %s\n", mo->name.c_str());
           printf("  os->concreteStore = %d\n", os->concreteStore);
       }
+
       if (!i->hasInitializer())
           os->initializeToRandom();
     }
@@ -1722,6 +1730,26 @@ Function* Executor::getTargetFunction(Value *calledVal, ExecutionState &state) {
   }
 }
 
+//*Haoxin start
+//For find the special symbolic array
+const Array* scan2(ref<Expr> e, std::set<std::string> &symNameList) {
+    //std::set<std::string> symNameList;
+    const Array *array;
+    Expr *ep = e.get();
+    //ep->dump();
+        for (unsigned i=0; i<ep->getNumKids(); i++)
+          scan2(ep->getKid(i), symNameList);
+        if (const ReadExpr *re = dyn_cast<ReadExpr>(e)) {
+          //printf("In execution array->name = %s\n", re->updates.root->name.c_str());
+          symNameList.insert(re->updates.root->name);
+          array = re->updates.root;
+          //break;
+          //re->dump();
+        }
+        return array;
+}
+// *Haoxin end
+
 int i = 0;
 int numExecuteCall = 0;
 void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
@@ -2147,7 +2175,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
       arguments.push_back(eval(ki, j+1, state).value);
 
     if (f) {
-      printf("+++++ Direct function call executed!\n");
+      //printf("+++++ Direct function call executed!\n");
       const FunctionType *fType =
         dyn_cast<FunctionType>(cast<PointerType>(f->getType())->getElementType());
       const FunctionType *fpType =
@@ -2210,8 +2238,8 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
           if (state.stack[state.stack.size()-1].kf->instructions[i]->dest == op) {
               printf("//We found the operand instruction in current stack!\n");
               llvm::Instruction * inst = state.stack[state.stack.size()-1].kf->instructions[i]->inst;
-              printf("  dest = %d, operand = %d\n", state.stack[state.stack.size()-1].kf->instructions[i]->dest,
-                      *state.stack[state.stack.size()-1].kf->instructions[i]->operands);
+              //printf("  dest = %d, operand = %d\n", state.stack[state.stack.size()-1].kf->instructions[i]->dest,
+               //       *state.stack[state.stack.size()-1].kf->instructions[i]->operands);
               inst->dump();
               //find the name
               if (inst->getNumOperands() != 1)
@@ -2223,10 +2251,12 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
               else{
                  terminateStateOnExecError(state, "Error in handle indirect function call (Operand don't have a name)!\n");
               }
-              printf("//We found the name of operand \n");
+              //printf("//We found the name of operand \n");
               printf("  opnd_name = %s\n", opnd_name.c_str());
           }
       }
+
+
 
       // Solution 2
       /*n
@@ -2271,7 +2301,24 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         (void) success;
         StatePair res = fork(*free, EqExpr::create(v, value), true);
         if (res.first) {
+          // Haoxin for AEG
+          if (state.addressSpace.WriteExploitCapability.size() != 0){
+            printf("**************We have found an exploitable point************\n");
+            printf("size of FunctionCalls = %d\n", FunctionCalls.size());
+            //Ready to overwrite the function pointer address
+            printf("handler's address = %d\n", FunctionCalls["handler"]);
+          }
+          //Iteratively check wether there is a successful hajacking
+          ref<Expr> base = ConstantExpr::create(FunctionCalls["handler"], 64);
+          std::set<uint64_t>::iterator it;
+          //for (it = legalFunctions.begin(); it != legalFunctions.end(); ++it){
+            //overwrite
+            //ref<Expr> temp = ConstantExpr::create(*it, 64);
+            //executeMemoryOperation(state, true, base, temp, 0);
           uint64_t addr = value->getZExtValue();
+
+          if (location.find("test.cc") != std::string::npos)
+            addr = FunctionCalls["_Z7badFuncPKi"];
           if (legalFunctions.count(addr)) {
             f = (Function*) addr;
 
@@ -2288,6 +2335,9 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
               hasInvalid = true;
             }
           }
+          //} // end for legalFunctions iteration
+
+
         }
 
         first = false;
@@ -2550,21 +2600,44 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     //printf("print addressInfo in load instruction:\n");
     //std::string str_addressInfo = getAddressInfo(state, base);
     //printf("    %s\n", str_addressInfo.c_str());
-    if ((ki->info->line == 16)){
-        printf("dump line 36 (load)\n");
+
+    if (!isa<ConstantExpr>(base)){
+        state.addressSpace.ReadExploitCapability.insert(base);
+        printf("ReadExploitCapability.size() = %d\n", state.addressSpace.ReadExploitCapability.size());
+        printf("+++This is a symbolic Load instruction!\n");
+        std::set<std::string> nameList;
+        const Array *array = scan2(base, nameList);
+        printf("array->name = %s \t size of nameList = %d\n", array->name.c_str(), nameList.size());
+        printf("array->size = %d\n", array->size);
         base->dump();
+        break;
     }
+
     executeMemoryOperation(state, false, base, 0, ki);
     break;
   }
   case Instruction::Store: { //load operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
-    if ((ki->info->line == 15 || ki->info->line == 14)){
-        printf("dump line 14 || 15 \n");
+
+    if (!isa<ConstantExpr>(base)){
+        state.addressSpace.WriteExploitCapability.insert(base);
+        printf("WriteExploitCapability.size() = %d\n", state.addressSpace.WriteExploitCapability.size());
+        printf("+++This is a symbolic Store instruction!\n");
+        std::set<std::string> nameList;
+        const Array *array = scan2(base, nameList);
+        printf("array->name = %s \t size of nameList = %d\n", array->name.c_str(), nameList.size());
+        printf("array->size = %d\n", array->size);
         base->dump();
-        value->dump();
+        break;
     }
+
+    if (value.get() == NULL){
+        printf("+++This is a symbolic Store after Load instruction!\n");
+        base->dump();
+        break;
+    }
+
     /*
     ref<ConstantExpr> temp_base = toConstant(state, base, "temp_base");
     printf("temp_base = %d\n", temp_base->getZExtValue());
@@ -2583,6 +2656,17 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     KGEPInstruction *kgepi = static_cast<KGEPInstruction*>(ki);
     ref<Expr> base = eval(ki, 0, state).value;
 
+    /*
+    if (!isa<ConstantExpr>(base)){
+        printf("+++This is a symbolic GetElementPtr instruction!\n");
+        std::set<std::string> nameList;
+        const Array *array = scan2(base, nameList);
+        printf("array->name = %s \t size of nameList = %d\n", array->name.c_str(), nameList.size());
+        printf("array->size = %d\n", array->size);
+        base->dump();
+        break;
+    }
+    */
     for (std::vector< std::pair<unsigned, uint64_t> >::iterator
            it = kgepi->indices.begin(), ie = kgepi->indices.end();
          it != ie; ++it) {
@@ -3492,25 +3576,7 @@ static const char *okExternalsList[] = { "printf",
 static std::set<std::string> okExternals(okExternalsList,
                                          okExternalsList +
                                          (sizeof(okExternalsList)/sizeof(okExternalsList[0])));
-//*Haoxin start
-//For find the special symbolic array
-const Array* scan2(ref<Expr> e, std::set<std::string> &symNameList) {
-    //std::set<std::string> symNameList;
-    const Array *array;
-    Expr *ep = e.get();
-    //ep->dump();
-        for (unsigned i=0; i<ep->getNumKids(); i++)
-          scan2(ep->getKid(i), symNameList);
-        if (const ReadExpr *re = dyn_cast<ReadExpr>(e)) {
-          //printf("In execution array->name = %s\n", re->updates.root->name.c_str());
-          symNameList.insert(re->updates.root->name);
-          array = re->updates.root;
-          //break;
-          //re->dump();
-        }
-        return array;
-}
-// *Haoxin end
+
 
 void Executor::callExternalFunction(ExecutionState &state,
                                     KInstruction *target,

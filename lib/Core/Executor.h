@@ -127,6 +127,9 @@ private:
   TimerGroup timers;
   std::unique_ptr<PTree> processTree;
 
+  // Haoxin for AEG
+  std::map<std::string, uint64_t> FunctionCalls;
+
   /// Used to track states that have been added during the current
   /// instructions step.
   /// \invariant \ref addedStates is a subset of \ref states.

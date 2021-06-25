@@ -70,6 +70,10 @@ namespace klee {
     // *Haoxin start
     MallocMemoryMap mobjects;
     // *Haoxin end
+    //
+    // Haoxin for AEG
+    std::set<ref<Expr>> ReadExploitCapability;
+    std::set<ref<Expr>> WriteExploitCapability;
 
     AddressSpace() : cowKey(1) {}
     AddressSpace(const AddressSpace &b) : cowKey(++b.cowKey), objects(b.objects), mobjects(b.mobjects){ }
