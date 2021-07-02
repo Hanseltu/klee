@@ -793,11 +793,14 @@ void Executor::initializeGlobals(ExecutionState &state) {
       globalAddresses.insert(std::make_pair(v, mo->getBaseExpr()));
 
       FunctionCalls.insert(std::make_pair(g_name, mo->address));
-
+      //v->getValueType()->dump();
+      //printf("isPointerTy = %d\n", v->getValueType()->isPointerTy());
+      //printf("getTypeID = %d\n", v->getValueType()->getTypeID());
       if (g_name == "handler"){
           printf("mo for global handler : \n");
           printf("  mo->address = %d\n", mo->address);
           mo->getBaseExpr();
+          v->getValueType()->dump();
           printf("  mo->name = %s\n", mo->name.c_str());
           printf("  os->concreteStore = %d\n", os->concreteStore);
 
@@ -2310,15 +2313,102 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
           }
           //Iteratively check wether there is a successful hajacking
           ref<Expr> base = ConstantExpr::create(FunctionCalls["handler"], 64);
-          std::set<uint64_t>::iterator it;
+          //if (state.addressSpace.WriteExploitCapability.size() != 0){
+            //add new constraints here
+            for (auto temp : state.addressSpace.WriteExploitCapability){
+                printf("-------------------------Now handling AAW Exploit----------------------------------\n");
+                temp->dump();
+                std::string name;
+                std::map<const llvm::GlobalValue*, ref<ConstantExpr>>::iterator it_map;
+                ref<ConstantExpr> fp_expr;
+
+                //Step 1: add constraint of "symbolic expression == function pointer expression"
+                for (it_map = globalAddresses.begin(); it_map != globalAddresses.end(); ++it_map){
+                    const llvm::GlobalValue *v_temp = it_map->first;
+                    name = v_temp->getGlobalIdentifier().c_str();
+                    //find expr for opnd_name
+                    if (name == opnd_name){
+                        fp_expr = it_map->second;
+                        printf("fp_expr's value: %d\n", fp_expr->getZExtValue());
+                        fp_expr->dump();
+
+                        //add constraint of "symbolic expression == function pointer expression"
+                        Expr::Width type = fp_expr->getWidth();
+
+                        if (type != Expr::Int64)
+                            terminateStateOnExecError(state, "Type mismatch while adding additional constraints (handling indirect call)!");
+                        ref<Expr> fp = ConstantExpr::create((uint64_t)fp_expr->getZExtValue(), Expr::Int64);
+                        if (cast<ConstantExpr>(fp)->isTrue()) //We can not handle it if fp is a symbolic variable?
+                            addConstraint(state, EqExpr::create(temp, fp));
+                        break; // stop if we already add this constraint
+                    }
+                }
+
+                //Step 2: add another constraints of checking modification of function pointer between hajacking point (indirect call) and exploitable point
+                for (it_map = globalAddresses.begin(); it_map != globalAddresses.end(); ++it_map){
+                    const llvm::GlobalValue *v_temp = it_map->first;
+                    name = v_temp->getGlobalIdentifier().c_str();
+                    //find expr for opnd_name
+                    //if (name.find(opnd_name) != std::string::npos){
+                    if (name == opnd_name){
+                        fp_expr = it_map->second;
+                        printf("fp_expr's value:\n");
+                        fp_expr->dump();
+
+                        //add constraint of "symbolic expression == function pointer expression"
+                        Expr::Width type = fp_expr->getWidth();
+
+                        unsigned bytes = Expr::getMinBytesForWidth(type);
+                        fp_expr = optimizer.optimizeExpr(fp_expr, true);
+                        ObjectPair op;
+                        bool success;
+                        solver->setTimeout(coreSolverTimeout);
+                        if (!state.addressSpace.resolveOne(state, solver, fp_expr, op, success)){
+                            fp_expr = toConstant(state, fp_expr, "111");
+                            success = state.addressSpace.resolveOne(cast<ConstantExpr>(fp_expr), op);
+                        }
+                        solver->setTimeout(time::Span());
+                        if (success){
+                            const MemoryObject *mo = op.first;
+                            const ObjectState *os = op.second;
+                            ref<Expr> offset = mo->getOffsetExpr(fp_expr);
+                            ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
+                            check = optimizer.optimizeExpr(check, true);
+
+                            bool inBounds;
+                            bool success = solver->mustBeTrue(state, check, inBounds);
+
+                            if (inBounds){
+                                ref<Expr> result = os->read(offset, type);
+                                printf("This is fp's os value in hajacking point\n");
+                                result->dump();
+                                //Find the value in FunctionAddressMap
+                                ref<Expr> pre_result = state.addressSpace.FunctionAddressMap[name];
+                                printf("This is fp's os value in exploit point\n");
+                                pre_result->dump();
+                                // add constraint (can not be directly added, as it's an invalid constraint)
+                                // So only check here
+                                if (pre_result == result){
+                                    klee_warning("Wow, a hajacking point is found!!!");
+                                    // here we update the value from exploitable point to function pointer
+                                }
+                                else
+                                    terminateStateOnExecError(state, "Current path can not be exploited");
+                                //addConstraint(state, EqExpr::create(result, pre_result));
+                            }
+                        }
+                    }
+                }
+            }
+          //std::set<uint64_t>::iterator it;
           //for (it = legalFunctions.begin(); it != legalFunctions.end(); ++it){
             //overwrite
             //ref<Expr> temp = ConstantExpr::create(*it, 64);
             //executeMemoryOperation(state, true, base, temp, 0);
           uint64_t addr = value->getZExtValue();
 
-          if (location.find("test.cc") != std::string::npos)
-            addr = FunctionCalls["_Z7badFuncPKi"];
+          //if (location.find("test.cc") != std::string::npos)
+          //  addr = FunctionCalls["_Z7badFuncPKi"];
           if (legalFunctions.count(addr)) {
             f = (Function*) addr;
 
@@ -2598,6 +2688,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   case Instruction::Load: { //read operation
     ref<Expr> base = eval(ki, 0, state).value;
     //printf("print addressInfo in load instruction:\n");
+    //base->dump();
     //std::string str_addressInfo = getAddressInfo(state, base);
     //printf("    %s\n", str_addressInfo.c_str());
 
@@ -2605,10 +2696,10 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         state.addressSpace.ReadExploitCapability.insert(base);
         printf("ReadExploitCapability.size() = %d\n", state.addressSpace.ReadExploitCapability.size());
         printf("+++This is a symbolic Load instruction!\n");
-        std::set<std::string> nameList;
-        const Array *array = scan2(base, nameList);
-        printf("array->name = %s \t size of nameList = %d\n", array->name.c_str(), nameList.size());
-        printf("array->size = %d\n", array->size);
+        //std::set<std::string> nameList;
+        //const Array *array = scan2(base, nameList);
+        //printf("array->name = %s \t size of nameList = %d\n", array->name.c_str(), nameList.size());
+        //printf("array->size = %d\n", array->size);
         base->dump();
         break;
     }
@@ -2616,22 +2707,77 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     executeMemoryOperation(state, false, base, 0, ki);
     break;
   }
-  case Instruction::Store: { //load operation
+  case Instruction::Store: { //write operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
 
     if (!isa<ConstantExpr>(base)){
-        state.addressSpace.WriteExploitCapability.insert(base);
+        state.addressSpace.WriteExploitCapability.push_back(base);
         printf("WriteExploitCapability.size() = %d\n", state.addressSpace.WriteExploitCapability.size());
         printf("+++This is a symbolic Store instruction!\n");
-        std::set<std::string> nameList;
-        const Array *array = scan2(base, nameList);
-        printf("array->name = %s \t size of nameList = %d\n", array->name.c_str(), nameList.size());
-        printf("array->size = %d\n", array->size);
+        //iteratively visit globalAddresses
+        std::map<const llvm::GlobalValue*, ref<ConstantExpr>>::iterator it_map;
+        for (it_map = globalAddresses.begin(); it_map != globalAddresses.end(); ++it_map){
+            if (it_map->first->getValueType()->isPointerTy()){
+                const llvm::GlobalValue *v_temp = it_map->first;
+                ref<ConstantExpr> e_temp = it_map->second;
+                std::string name = v_temp->getGlobalIdentifier().c_str();
+                printf("name : %s\n", v_temp->getGlobalIdentifier().c_str());
+                e_temp->dump();
+                //find os for mo
+                //if (name.find("handler") != std::string::npos){
+                //Expr::Width type = getWidthForLLVMType(ki->inst->getType());
+                Expr::Width type = e_temp->getWidth();
+                unsigned bytes = Expr::getMinBytesForWidth(type);
+                e_temp = optimizer.optimizeExpr(e_temp, true);
+                ObjectPair op;
+                bool success;
+                solver->setTimeout(coreSolverTimeout);
+                if (!state.addressSpace.resolveOne(state, solver,e_temp, op, success)){
+                    e_temp = toConstant(state, e_temp, "111");
+                    success = state.addressSpace.resolveOne(cast<ConstantExpr>(e_temp), op);
+                }
+                solver->setTimeout(time::Span());
+                if (success){
+                    const MemoryObject *mo = op.first;
+                    const ObjectState *os = op.second;
+                    ref<Expr> offset = mo->getOffsetExpr(e_temp);
+                    ref<Expr> check = mo->getBoundsCheckOffset(offset, bytes);
+                    check = optimizer.optimizeExpr(check, true);
+
+                    bool inBounds;
+                    bool success = solver->mustBeTrue(state, check, inBounds);
+
+                    if (inBounds){
+                        ref<Expr> result = os->read(offset, type);
+                        result->dump();
+                        state.addressSpace.FunctionAddressMap[name] = result;
+                    }
+                }
+                //}
+            }
+        }
+
+        //std::set<std::string> nameList;
+        //const Array *array = scan2(base, nameList);
+        //printf("array->name = %s \t size of nameList = %d\n", array->name.c_str(), nameList.size());
+        //printf("array->size = %d\n", array->size);
+        //ref<Expr> fp = ConstantExpr::create(9999, 64);
+        //ref<Expr> last = base->getKid(1)->getKid(1)->getKid(1)->getKid(1);
+        //last->dump();
+        //addConstraint(state, EqExpr::create(fp, base));
+        //addConstraint(state, base); //crash
+        //base = fp;
+        //printf("***LOOK*** %d\n", base->getKind());
         base->dump();
         break;
     }
 
+      std::string location = state.pc->getSourceLocation();
+      if (location.find("test.cc:28") != std::string::npos){
+          printf("store value is\n");
+          value->dump();
+      }
     if (value.get() == NULL){
         printf("+++This is a symbolic Store after Load instruction!\n");
         base->dump();
@@ -5054,8 +5200,8 @@ bool Executor::getSymbolicSolution(const ExecutionState &state,
   std::vector<const Array*> objects;
   for (unsigned i = 0; i != state.symbolics.size(); ++i){
     for (auto s : state.symbolics){
-        ;//printf("symbolic mo->address = %d\n", s.first->address);
-        //printf("symbolic array->name = %s\n", s.second->name.c_str());
+        printf("symbolic mo->address = %d\n", s.first->address);
+        printf("symbolic array->name = %s\n", s.second->name.c_str());
     }
     objects.push_back(state.symbolics[i].second);
   }

@@ -260,7 +260,7 @@ DISABLE_WORKAROUND_LLVM_PR39177:BOOL=ON
 DOWNLOAD_LLVM_TESTING_TOOLS:BOOL=OFF
 
 //Dot tool for use with Doxygen
-DOXYGEN_DOT_EXECUTABLE:FILEPATH=DOXYGEN_DOT_EXECUTABLE-NOTFOUND
+DOXYGEN_DOT_EXECUTABLE:FILEPATH=/usr/bin/dot
 
 //Doxygen documentation generation tool (http://www.doxygen.org)
 DOXYGEN_EXECUTABLE:FILEPATH=/usr/bin/doxygen
@@ -590,7 +590,7 @@ DOXYGEN_DOT_EXECUTABLE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: DOXYGEN_EXECUTABLE
 DOXYGEN_EXECUTABLE-ADVANCED:INTERNAL=1
 //Details about finding Doxygen
-FIND_PACKAGE_MESSAGE_DETAILS_Doxygen:INTERNAL=[/usr/bin/doxygen][cfound components: doxygen missing components: dot][v1.8.13()]
+FIND_PACKAGE_MESSAGE_DETAILS_Doxygen:INTERNAL=[/usr/bin/doxygen][cfound components: doxygen dot ][v1.8.13()]
 //Details about finding SQLITE3
 FIND_PACKAGE_MESSAGE_DETAILS_SQLITE3:INTERNAL=[/usr/lib/x86_64-linux-gnu/libsqlite3.so][/usr/include][v()]
 //Details about finding Z3

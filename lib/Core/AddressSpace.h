@@ -73,7 +73,8 @@ namespace klee {
     //
     // Haoxin for AEG
     std::set<ref<Expr>> ReadExploitCapability;
-    std::set<ref<Expr>> WriteExploitCapability;
+    std::vector<ref<Expr>> WriteExploitCapability;
+    std::map<std::string, ref<Expr>> FunctionAddressMap;
 
     AddressSpace() : cowKey(1) {}
     AddressSpace(const AddressSpace &b) : cowKey(++b.cowKey), objects(b.objects), mobjects(b.mobjects){ }
