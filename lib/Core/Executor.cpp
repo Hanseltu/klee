@@ -2420,6 +2420,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         uint64_t addr = 0;
         //if (!success_aaw)
           addr = value->getZExtValue();
+        printf("Function call address is %d\n", addr);
         //else
           //addr = pre_write->getZExtValue();
 
