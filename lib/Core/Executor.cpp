@@ -2315,8 +2315,13 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
           ref<Expr> base = ConstantExpr::create(FunctionCalls["handler"], 64);
           //if (state.addressSpace.WriteExploitCapability.size() != 0){
             //add new constraints here
-            for (auto temp : state.addressSpace.WriteExploitCapability){
+          std::map<ref<Expr>, ref<Expr>>::iterator it_wec;
+          ref<Expr> pre_write;
+          static bool success_aaw = 0;
+            for (it_wec = state.addressSpace.WriteExploitCapability.begin(); it_wec != state.addressSpace.WriteExploitCapability.end(); it_wec++){
                 printf("-------------------------Now handling AAW Exploit----------------------------------\n");
+                ref<Expr> temp = it_wec->first;
+                pre_write = it_wec->second;
                 temp->dump();
                 std::string name;
                 std::map<const llvm::GlobalValue*, ref<ConstantExpr>>::iterator it_map;
@@ -2338,8 +2343,11 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                         if (type != Expr::Int64)
                             terminateStateOnExecError(state, "Type mismatch while adding additional constraints (handling indirect call)!");
                         ref<Expr> fp = ConstantExpr::create((uint64_t)fp_expr->getZExtValue(), Expr::Int64);
-                        if (cast<ConstantExpr>(fp)->isTrue()) //We can not handle it if fp is a symbolic variable?
+                        //if (cast<ConstantExpr>(fp)->isTrue()) { //We can not handle it if fp is a symbolic variable?
+                        if (name != "__exit_cleanup") { //Just omit this buildin function
+                            printf("*************Write the first constraint***********\n");
                             addConstraint(state, EqExpr::create(temp, fp));
+                        }
                         break; // stop if we already add this constraint
                     }
                 }
@@ -2391,9 +2399,13 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                                 if (pre_result == result){
                                     klee_warning("Wow, a hajacking point is found!!!");
                                     // here we update the value from exploitable point to function pointer
+                                    //ObjectState *wos = state.addressSpace.getWriteable(mo, os);
+                                    //wos->write(offset, pre_write);
+                                    success_aaw = 1;
                                 }
                                 else
-                                    terminateStateOnExecError(state, "Current path can not be exploited");
+                                    //terminateStateOnExecError(state, "Current path can not be exploited");
+                                    klee_warning("Current path can not be exploited");
                                 //addConstraint(state, EqExpr::create(result, pre_result));
                             }
                         }
@@ -2405,7 +2417,11 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
             //overwrite
             //ref<Expr> temp = ConstantExpr::create(*it, 64);
             //executeMemoryOperation(state, true, base, temp, 0);
-          uint64_t addr = value->getZExtValue();
+        uint64_t addr = 0;
+        //if (!success_aaw)
+          addr = value->getZExtValue();
+        //else
+          //addr = pre_write->getZExtValue();
 
           //if (location.find("test.cc") != std::string::npos)
           //  addr = FunctionCalls["_Z7badFuncPKi"];
@@ -2710,9 +2726,9 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
   case Instruction::Store: { //write operation
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
-
+    //ref<ConstantExpr> value_temp = toConstant(state, value, "...");
     if (!isa<ConstantExpr>(base)){
-        state.addressSpace.WriteExploitCapability.push_back(base);
+        state.addressSpace.WriteExploitCapability.insert(std::pair<ref<Expr>, ref<Expr>>(base, value));
         printf("WriteExploitCapability.size() = %d\n", state.addressSpace.WriteExploitCapability.size());
         printf("+++This is a symbolic Store instruction!\n");
         //iteratively visit globalAddresses
