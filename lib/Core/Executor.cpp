@@ -2421,6 +2421,13 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         //if (!success_aaw)
           addr = value->getZExtValue();
         printf("Function call address is %d\n", addr);
+        for (auto s : state.stack){
+                printf("//In indirect call : Instructions in stack: Num.%d\n", i);
+            for (int i = 0; i < s.kf->numInstructions; i++){
+                llvm::Instruction * inst = s.kf->instructions[i]->inst;
+                inst->dump();
+            }
+        }
         //else
           //addr = pre_write->getZExtValue();
 
@@ -2451,6 +2458,18 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         free = res.second;
       } while (free);
     }
+        /*
+      std::string location = state.pc->getSourceLocation();
+      if (location.find("test.cc") == std::string::npos){
+        for (auto s : state.stack){
+            for (int i = 0; i < s.kf->numInstructions; i++){
+                printf("//Instructions in stack: Num.%d\n", i);
+                llvm::Instruction * inst = s.kf->instructions[i]->inst;
+                inst->dump();
+            }
+        }
+      }
+      */
     numExecuteCall += 1;
     break;
   }
@@ -2728,6 +2747,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
     ref<Expr> base = eval(ki, 1, state).value;
     ref<Expr> value = eval(ki, 0, state).value;
     //ref<ConstantExpr> value_temp = toConstant(state, value, "...");
+
     if (!isa<ConstantExpr>(base)){
         state.addressSpace.WriteExploitCapability.insert(std::pair<ref<Expr>, ref<Expr>>(base, value));
         printf("WriteExploitCapability.size() = %d\n", state.addressSpace.WriteExploitCapability.size());
@@ -2774,7 +2794,6 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                 //}
             }
         }
-
         //std::set<std::string> nameList;
         //const Array *array = scan2(base, nameList);
         //printf("array->name = %s \t size of nameList = %d\n", array->name.c_str(), nameList.size());
@@ -2800,7 +2819,6 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         base->dump();
         break;
     }
-
     /*
     ref<ConstantExpr> temp_base = toConstant(state, base, "temp_base");
     printf("temp_base = %d\n", temp_base->getZExtValue());

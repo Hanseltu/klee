@@ -431,6 +431,8 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
 
   //This is the version does not need API
   //printf("Call handleMalloc here!\n");
+  // Turn off symbolic malloc
+  /*
   printf("file name = %s\n",target->info->file.c_str());
   std::string file_name = target->info->file;
   printf("file_name size = %d\n",file_name.size());
@@ -450,7 +452,9 @@ void SpecialFunctionHandler::handleMalloc(ExecutionState &state,
   else {
     executor.executeAlloc(state, arguments[0], false, target);
   }
+  */
   // *Haoxin end
+    executor.executeAlloc(state, arguments[0], false, target);
 }
 
 void SpecialFunctionHandler::handleMemalign(ExecutionState &state,
