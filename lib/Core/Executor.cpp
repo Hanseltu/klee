@@ -2421,6 +2421,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         //if (!success_aaw)
           addr = value->getZExtValue();
         printf("Function call address is %d\n", addr);
+        /*
         for (auto s : state.stack){
                 printf("//In indirect call : Instructions in stack: Num.%d\n", i);
             for (int i = 0; i < s.kf->numInstructions; i++){
@@ -2428,6 +2429,7 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                 inst->dump();
             }
         }
+        */
         //else
           //addr = pre_write->getZExtValue();
 
@@ -2458,18 +2460,6 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         free = res.second;
       } while (free);
     }
-        /*
-      std::string location = state.pc->getSourceLocation();
-      if (location.find("test.cc") == std::string::npos){
-        for (auto s : state.stack){
-            for (int i = 0; i < s.kf->numInstructions; i++){
-                printf("//Instructions in stack: Num.%d\n", i);
-                llvm::Instruction * inst = s.kf->instructions[i]->inst;
-                inst->dump();
-            }
-        }
-      }
-      */
     numExecuteCall += 1;
     break;
   }
@@ -2759,10 +2749,15 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                 const llvm::GlobalValue *v_temp = it_map->first;
                 ref<ConstantExpr> e_temp = it_map->second;
                 std::string name = v_temp->getGlobalIdentifier().c_str();
+                //find os for mo
+                if ((name.find("_") == std::string::npos) &&
+                        (name.find("environ") == std::string::npos) &&
+                        (name.find("stderr") == std::string::npos) &&
+                        (name.find("stdin") == std::string::npos) &&
+                        (name.find("stdout") == std::string::npos)){
                 printf("name : %s\n", v_temp->getGlobalIdentifier().c_str());
                 e_temp->dump();
-                //find os for mo
-                //if (name.find("handler") != std::string::npos){
+                //if (name.find("__")){
                 //Expr::Width type = getWidthForLLVMType(ki->inst->getType());
                 Expr::Width type = e_temp->getWidth();
                 unsigned bytes = Expr::getMinBytesForWidth(type);
@@ -2788,10 +2783,20 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
                     if (inBounds){
                         ref<Expr> result = os->read(offset, type);
                         result->dump();
+                        printf("ObjectState readOnly = %d\n", os->readOnly);
                         state.addressSpace.FunctionAddressMap[name] = result;
                     }
-                }
-                //}
+                    //make variable symbolic
+                    std::string sym_name = "sym_" + name + "_" + std::to_string(mo->address);
+                    ObjectState *os_temp = new ObjectState(mo);
+                    const Array *array = arrayCache.CreateArray(sym_name, 8);
+                    ref<Expr> symExpr = ReadExpr::createTempRead(array, Expr::Int64);
+                    symExpr->dump();
+                    //use the symbolic one replace the orginal one
+                    state.addressSpace.FPAddressSymExprMap.insert(std::pair<uint64_t, ref<Expr>>(mo->address, symExpr));
+                    printf("size of FPAddressSymExprMap = %d\n", state.addressSpace.FPAddressSymExprMap.size());
+                    }
+                } //end find string
             }
         }
         //std::set<std::string> nameList;
@@ -2808,6 +2813,20 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         base->dump();
         break;
     }
+    //replace the original to symbolic
+    uint64_t address = toConstant(state, base, "address")->getZExtValue();
+    std::map<uint64_t, ref<Expr>>::iterator iter;
+    if (state.addressSpace.WriteExploitCapability.size() != 0){
+        printf("Before replacing: address = %d\n", address);
+        iter = state.addressSpace.FPAddressSymExprMap.find(address);
+        if (iter != state.addressSpace.FPAddressSymExprMap.end()){
+            printf("We found it !!!!!!!!!!!!!\n");
+            //now replace
+            //base = state.addressSpace.FPAddressSymExprMap[address];
+            //printf("base after replacing !!!!!!!!!!!!!\n");
+            //base->dump();
+        }
+    }
 
       std::string location = state.pc->getSourceLocation();
       if (location.find("test.cc:28") != std::string::npos){
@@ -2819,15 +2838,15 @@ void Executor::executeInstruction(ExecutionState &state, KInstruction *ki) {
         base->dump();
         break;
     }
-    /*
-    ref<ConstantExpr> temp_base = toConstant(state, base, "temp_base");
-    printf("temp_base = %d\n", temp_base->getZExtValue());
+    //ref<ConstantExpr> temp_base = toConstant(state, base, "temp_base");
+    //printf("temp_base = %d\n", temp_base->getZExtValue());
 
-    ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
-    printf("temp_value = %d\n", temp_value->getZExtValue());
-    */
+    //ref<ConstantExpr> temp_value = toConstant(state, value, "temp_value");
+    //printf("temp_value = %d\n", temp_value->getZExtValue());
 
     //printf("callMallocFunction = %d\n", callMallocFunction);
+    printf("PC-----:\n");
+    state.pc->inst->dump();
     executeMemoryOperation(state, true, base, value, 0);
     //executeMemoryOperationForMalloc(state, true, base, value, 0);
     break;

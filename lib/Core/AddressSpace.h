@@ -75,6 +75,7 @@ namespace klee {
     std::set<ref<Expr>> ReadExploitCapability;
     std::map<ref<Expr>, ref<Expr>> WriteExploitCapability;
     std::map<std::string, ref<Expr>> FunctionAddressMap;
+    std::map<uint64_t, ref<Expr>> FPAddressSymExprMap;
 
     AddressSpace() : cowKey(1) {}
     AddressSpace(const AddressSpace &b) : cowKey(++b.cowKey), objects(b.objects), mobjects(b.mobjects){ }
